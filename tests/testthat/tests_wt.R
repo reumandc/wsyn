@@ -1,6 +1,6 @@
 context("wt")
 
-test_that("test for correct class of output, and for correct inclusing of data and times",{
+test_that("test for correct class of output, and for correct including of data and times",{
   times<-1:100
   t.series<-rnorm(length(times))
   t.series<-t.series-mean(t.series)
