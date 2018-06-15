@@ -1,4 +1,4 @@
-Dan has not gone through this yet
+#Dan has not gone through this yet
 
 #' Clean spatiotemporal data matrices to make them ready for wavelet and other analyses
 #'

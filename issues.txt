@@ -1,3 +1,12 @@
+Progress:
+1) DONE write tts class and basic methods and unit tests of these
+2) DONE write wt class and basic methods and unit tests of these
+3) write wmf class and basic methods and unit tests of these - I have the class and basic methods, but probably they won't work until I bring warray over from reumanplatz. Also have not yet done unit testing.
+4) write wpmf class and basic methods and unit tests of these - I have the class and basic methods, but no tests yet
+5) check and unit test cleandat
+6) write the plotter functions, and unit tests
+
+
 wt.r:
 #TODO: make this a compiled function using cmpfun in the compiler package
 #(which is part of base R)
@@ -13,7 +22,7 @@ First line of wpmf:   Why is this called freqs if it is timescales? Possibly con
 
 
 Ideas I emailed to myself 2018 05 06:
-Add data slots to wt wmf
+DONE Add data slots to wt wmf
 and wpmf classes? So the data can be kept with the result?
 
 Make a ts class which stands for timescale, base class for

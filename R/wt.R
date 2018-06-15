@@ -86,14 +86,16 @@ wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f
   }
   if(is.null(scale.max.input)){
     result<-result[,1:m.last]
-    errcheck_tts(times,timescales,values,"wt")
-    result<-list(values=result, times=times, timescales=s2[1:m.last]/f0, dat=t.series)
+    timescales<-s2[1:m.last]/f0
+    errcheck_tts(times,timescales,result,"wt")
+    result<-list(values=result, times=times, timescales=timescales, dat=t.series)
     class(result)<-c("wt","tts","list")
     return(result)
   }
   else{
-    errcheck_tts(times,timescales,values,"wt")
-    result<-list(values=result, times = times, timescales=s2/f0, dat=t.series)
+    timescales<-s2/f0
+    errcheck_tts(times,timescales,result,"wt")
+    result<-list(values=result, times = times, timescales=timescales, dat=t.series)
     class(result)<-c("wt","tts","list")
     return(result)
   }
