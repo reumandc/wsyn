@@ -1,0 +1,44 @@
+wt.r:
+#TODO: make this a compiled function using cmpfun in the compiler package
+#(which is part of base R)
+#TODO: make the truncation occur before the computation rather than after
+#TODO: Not clear from the docs what the resulting behavior is for the default
+#value NULL of scale.max.input. Likewise for other related funcs (wmf, wpmf, etc)
+
+The arguments of wt, wmf, and wpmf are similar, but the docs describing them
+differ sometimes. Why the inconsistency? Revisit all three sets of argument
+docs for consistency and accuracy. Likewise for the docs of the outputs.
+
+First line of wpmf:   Why is this called freqs if it is timescales? Possibly confusing.
+
+
+Ideas I emailed to myself 2018 05 06:
+Add data slots to wt wmf
+and wpmf classes? So the data can be kept with the result?
+
+Make a ts class which stands for timescale, base class for
+coherence results
+
+Then wc swc wpc swpc classes that extend ts. These are for
+wavelet coherence,spatial wavelet coherence, wavelet phase
+coherence and spatial wavelet phase coherence classes. These
+will also have slots for the data, and maybe a slot for the
+normalization used? If you are having that slot, you may not
+need all these classes. If you are also having the data you may
+need only one class
+
+ts has slots for timescale and for a complex vector of the same
+length
+
+These classes (except ts) also have slots for coherences of
+surrogates, and maybe for post-ranking results.
+
+Have a wcoh and pcoh classes for wavelet and phase coherence.
+Since data are included as slot(s) we do not need to specify
+spatial or not.
+
+Also have a gcoh class for general coherence. This is for
+alternative normalizations. You have to pass in some kind of
+normalization routine. Available alternatives include no
+normalization and normalizing each time series separately by
+power. The normalization function is included in the object
