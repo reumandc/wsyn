@@ -47,14 +47,6 @@ wmf<-function(dat, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f0 = 1)
   #get denominator for normalization
   normdenom<-sqrt(apply(X=(Mod(wavarray))^2,MARGIN=3,FUN=mean,na.rm=T))
 
-  #normalize each wavelet transform by the denominator calculated above
-  #normarray<-array(NA, dim=dim(wavarray))
-  #for(i in 1:dim(wavarray)[1]){
-  #  normarray[i,,]<-t(t(wavarray[i,,])/normdenom)
-  #}
-  #the above and below should produce the same result, but the below is a 
-  #bit more transparent
-  
   #normalize each timescale by the value of normdenom for that timescale
   for (i in 1:dim(wavarray)[3])
   {

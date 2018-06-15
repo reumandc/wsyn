@@ -1,7 +1,7 @@
 Progress:
 1) DONE write tts class and basic methods and unit tests of these
 2) DONE write wt class and basic methods and unit tests of these
-3) write wmf class and basic methods and unit tests of these - I have the class and basic methods, but probably they won't work until I bring warray over from reumanplatz. Also have not yet done unit testing.
+3) DONE write wmf class and basic methods and unit tests of these 
 4) write wpmf class and basic methods and unit tests of these - I have the class and basic methods, but no tests yet
 5) check and unit test cleandat
 6) write the plotter functions, and unit tests
