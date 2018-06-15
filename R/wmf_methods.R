@@ -18,7 +18,17 @@ set_values.wmf<-function(obj,newval)
   stop("Error in set_values: values should not be altered for a wmf object")
 }
 
-#value getting - methods not needed, inherited from tts
+set_dat.wmf<-function(obj,newval)
+{
+  stop("Error in set_dat: dat should not be altered for a wmf object")
+}
+
+#value getting - methods not needed except for dat, others inherited from tts
+
+get_dat.wmf<-function(obj)
+{
+  return(obj$dat)
+}
 
 #This is based on an existing generic so not sure if this will work like this.
 #Also, might not be necessary, perhaps the tts one is enough.

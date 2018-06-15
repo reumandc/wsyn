@@ -33,29 +33,13 @@
 
 wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1)
 {
-  #Error checking
-  if (round(mean(t.series,na.rm=T),10) != 0)
-  {
-    stop('Error in wt: Time series must have zero mean')
-  }
+  errcheck_tsdat(times,t.series,"wt")
+
   if(is.null(scale.max.input)){
     scale.max<-length(t.series)
   }
   else{
     scale.max<-scale.max.input
-  }
-  if (length(times)!=length(t.series))
-  {
-    stop('Error in wt: times and t.series must be the same length')
-  }
-  d<-diff(times)
-  if (!isTRUE(all.equal(rep(d[1],length(d)-1),d[2:length(d)])))
-  {
-    stop("Error in wt: times must be evenly spaced")  
-  }
-  if (d[1]<=0)
-  {
-    stop("Error in wt: times must be increasing")
   }
   
   #determine how many frequencies are in the range and make receptacle for results 
@@ -102,11 +86,13 @@ wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f
   }
   if(is.null(scale.max.input)){
     result<-result[,1:m.last]
+    errcheck_tts(times,timescales,values,"wt")
     result<-list(values=result, times=times, timescales=s2[1:m.last]/f0, dat=t.series)
     class(result)<-c("wt","tts","list")
     return(result)
   }
   else{
+    errcheck_tts(times,timescales,values,"wt")
     result<-list(values=result, times = times, timescales=s2/f0, dat=t.series)
     class(result)<-c("wt","tts","list")
     return(result)

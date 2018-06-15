@@ -16,6 +16,7 @@
 #' \item{values}{A matrix of complex numbers containing the wavelet phasor mean field, of dimensions \code{length(times)} by the number of timescales. Entries not considered reliable (longer timescales, near the edges of the time span) are set to NA.}
 #' \item{times}{The times associated with the \code{wpmf}}
 #' \item{timescales}{The timescales associated with the \code{wpmf}}
+#' \item{dat}{The data matrix (locations by time) from which the wpmf was computed}
 #' 
 #' @note The wavelet phasor mean field was developed by Lawrence Sheppard and Daniel Reuman. R code by Thomas Anderson and Jon Walter
 #' 
@@ -24,14 +25,17 @@
 #' @references Sheppard, L.W., et al. (2015) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 #' 
 #' @examples
-#' time<-1:30
-#' obs<-matrix(rnorm(20*length(time),0,1),nrow=20,ncol=length(time))
-#' wmf<-wpmf(obs,times=time)
+#' #Dan has not checked these yet
+#' #time<-1:30
+#' #obs<-matrix(rnorm(20*length(time),0,1),nrow=20,ncol=length(time))
+#' #wmf<-wpmf(obs,times=time)
 #' 
 #' @export
 
 wpmf<-function(dat,times,scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1)
 {
+  errcheck_stdat(times,dat,"wpmf")
+  
   freqs<-wt(dat[1,],times=1:ncol(dat), scale.min, scale.max.input, sigma, f0)$timescales
   wav.array<-warray(dat, times=1:ncol(dat), scale.min,scale.max.input, sigma, f0)$wave.array
   
@@ -42,7 +46,8 @@ wpmf<-function(dat,times,scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1)
   
   phasor.wmf<-apply(norm.array, c(2,3), mean, na.rm=T)
   
-  result<-return(list(values=phasor.wmf,times=times,timescales=freqs))
+  errcheck_tts(times,freqs,phasor.wmf,"wpmf")
+  result<-return(list(values=phasor.wmf,times=times,timescales=freqs,dat=dat))
   class(result)<-c("wpmf","tts","list")
   return(result)
 }

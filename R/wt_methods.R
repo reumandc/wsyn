@@ -18,32 +18,12 @@ set_values.wt<-function(obj,newval)
   stop("Error in set_values: values should not be altered for a wt object")
 }
 
-set_dat<-function(obj,newval)
-{
-  UseMethod("set_dat",obj)
-}
-
-set_dat.default<-function(obj,newval)
-{
-  stop("Error in set_dat: set_dat not defined for this class")
-}
-
 set_dat.wt<-function(obj,newval)
 {
   stop("Error in set_dat: values should not be altered for a wt object")
 }
 
 #value getting - methods not needed except for dat, others inherited from tts
-
-get_dat<-function(obj)
-{
-  UseMethod("get_dat",obj)
-}
-
-get_dat.default<-function(obj)
-{
-  stop("Error in get_dat: get_dat not defined for this class")
-}
 
 get_dat.wt<-function(obj)
 {

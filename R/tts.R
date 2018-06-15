@@ -19,31 +19,7 @@
 
 tts<-function(times,timescales,values)
 {
-  
-  #2) timescale should be a numeric vector, think about what else it should be, e.g., positive, decreasing/increasing, what?
-  if (!is.numeric(timescales))
-  {
-    stop("Error in tts class: timescales must be numeric")
-  }
-  if (any(timescales<=0))
-  {
-    stop("Error in tts class: timescales must be positive")
-  }
-  if ()
-    #3) values a numeric or complex-valued matrix, length(times) by length(timescales)
-    if (!is.numeric(values) && !is.complex(values))
-    {
-      stop("Error in tts class: values must be numeric or complex")
-    }
-  if (!is.matrix(values))
-  {
-    stop("Error in tts class: values must be a matrix")
-  }
-  if (dim(values)[1]!=length(times) || dim(values)[2]!=length(timescales))
-  {
-    stop("Error in tts class: dimensions of values should agree with lengths of times and timescales")
-  }
-  
+  errcheck_tts(times,timescales,values,"tts")
   res<-list(times=times,timescales=timescales,values=values)  
   class(res)<-c("tts","list")
   return(res)

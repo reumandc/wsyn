@@ -25,7 +25,7 @@
 #' @references Sheppard, L.w., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 #' 
 #' @examples
-#' #have not reviewed this example
+#' #Dan has not reviewed this example yet
 #' #time<-1:30 #generate time steps
 #' #dat<-matrix(rpois(20*length(time),20),nrow=20,ncol=length(time)) #generate fake count data for 20 locations
 #' #dat<-cleandat(dat,normalize=F,detrend=T)$cleandat #detrend each site's time series, saving the cleaned data
@@ -34,6 +34,8 @@
 #' @export
 
 wmf<-function(dat, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f0 = 1){
+  
+  errcheck_stdat(times,dat,"wmf")
   
   freqs<-wt(dat[1,],times, scale.min, scale.max.input, sigma, f0)$timescales
   wav.array<-warray(dat, times, scale.min, scale.max.input, sigma, f0)$wave.array
@@ -54,6 +56,7 @@ wmf<-function(dat, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f0 = 1)
   
   wavelet.mean.field<-apply(norm.array, c(2,3), mean, na.rm=T)
   
+  errcheck_tts(times,timescales,wavelet.mean.field,"wmf")
   result<-list(values=wavelet.mean.field,times=times,timescales=freqs,dat=dat)
   class(result)<-c("wmf","tts","list")
   return(result)

@@ -8,12 +8,12 @@ set_times<-function(obj,newval)
 
 set_times.default<-function(obj,newval)
 {
-  stop("Error in set_times: set_times only defined for class tts")
+  stop("Error in set_times: set_times not defined for this class")
 }
 
 set_times.tts<-function(obj,newval)
 {
-  errcheck_tts(newval,obj$timescales,obj$values)
+  errcheck_tts(newval,obj$timescales,obj$values,"set_times.tts")
   obj$times<-newval
   return(obj)
 }
@@ -25,12 +25,12 @@ set_timescales<-function(obj,newval)
 
 set_timescales.default<-function(obj,newval)
 {
-  stop("Error in set_timescales: set_timescales only defined for class tts")
+  stop("Error in set_timescales: set_timescales not defined for this class")
 }
 
 set_timescales.tts<-function(obj,newval)
 {
-  errcheck_tts(obj$times,newval,obj$values)
+  errcheck_tts(obj$times,newval,obj$values,"set_timescales.tts")
   obj$timescales<-newval
   return(obj)
 }
@@ -42,14 +42,29 @@ set_values<-function(obj,newval)
 
 set_values.default<-function(obj,newval)
 {
-  stop("Error in set_values: set_values only defined for class tts")
+  stop("Error in set_values: set_values not defined for this class")
 }
 
 set_values.tts<-function(obj,newval)
 {
-  errcheck_tts(obj$times,obj$timescales,newval)
+  errcheck_tts(obj$times,obj$timescales,newval,"set_values.tts")
   obj$values<-newval
   return(obj)
+}
+
+set_dat<-function(obj,newval)
+{
+  UseMethod("set_dat",obj)
+}
+
+set_dat.default<-function(obj,newval)
+{
+  stop("Error in set_dat: set_dat not defined for this class")
+}
+
+set_dat.tts<-function(obj,newval)
+{
+  stop("Error in set_dat: no dat slot for a tts object")
 }
 
 #value getting
@@ -60,7 +75,7 @@ get_times<-function(obj)
 
 get_times.default<-function(obj)
 {
-  stop("Error in get_times: get_times only defined for class tts")
+  stop("Error in get_times: get_times not defined for this class")
 }
 
 get_times.tts<-function(obj)
@@ -75,7 +90,7 @@ get_timescales<-function(obj)
 
 get_timescales.default<-function(obj)
 {
-  stop("Error in get_timescales: get_timescales only defined for class tts")
+  stop("Error in get_timescales: get_timescales not defined for this class")
 }
 
 get_timescales.tts<-function(obj)
@@ -90,12 +105,27 @@ get_values<-function(obj)
 
 get_values.default<-function(obj)
 {
-  stop("Error in get_values: get_values only defined for class tts")
+  stop("Error in get_values: get_values not defined for this class")
 }
 
 get_values.tts<-function(obj)
 {
   return(obj$values)
+}
+
+get_dat<-function(obj)
+{
+  UseMethod("get_dat",obj)
+}
+
+get_dat.default<-function(obj)
+{
+  stop("Error in get_dat: get_dat not defined for this class")
+}
+
+get_dat.tts<-function(obj)
+{
+  stop("Error in get_dat: no dat slot for a tts object")
 }
 
 #This is based on an existing generic so not sure if this will work like this
