@@ -25,6 +25,6 @@ errcheck_times<-function(times,callfunc)
   }
   if (d[1]<=0)
   {
-    stop(paste0("Error in errcheck_times called by "callfunc,": times must be increasing"))
+    stop(paste0("Error in errcheck_times called by ",callfunc,": times must be increasing"))
   }
 }

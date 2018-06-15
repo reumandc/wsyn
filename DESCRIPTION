@@ -4,10 +4,10 @@ Type: Package
 Title: Wavelet Approaches to Studies of Synchrony in Ecology and Other Fields
 Authors@R: c(
     person("Daniel C.", "Reuman", email = "reuman@ku.edu", role = c("aut", "cre", "cph")),
-    person("Thomas L.", "Anderson", email="anderstl@gmail.com", role=c("aut","cre")),
-    person("Jonathan", "Walter", email = "jaw3es@virginia.edu", role=c("aut", "cre")),
-    person("Lei", "Zhao", email = "leizhao@ku.edu", role=c("aut", "cre")),
-    person("Lawrence W.", "Sheppard", email="lwsheppard@ku.edu", role=c("aut","cre"))
+    person("Thomas L.", "Anderson", email="anderstl@gmail.com", role=c("aut")),
+    person("Jonathan", "Walter", email = "jaw3es@virginia.edu", role=c("aut")),
+    person("Lei", "Zhao", email = "leizhao@ku.edu", role=c("aut")),
+    person("Lawrence W.", "Sheppard", email="lwsheppard@ku.edu", role=c("aut"))
     )
 Description: This package contains tools for a wavelet-based approach to analyzing spatial synchrony, principally in ecological data.
 License: GPL (>=3)

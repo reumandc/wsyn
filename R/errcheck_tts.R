@@ -20,7 +20,7 @@ errcheck_tts<-function(times,timescales,values,callfunc)
   }
   if (length(timescales)<2)
   {
-    stop(pasteo("Error in errcheck_tts called by ",callfunc,": timescales must be a vector"))
+    stop(paste0("Error in errcheck_tts called by ",callfunc,": timescales must be a vector"))
   }
   if (any(timescales<=0))
   {
