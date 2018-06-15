@@ -2,7 +2,7 @@
 #' series make a ligitimate spatio-temporal data set for wavelet analysis
 #' 
 #' @param times the times of measurement
-#' @param dat each row is a time series
+#' @param dat each row is a time series - must have at least two rows
 #' @param callfunc the function calling this one, for error tracking
 #' 
 #' @return \code{errcheck_stdat} returns nothing but throws and error if inputs not appropriate
@@ -20,9 +20,13 @@ errcheck_stdat<-function(times,dat,callfunc)
   {
     stop(paste0("Error in errcheck_stdat called by ",callfunc,": dat must be a matrix"))
   }
+  if (dim(dat)[1]==1)
+  {
+    stop(paste0("Error in errcheck_stdat called by ",callfunc,": dat must have at least two rows"))
+  }
   if (length(times)!=dim(dat)[2])
   {
-    stop(paste0("Error in errcheck_stdat called by ",callfunc,": dim(dat)[2] must equal length(times)"))
+    stop(paste0("Error in errcheck_stdat called by ",callfunc,": second dimension of dat must equal length of times"))
   }
   for (counter in 1:dim(dat)[1])
   {
