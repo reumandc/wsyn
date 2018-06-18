@@ -11,6 +11,10 @@ test_that("tests for errcheck_tsdat",{
   expect_error(errcheck_tsdat(times,t.series,callfunc),
                "Error in errcheck_tsdat called by notrealfunc: times and t.series must be the same length")
 
+  t.series<-c(1:9,Inf)
+  expect_error(errcheck_tsdat(times,t.series,callfunc),
+               "Error in errcheck_times called by notrealfunc: t.series must not contain NAs, NaNs, Infs")
+  
   t.series<-1:10
   expect_error(errcheck_tsdat(times,t.series,callfunc),
                "Error in errcheck_tsdat called by notrealfunc: t.series must have zero mean")

@@ -12,6 +12,7 @@
 errcheck_stdat<-function(times,dat,callfunc)
 {
   errcheck_times(times,callfunc)
+
   if (!is.numeric(dat))
   {
     stop(paste0("Error in errcheck_stdat called by ",callfunc,": dat must be numeric"))
@@ -27,6 +28,10 @@ errcheck_stdat<-function(times,dat,callfunc)
   if (length(times)!=dim(dat)[2])
   {
     stop(paste0("Error in errcheck_stdat called by ",callfunc,": second dimension of dat must equal length of times"))
+  }
+  if (!all(is.finite(dat)))
+  {
+    stop(paste0("Error in errcheck_stdat called by ",callfunc,": dat must not contain NAs, NaNs, Infs"))
   }
   for (counter in 1:dim(dat)[1])
   {

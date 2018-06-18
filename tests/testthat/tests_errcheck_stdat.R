@@ -18,5 +18,10 @@ test_that("tests of errcheck_stdat",{
   dat<-matrix(1,3,9)
   expect_error(errcheck_stdat(times,dat,callfunc),
                "Error in errcheck_stdat called by notrealfunc: second dimension of dat must equal length of times")
+  
+  dat<-matrix(1,3,10)
+  dat[1,1]<-NaN
+  expect_error(errcheck_stdat(times,dat,callfunc),
+               "Error in errcheck_stdat called by notrealfunc: dat must not contain NAs, NaNs, Infs")
 })
 

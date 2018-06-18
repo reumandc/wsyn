@@ -22,6 +22,10 @@ errcheck_tts<-function(times,timescales,values,callfunc)
   {
     stop(paste0("Error in errcheck_tts called by ",callfunc,": timescales must be a vector"))
   }
+  if (!all(is.finite(timescales)))
+  {
+    stop(paste0("Error in errcheck_tts called by ",callfunc,": timescales must not contain NAs, NaNs, Infs"))
+  }
   if (any(timescales<=0))
   {
     stop(paste0("Error in errcheck_tts called by ",callfunc,": timescales must be positive"))

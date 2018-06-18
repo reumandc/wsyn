@@ -18,6 +18,10 @@ errcheck_times<-function(times,callfunc)
   {
     stop(paste0("Error in errcheck_times called by ",callfunc,": times must be a vector"))
   }
+  if (!all(is.finite(times)))
+  {
+    stop(paste0("Error in errcheck_times called by ",callfunc,": times must not contain NAs, NaNs, Infs"))
+  }
   d<-diff(times)
   if (!isTRUE(all.equal(rep(d[1],length(d)-1),d[2:length(d)])))
   {

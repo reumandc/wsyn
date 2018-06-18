@@ -10,7 +10,11 @@ test_that("tests for errcheck_tts that pertain to the timescales input", {
   timescales<-1
   expect_error(errcheck_tts(times,timescales,values,"notrealfunc"),
                "Error in errcheck_tts called by notrealfunc: timescales must be a vector")
-
+  
+  timescales<-c(1,2,3,4,Inf)
+  expect_error(errcheck_tts(times,timescales,values,"notrealfunc"),
+               "Error in errcheck_tts called by notrealfunc: timescales must not contain NAs, NaNs, Infs")
+  
   timescales<-c(-3,-2,-1)
   expect_error(errcheck_tts(times,timescales,values,"notrealfunc"),
                "Error in errcheck_tts called by notrealfunc: timescales must be positive")
