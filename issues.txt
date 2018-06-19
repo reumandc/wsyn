@@ -4,13 +4,13 @@ Progress:
 3) DONE write wmf class and basic methods and unit tests of these 
 4) DONE write wpmf class and basic methods and unit tests of these 
 4.1) DONE make your error handling functions screen for non-finite values and throw an error
-4.2) make the wmpf class have a significance slot, and make accompanying methods deal with it, and add to the unit tests for those methods if necessary, and make the generato function compute significance in a few diff ways (fft, aaft, standard quick way).
+4.2) DONE make the wmpf class have a significance slot, and make accompanying methods deal with it, and add to the unit tests for those methods if necessary, and make the generato function compute significance in a few diff ways (fft, aaft, standard quick way).
   -DONE get surrogate function(s), unit tests for surrogate function 
   -DONE change the generator function
   -DONE change the methods to reflect/impose the new class definition for wpmf
   -DONE unit tests for new aspects of generator
   -DONE unit tests for new aspects of methods
-  -go back and use log 2 on the timescales axis in plots in tests_wmf
+  -DONE go back and use log 2 on the timescales axis in plots in tests_wmf
 5) check and unit test cleandat
 6) write the plotter functions, and unit tests. perhaps these should go in the methods files? maybe not. think more
 7) get the .Rmds going and compile it as a package

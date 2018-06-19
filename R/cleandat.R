@@ -17,9 +17,9 @@
 #' 
 #' @note The algorithm determines an optimal transformation parameter (lambda) to apply to the whole dataset
 #' by maximizing the summed log-likelihood across all locations. See Sheppared et al. (2015) for details.
-#' Procedure developed by Lawrence Sheppard and Daniel Reuman: R code by Jonathan Walter an Lei Zhao
+#' Procedure developed by Lawrence Sheppard and Daniel Reuman; R code by Jonathan Walter and Lei Zhao.
 #' 
-#' @author Jonathan Walter, \email{jonathan.walter@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@ku.edu}; Daniel Reuman, \email{reuman@ku.edu}; Lei Zhao, \email{leizhao@ku.edu}
+#' @author Jonathan Walter, \email{jonathan.walter@@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}; Lei Zhao, \email{leizhao@@ku.edu}
 #'
 #' @references Sheppard, L.w., et al. (2015) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 #'
