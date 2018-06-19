@@ -207,15 +207,81 @@ test_that("test aaft surrogates, independent surrogs, no ties",{
   expect_equal(which(datps>50),which(surps1>50))
 })
 
-#test_that("test aaft surrogates, synchrony preserving surrogates, ties in data",{
-#  #write this when you write the corresponding code  
-#  surrtype<-"aaft"
-#  syncpres<-TRUE
-#})
+test_that("test aaft surrogates, synchrony preserving surrogates, ties in data",{
+  surrtype<-"aaft"
+  syncpres<-TRUE
+  
+  #***single-ts data
+  
+  times<-0:99
+  dat<-sin(2*pi*times/10)+rnorm(100,0,.1)
+  dat<-c(dat,dat[1])
+  dat<-dat-mean(dat)
+  times<-0:100
+  nsurrogs<-3
+  res<-surrog(dat,nsurrogs,surrtype,syncpres)
+  
+  #test format of the output 
+  expect_type(res,"list")
+  expect_equal(length(res),nsurrogs)
+  expect_equal(sapply(FUN=length,X=res),rep(length(times),nsurrogs))
+  
+  #make sure surrogates have the same values as the real data, reordered
+  expect_equal(sort(res[[1]]),sort(dat))
+  expect_equal(sort(res[[2]]),sort(dat))
+  expect_equal(sort(res[[3]]),sort(dat))
+  
+  #***look at spectrum of dat and surrogates, should be approximately the same
+  set.seed(401)
+  times<-1:999
+  dat<-sin(2*pi*times/10)+rnorm(999,0,.25)
+  dat<-c(dat,dat[1])
+  dat<-dat-mean(dat)
+  nsurrogs<-2
+  res<-surrog(dat,nsurrogs,surrtype,syncpres)
+  datps<-abs(fft(dat))
+  #plot(datps)
+  surps1<-abs(fft(res[[2]]))
+  #plot(surps1) #check with Lawrence that this is similar enough  
+  expect_equal(which(datps>75),which(surps1>75))
+})
 
-#test_that("test aaft surrogates, independent surrogates, ties in data",{
-#  #write this when you write the corresponding code    
-#  surrtype<-"aaft"
-#  syncpres<-FALSE
-#})
+test_that("test aaft surrogates, independent surrogates, ties in data",{
+  surrtype<-"aaft"
+  syncpres<-FALSE
+
+  #***single-ts data
+  
+  times<-0:99
+  dat<-sin(2*pi*times/10)+rnorm(100,0,.1)
+  dat<-c(dat,dat[1])
+  dat<-dat-mean(dat)
+  times<-0:100
+  nsurrogs<-3
+  res<-surrog(dat,nsurrogs,surrtype,syncpres)
+  
+  #test format of the output 
+  expect_type(res,"list")
+  expect_equal(length(res),nsurrogs)
+  expect_equal(sapply(FUN=length,X=res),rep(length(times),nsurrogs))
+  
+  #make sure surrogates have the same values as the real data, reordered
+  expect_equal(sort(res[[1]]),sort(dat))
+  expect_equal(sort(res[[2]]),sort(dat))
+  expect_equal(sort(res[[3]]),sort(dat))
+  
+  #***look at spectrum of dat and surrogates, should be approximately the same
+  set.seed(401)
+  times<-1:999
+  dat<-sin(2*pi*times/10)+rnorm(999,0,.25)
+  dat<-c(dat,dat[1])
+  dat<-dat-mean(dat)
+  nsurrogs<-2
+  res<-surrog(dat,nsurrogs,surrtype,syncpres)
+  datps<-abs(fft(dat))
+  #plot(datps)
+  surps1<-abs(fft(res[[2]]))
+  #plot(surps1) #check with Lawrence that this is similar enough  
+  expect_equal(which(datps>75),which(surps1>75))
+})
 
