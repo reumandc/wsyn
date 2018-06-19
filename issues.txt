@@ -2,9 +2,17 @@ Progress:
 1) DONE write tts class and basic methods and unit tests of these
 2) DONE write wt class and basic methods and unit tests of these
 3) DONE write wmf class and basic methods and unit tests of these 
-4) write wpmf class and basic methods and unit tests of these - I have the class and basic methods, but no tests yet
+4) DONE write wpmf class and basic methods and unit tests of these 
+4.1) DONE make your error handling functions screen for non-finite values and throw and error
+4.2) make the wmpf class have a significance slot, and make accompanying methods deal with it, and add to the unit tests for those methods if necessary, and make the generato function compute significance in a few diff ways (fft, aaft, standard quick way).
+  -get surrogate function(s), unit tests for surrogate function - done except for ties aaft case
+  -change the generator function
+  -change the methods to reflect/impose the new class definition for wpmf
+  -unit tests for new aspects of generator
+  -unit tests for new aspects of methods
+  -go back and use log 2 on the timescales axis in plots in tests_wmf
 5) check and unit test cleandat
-6) write the plotter functions, and unit tests
+6) write the plotter functions, and unit tests. perhaps these should go in the methods files? maybe not. think more
 
 
 wt.r:

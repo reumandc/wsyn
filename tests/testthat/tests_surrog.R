@@ -122,14 +122,100 @@ test_that("test Fourier surrogates, independent surrogs",{
   expect_lt(max(abs(getcors)),.05)
 })
 
-#test_that("test aaft surrogates, synchrony preserving surrogs",{
-#  #to be done together with writing that part of the code in surrog.R  
+test_that("test aaft surrogates, synchrony preserving surrogs, no ties",{
+  surrtype<-"aaft"
+  syncpres<-TRUE
+  
+  #***single-ts data
+  
+  times<-1:100
+  dat<-sin(2*pi*times/10)+rnorm(100,0,.1)
+  dat<-dat-mean(dat)
+  nsurrogs<-3
+  res<-surrog(dat,nsurrogs,surrtype,syncpres)
+  
+  #test format of the output 
+  expect_type(res,"list")
+  expect_equal(length(res),nsurrogs)
+  expect_equal(sapply(FUN=length,X=res),rep(length(times),nsurrogs))
+  
+  #make sure surrogates have the same values as the real data, reordered
+  expect_equal(sort(res[[1]]),sort(dat))
+  expect_equal(sort(res[[2]]),sort(dat))
+  expect_equal(sort(res[[3]]),sort(dat))
+  
+  #***look at spectrum of dat and surrogates, should be approximately the same
+  set.seed(401)
+  times<-1:1000
+  dat<-sin(2*pi*times/10)+rnorm(1000,0,.25)
+  dat<-dat-mean(dat)
+  nsurrogs<-2
+  res<-surrog(dat,nsurrogs,surrtype,syncpres)
+  datps<-abs(fft(dat))
+  #plot(datps)
+  surps1<-abs(fft(res[[2]]))
+  #plot(surps1) #check with Lawrence that this is similar enough  
+  expect_equal(which(datps>50),which(surps1>50))
+  
+  #***the same ts repeated twice, to test the same phase randomization is being used
+  dat<-rbind(dat,dat)
+  res<-surrog(dat,nsurrogs,surrtype,syncpres)
+  
+  #test format of the output
+  expect_type(res,"list")
+  expect_equal(length(res),nsurrogs)
+  expect_equal(sapply(FUN=dim,X=res),rbind(rep(2,nsurrogs),rep(length(times),nsurrogs)))
+  
+  #make sure you get pairs of the same ts for each surrog
+  expect_equal(res[[1]][1,],res[[1]][2,])
+  expect_equal(res[[2]][1,],res[[2]][2,])
+})
+
+test_that("test aaft surrogates, independent surrogs, no ties",{
+  surrtype<-"aaft"
+  syncpres<-FALSE
+
+  #***single-ts data
+  
+  times<-1:100
+  dat<-sin(2*pi*times/10)+rnorm(100,0,.1)
+  dat<-dat-mean(dat)
+  nsurrogs<-3
+  res<-surrog(dat,nsurrogs,surrtype,syncpres)
+  
+  #test format of the output 
+  expect_type(res,"list")
+  expect_equal(length(res),nsurrogs)
+  expect_equal(sapply(FUN=length,X=res),rep(length(times),nsurrogs))
+  
+  #make sure surrogates have the same values as the real data, reordered
+  expect_equal(sort(res[[1]]),sort(dat))
+  expect_equal(sort(res[[2]]),sort(dat))
+  expect_equal(sort(res[[3]]),sort(dat))
+  
+  #***look at spectrum of dat and surrogates, should be approximately the same
+  set.seed(401)
+  times<-1:1000
+  dat<-sin(2*pi*times/10)+rnorm(1000,0,.25)
+  dat<-dat-mean(dat)
+  nsurrogs<-2
+  res<-surrog(dat,nsurrogs,surrtype,syncpres)
+  datps<-abs(fft(dat))
+  #plot(datps)
+  surps1<-abs(fft(res[[2]]))
+  #plot(surps1) #check with Lawrence that this is similar enough  
+  expect_equal(which(datps>50),which(surps1>50))
+})
+
+#test_that("test aaft surrogates, synchrony preserving surrogates, ties in data",{
+#  #write this when you write the corresponding code  
 #  surrtype<-"aaft"
 #  syncpres<-TRUE
 #})
 
-#test_that("test aaft surrogates, independent surrogs",{
-#  #to be done together with writing that part of the code in surrog.R  
+#test_that("test aaft surrogates, independent surrogates, ties in data",{
+#  #write this when you write the corresponding code    
 #  surrtype<-"aaft"
 #  syncpres<-FALSE
 #})
+

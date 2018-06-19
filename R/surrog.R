@@ -41,71 +41,92 @@ surrog<-function(dat,nsurrogs,surrtype,syncpres)
     stop("Error in surrog: bad value for surrtype")
   }
 
-  #aaft surrogates  
-  if (surrtype=="aaft")
-  {
-    stop("Error in surrog: aaft surrogates not implemented yet")
-    #Q - break ties and map separately for each time series? or by combining all values into one pot?
-    #A - separately
-    
-    #outline:
-    # if none of the timeseries have any within-timeseries ties
-    #   map each time series (separately) onto the quantiles of a normal dist
-    #   apply fft surrogates as below
-    #   remap results back 
-    # if there are ties
-    #   break the ties randomly (use the rank function) while mapping onto quantiles of a normal (this has to be done once for each surrogate, since it is random)
-    #   randomize the phases of each of these
-    #   inverse transform
-    #   remap, undoing the first step (so you will have to retain each mapping)
-    # Probably these two alternatives have to be done separately, because for the second you have to fft each random mapping of the data to normal quantiles
-    # Note: the rank function will come in handy because it can randomly break ties or not, according to an option
-  } # Note: the case of ties is much less efficient because two additional steps have to be done separately for all surrogs
-  
   #fft surrogates
   if (surrtype=="fft")
   {
-    #get ffts of all time series
-    fftdat<-matrix(complex(real=NA, imaginary=NA), nrow=nrow(dat), ncol=ncol(dat))
-    for(row in 1:nrow(dat))
-    {
-      fftdat[row,]<-fft(dat[row,])
-    }
-    fftmod<-Mod(fftdat)
-    fftarg<-Arg(fftdat)
+    #do the surrogates
+    res<-fftsurrog(dat,nsurrogs,syncpres)
     
-    #now get random phases for each desired surrogate and
-    #inverse transform to get the surrogates
-    res<-list()
-    for(n in 1:nsurrogs)
+    #if dat was a vector, make output same format
+    if (wasvect)
     {
-      # get and apply random phases
-      if (syncpres)
+      for (n in 1:length(res))
       {
-        #synchrony preserving surrogates only need one set of phase pertubations, used for all time series
-        h<-Arg(fft(rnorm(ncol(dat))))
-        randomizedphases<-(matrix(rep(h, times=nrow(dat)), nrow(dat), ncol(dat), byrow=TRUE)+fftarg) %% (2*pi)
-      }else
-      {
-        #need separate independent phase perturbations for each time series
-        h<-matrix(rnorm(ncol(dat)*nrow(dat)),nrow(dat),ncol(dat))
-        randomizedphases<-(fftarg+t(apply(X=h,MARGIN=1,FUN=function(x){Arg(fft(x))}))) %% (2*pi)
+        res[[n]]<-as.vector(res[[n]])
       }
-      fftsurrog<-matrix(complex(modulus=fftmod, argument=randomizedphases),nrow(dat), ncol(dat))
+    }
+
+    return(res)
+  }
+  
+  #aaft surrogates  
+  if (surrtype=="aaft")
+  {
+    #get appropriate quantiles of a standard normal
+    normquant<-qnorm((1:dim(dat)[2])/(dim(dat)[2]+1))
+    
+    #find out of there are ties
+    areties<-FALSE
+    for (counter in 1:dim(dat)[1])
+    {
+      if (length(unique(dat[counter,]))<dim(dat)[2])
+      {
+        areties<-TRUE
+        break
+      }
+    }
+
+    #cases with ties are handled differently, and less efficiently by necessity    
+    if (areties)
+    {
+      stop("Error in surrog: aaft surrogates not implemented for time series with ties yet")
+      #Q - break ties and map separately for each time series? or by combining all values into one pot?
+      #A - separately
       
-      # inverse transform
-      invmat<-matrix(NA, nrow(dat), ncol(dat))
-      for(i in 1:nrow(dat)){
-        invmat[i,]<-fft(fftsurrog[i,], inverse=T)/(ncol(fftsurrog))
+      # if there are ties
+      #   break the ties randomly (use the rank function) while mapping onto quantiles of a normal (this has to be done once for each surrogate, since it is random)
+      #   randomize the phases of each of these
+      #   inverse transform
+      #   remap, undoing the first step (so you will have to retain each mapping)
+      # Probably these two alternatives have to be done separately, because for the second you have to fft each random mapping of the data to normal quantiles
+      # Note: the rank function will come in handy because it can randomly break ties or not, according to an option
+      # Note: the case of ties is much less efficient because two additional steps have to be done separately for all surrogs
+    }else
+    {
+      #map each time series (separately) onto the quantiles of a normal dist
+      datorig<-dat
+      datranks<-t(apply(FUN=rank,X=dat,MARGIN=1))
+      dat<-matrix(normquant[datranks],nrow(datranks),ncol(datranks))
+      
+      #apply fft surrogates
+      mpdres<-fftsurrog(dat,nsurrogs,syncpres)
+     
+      #remap results back 
+      res<-list()
+      datorders<-t(apply(FUN=order,X=dat,MARGIN=1))
+      for (counter1 in 1:length(mpdres))
+      {
+        res[[counter1]]<-NA*dat
+        
+        thissurrog<-mpdres[[counter1]]
+        thissurrogrk<-t(apply(FUN=rank,X=thissurrog,MARGIN=1))
+        
+        for (counter2 in 1:dim(dat)[1])
+        {
+          res[[counter1]][counter2,]<-datorig[counter2,datorders[counter2,thissurrogrk[counter2,]]]
+        }  
       }
+      
+      #if dat was a vector, make output same format
       if (wasvect)
       {
-        res[[n]]<-as.vector(Re(invmat))
-      }else
-      {
-        res[[n]]<-Re(invmat)
+        for (n in 1:length(res))
+        {
+          res[[n]]<-as.vector(res[[n]])
+        }
       }
+      
+      return(res)
     }
-    return(res)
   }
 }
