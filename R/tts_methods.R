@@ -52,21 +52,6 @@ set_values.tts<-function(obj,newval)
   return(obj)
 }
 
-set_dat<-function(obj,newval)
-{
-  UseMethod("set_dat",obj)
-}
-
-set_dat.default<-function(obj,newval)
-{
-  stop("Error in set_dat: set_dat not defined for this class")
-}
-
-set_dat.tts<-function(obj,newval)
-{
-  stop("Error in set_dat: no dat slot for a tts object")
-}
-
 #value getting
 get_times<-function(obj)
 {
@@ -111,21 +96,6 @@ get_values.default<-function(obj)
 get_values.tts<-function(obj)
 {
   return(obj$values)
-}
-
-get_dat<-function(obj)
-{
-  UseMethod("get_dat",obj)
-}
-
-get_dat.default<-function(obj)
-{
-  stop("Error in get_dat: get_dat not defined for this class")
-}
-
-get_dat.tts<-function(obj)
-{
-  stop("Error in get_dat: no dat slot for a tts object")
 }
 
 #This is based on an existing generic so not sure if this will work like this

@@ -10,7 +10,7 @@ test_that("test set_dat",{
                "Error in set_dat: set_dat not defined for this class")
   
   obj<-tts(times,timescales,values) 
-  expect_error(set_dat(obj,dat),"Error in set_dat: no dat slot for a tts object")
+  expect_error(set_dat(obj,dat),"Error in set_dat: set_dat not defined for this class")
 })
 
 test_that("test set_times", {
@@ -45,7 +45,7 @@ test_that("test get_dat",{
   
   obj<-tts(times,timescales,values) 
   expect_error(get_dat(obj),
-               "Error in get_dat: no dat slot for a tts object")
+               "Error in get_dat: get_dat not defined for this class")
 })
 
 test_that("test get_timescales", {
