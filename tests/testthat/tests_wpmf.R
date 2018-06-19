@@ -29,9 +29,11 @@ test_that("other tests that output has the correct format",{
   rg<-range(Mod(get_values(res)),na.rm=T)
   expect_gte(rg[1],0)
   expect_lte(rg[2],1)
+  
+  expect_equal(is.na(res$signif),TRUE)
 })
 
-test_that("test for qualitatively correct output",{
+test_that("test for qualitatively correct output, quick signif method",{
   #this test based on supplementary figure 1 in Sheppard et al, Nature Climate Change, 
   #2016, doi: 10.1038/NCLIMATE2881. We used the wmf there, but we could also have used
   #the wpmf
@@ -49,16 +51,101 @@ test_that("test for qualitatively correct output",{
     dat[counter,]<-dat[counter,]-mean(dat[counter,])
   }
   times<-x
-  res<-wpmf(dat,times)
+  res<-wpmf(dat,times,sigmethod="quick")
   rg<-range(Mod(get_values(res)),na.rm=T)
   expect_gte(rg[1],0)
   expect_lte(rg[2],1)
+  expect_equal(res$signif[[1]],"quick")
+  expect_equal(length(res$signif[[2]]),1000)
   #Make a plot to check visually. Expected to look like panel panel k of supp fig 1 in the 
   #reference cited above
-  #image(get_times(res),get_timescales(res),Mod(get_values(res)))
-  #lines(c(1,100),c(10,10))
-  #lines(c(1,100),c(5,5))
+  #image(get_times(res),log2(get_timescales(res)),Mod(get_values(res)))
+  #lines(c(1,100),log2(c(10,10)))
+  #lines(c(1,100),log2(c(5,5)))
+  #par(new=T)
+  #contour(get_times(res),log2(get_timescales(res)),Mod(get_values(res)),
+  #        levels=unname(quantile(res$signif$magsumrndphas,.95)),axes=FALSE,drawlabels=FALSE,
+  #        frame.plot=FALSE)
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="9869d607a4b4db86422dbdf8bf0b23e5")   
+  expect_known_hash(res,hash="695f10ec2709a77d4deebcc02b8198c5")   
+})
+
+test_that("test for qualitatively correct output, fft signif method",{
+  #this test based on supplementary figure 1 in Sheppard et al, Nature Climate Change,
+  #2016, doi: 10.1038/NCLIMATE2881. We used the wmf there, but we could also have used
+  #the wpmf. The only difference between this and the above is we are here using fft
+  #significance testing
+  set.seed(101)
+  x1<-0:50
+  x2<-51:100
+  x<-c(x1,x2)
+  ts1<-c(sin(2*pi*x1/10),sin(2*pi*x2/5))+1.1
+  dat<-matrix(NA,11,length(x))
+  for (counter in 1:dim(dat)[1])
+  {
+    ts2<-3*sin(2*pi*x/3+2*pi*runif(1))+3.1
+    ts3<-rnorm(length(x),0,1.5)
+    dat[counter,]<-ts1+ts2+ts3
+    dat[counter,]<-dat[counter,]-mean(dat[counter,])
+  }
+  times<-x
+  res<-wpmf(dat,times,sigmethod="fft",nrand=50)
+  expect_equal(res$signif[[1]],"fft")
+  expect_equal(unname(res$signif[[2]]),50)
+  expect_equal(class(res$signif$gt),"matrix")
+  expect_equal(dim(get_values(res)),dim(res$signif$gt))
+  
+  #Make a plot to check visually. Expected to look like panel panel k of supp fig 1 in the
+  #reference cited above
+  #image(get_times(res),log2(get_timescales(res)),Mod(get_values(res)))
+  #lines(c(1,100),log2(c(10,10)))
+  #lines(c(1,100),log2(c(5,5)))
+  #par(new=T)
+  #contour(get_times(res),log2(get_timescales(res)),res$signif$gt,
+  #        levels=.95,axes=FALSE,drawlabels=FALSE,
+  #        frame.plot=FALSE)
+  #It looked good so I commented it out, now just check future runs are always the same.
+  #Hash below was obtained using digest::digest(res).
+  expect_known_hash(res,hash="2c9feb6c236523da63c6c5e081d5ac96")
+})
+
+test_that("test for qualitatively correct output, aaft signif method",{
+  #this test based on supplementary figure 1 in Sheppard et al, Nature Climate Change,
+  #2016, doi: 10.1038/NCLIMATE2881. We used the wmf there, but we could also have used
+  #the wpmf. The only difference between this and the above tests is we are here using aaft
+  #significance testing
+  set.seed(101)
+  x1<-0:50
+  x2<-51:100
+  x<-c(x1,x2)
+  ts1<-c(sin(2*pi*x1/10),sin(2*pi*x2/5))+1.1
+  dat<-matrix(NA,11,length(x))
+  for (counter in 1:dim(dat)[1])
+  {
+    ts2<-3*sin(2*pi*x/3+2*pi*runif(1))+3.1
+    ts3<-rnorm(length(x),0,1.5)
+    dat[counter,]<-ts1+ts2+ts3
+    dat[counter,]<-dat[counter,]-mean(dat[counter,])
+  }
+  times<-x
+  nrd<-25
+  res<-wpmf(dat,times,sigmethod="aaft",nrand=nrd)
+  expect_equal(res$signif[[1]],"aaft")
+  expect_equal(unname(res$signif[[2]]),nrd)
+  expect_equal(class(res$signif$gt),"matrix")
+  expect_equal(dim(get_values(res)),dim(res$signif$gt))
+  
+  #Make a plot to check visually. Expected to look like panel panel k of supp fig 1 in the
+  #reference cited above
+  #image(get_times(res),log2(get_timescales(res)),Mod(get_values(res)))
+  #lines(c(1,100),log2(c(10,10)))
+  #lines(c(1,100),log2(c(5,5)))
+  #par(new=T)
+  #contour(get_times(res),log2(get_timescales(res)),res$signif$gt,
+  #        levels=.95,axes=FALSE,drawlabels=FALSE,
+  #        frame.plot=FALSE)
+  #It looked good so I commented it out, now just check future runs are always the same.
+  #Hash below was obtained using digest::digest(res).
+  expect_known_hash(res,hash="fe19111cf88b38286531c7aaf1f4bf4b")
 })
