@@ -8,5 +8,4 @@ test_that("just run it to see if it produces something of the right form",{
   expect_equal(length(res),1)
 })
 
-#this function is pretty simple, does not seem necessary to test further
 

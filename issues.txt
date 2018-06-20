@@ -13,7 +13,7 @@ Progress:
   -DONE go back and use log 2 on the timescales axis in plots in tests_wmf
 5) check and unit test cleandat
 6) write the plotter functions, and unit tests. perhaps these should go in the methods files? maybe not. think more
-7) get the .Rmds going and compile it as a package
+7) get the .Rmds going and compile everything as a package
 8) start a vignette, covering the code you have written so far
 9) compile again as a package
 10) stopping point - mean field methods implemented. next step coherence methods.

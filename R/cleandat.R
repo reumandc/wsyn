@@ -1,128 +1,151 @@
-#Dan has not gone through this yet
-
-#' Clean spatiotemporal data matrices to make them ready for wavelet and other analyses
+#' Clean (spatio)temporal data matrices to make them ready for analyses using the \code{wsyn} package
 #'
-#' A data cleaning function for applying an optimal Box-Cox transformation, detrending, and standarizing variance
+#' A data cleaning function for optimal Box-Cox transformation, detrending, standarizing variance, de-meaning
 #' 
-#' @param indata a locations x time data matrix, or else a time series vector (1 location)
-#' @param normalize TRUE or FALSE, use a Box-Cox procedure to find optimal transformation for normalizing data
-#' @param each.ts TRUE or FALSE. If TRUE, apply Box-Cox for each timeseries; else apply it for the whole matrix, choosing a single optimal lambda.
-#' @param lambdas a vector of lambdas to test; defaults to seq(-10,10, by=0.01)
-#' @param detrend TRUE or FALSE, remove a linear trend from each time series; defaults to TRUE
-#' @param rescale TRUE or FALSE, if true rescale by dividing each time series by its standard deviation; defaults to TRUE
-#' @param do.plot TRUE or FALSE, plot log-likelihood profiles; defaults to FALSE
+#' @param dat A locations x time data matrix, or a time series vector (for 1 location)
+#' @param times The times of measurement
+#' @param clev The level of cleaning to do, 1 through 4. See details. 
+#' @param lambdas A vector of lambdas to test for optimal Box-Cox transformation, if Box-Cox is performed. Ignored for \code{clev<4}. Defaults to seq(-10,10, by=0.01). The best of these is used.
+#' @param mints If \code{clev==4}, then time series are shifted to have this minimum value. Default NA means use the smallest difference between consecutive, distinct sorted values.
 #' 
-#' @return \code{outdat} a list containing the cleaned data, the optimal lambda from the Box-Cox procedure, 
-#' and values of detrend and rescale
+#' @return \code{cleandat} returns a list containing the cleaned data, \code{clev}, and the optimal lambdas from the 
+#' Box-Cox procedure (\code{NA} for \code{clev<4}, see Details).
 #' 
-#' @note The algorithm determines an optimal transformation parameter (lambda) to apply to the whole dataset
-#' by maximizing the summed log-likelihood across all locations. See Sheppared et al. (2015) for details.
-#' Procedure developed by Lawrence Sheppard and Daniel Reuman; R code by Jonathan Walter and Lei Zhao.
-#' 
-#' @author Jonathan Walter, \email{jonathan.walter@@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}; Lei Zhao, \email{leizhao@@ku.edu}
+#' @details NAs, Infs, etc. in \code{dat} trigger an error. If \code{clev==1}, time series are (individually) 
+#' de-meaned. If \code{clev==2}, time series are (individually) linearly detrended and de-meaned. If \code{clev==3}, 
+#' time series are (individually) linearly detrended and de-meaned, and variances are standardized to 1. If 
+#' \code{clev==4}, an optimal Box-Cox normalization procedure is applied to each time series (individually), and 
+#' they are linearly detrended, de-meaned, and variances are standardized to 1. Constant time series and perfect 
+#' linear trends trigger an error for \code{clev>=3}. If \code{clev==4} and the optimal \code{lambda} for one or 
+#' more time series is a boundary case or if there is more than one optimal lambda, it triggers a warning. A 
+#' wider range of \code{lambda} should be considered in the former case. Before the Box-Cox procedure, the 
+#'  
+#' @author Jonathan Walter, \email{jaw3es@@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}; Lei Zhao, \email{leizhao@@ku.edu}
 #'
-#' @references Sheppard, L.w., et al. (2015) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
-#'
+#' @references 
+#' Box, GEP and Cox, DR (1964) An analysis of transformations (with discussion). Journal of the Royal Statistical Society B, 26, 211–252.
+#' Venables, WN and Ripley, BD (2002) Modern Applied Statistics with S. Fourth edition. Springer.
+#' Sheppard, LW, et al. (2015) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+#' 
+#' @examples 
+#' #Don't have any yet but need some
+#' 
 #' @export  
 
-cleandat<-function(indata, normalize=TRUE, each.ts=FALSE, lambdas=seq(-10,10,by=0.01), detrend=TRUE, rescale=TRUE, do.plot=FALSE){
-  
-  # library(car)
-  library(MASS)
-  
-  ## Check for missing data
-  if(sum(is.na(indata))>0){print("Warning: indata contains missing observations. Note that many methods in Reumannplatz (including all wavelet statistics) are inappropriate for datasets with missing data.")}
-  
-  bc.trans<-function(y,lambda){ #Set up function for Box-Cox transformation
-    if (lambda==0){
-      return(log(y))
-    }else{
-      return((y^lambda-1)/lambda)
+cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
+{
+  #error checking
+  if (!(clev %in% c(1,2,3,4)))
+  {
+    stop("Error in cleandat: clev must be 1, 2, 2, or 4")
+  }
+  if (clev==4 && is.finite(mints) && mints<=0)
+  {
+    stop("Error in cleandat: mints, if specified and if clev is 4, must be positive")
+  }
+  errcheck_times(times,"cleandat")
+  if (!is.numeric(dat))
+  {
+    stop("Error in cleandat: dat must be numeric")
+  }
+  wasvect<-FALSE
+  if (!is.matrix(dat))
+  {
+    wasvect<-TRUE
+    dat<-matrix(dat,1,length(dat))
+  }
+  if (length(times)!=dim(dat)[2])
+  {
+    stop("Error in cleandat: length of dat and times must be equal")
+  }
+  if (!all(is.finite(dat)))
+  {
+    stop("Error in cleandat: dat must not contain NAs, NaNs, Infs")
+  }
+  #error check for perfect linear trends
+  if (clev>=3)
+  {
+    for (counter in 1:dim(dat)[1])
+    {
+      thisrow<-dat[counter,]
+      if (isTRUE(all.equal(sd(residuals(lm(thisrow~times))),0)))
+      {
+        stop("Error in cleandat: cannot perform clev 3 cleaning on time series that are constant or a perfect linear trend")
+      }
     }
   }
   
-  out<-list(cleandat=NULL, lambda=NULL, detrend=detrend, rescale=rescale)
-  
-  if(is.null(nrow(indata))){
-    y<<-indata
-    x<<-1:length(y)
-    if(normalize){
-      diffs<-abs(diff(y[order(y)]))
-      tsmin<<-min(diffs[diffs !=0], na.rm=T) # set minimum value to smallest difference between consecutive sorted values
-      y<<-y-min(y, na.rm=T)+tsmin
-      
-      like<-boxcox(lm(y~x, na.action=na.exclude),lambda=lambdas, plotit=do.plot)$y
-      
-      inds<-which(like==max(like, na.rm=T))
-      if (length(inds)>1 || length(inds)==0) { stop('Error in Box-Cox routine.') }
-      if (inds==length(lambdas) || inds==1) { stop('Make range of lambdas bigger') }
-      best.lambda<-lambdas[inds]
-      
-      y<<-bc.trans(y, best.lambda)
-      out$lambda = best.lambda
+  cdat<-dat
+  optlambdas<-NA*numeric(1)
+  if (clev==1)
+  {
+    #de-mean only
+    for (crow in 1:dim(cdat)[1])
+    {
+      cdat[crow,]<-cdat[crow,]-mean(cdat[crow,])
     }
-    if(detrend){
-      y<<-residuals(lm(y~x), na.action=na.exclude)#$residuals
-    }
-    if(rescale){
-      y<<-y-mean(y, na.rm=T)
-      y<<-y/sd(y, na.rm=T)
-    }
-    out$cleandat<-y
-    rm(x, y, pos=1)
-  }else{
-    y<-indata
-    if(normalize){
-      x<<-1:ncol(indata)
-      like.mat<-matrix(NA, nrow=nrow(y), ncol=length(lambdas))
-      for(mm in 1:nrow(y)){
-        #print(mm)
-        diffs<-abs(diff(y[mm,][order(y[mm,])]))
-        tsmin<-min(diffs[diffs !=0], na.rm=T) # set minimum value to smallest difference between consecutive sorted values
-        y[mm,]<-y[mm,]-min(y[mm,], na.rm=T)+tsmin
-        
-        y.mm<<-y[mm,]
-        like.mat[mm,]<-boxcox(lm(y.mm~x, na.action=na.exclude), lambda=lambdas, plotit=do.plot)$y
-      }
-      ## <<<<<<<<<<<<------------ I added this part
-      if(each.ts){ 
-        inds<-apply(like.mat, 1, which.max)
-        if(any(inds==length(lambdas)) || any(inds==1)){ stop('Make range of lambdas bigger')}
-        best.lambda<-lambdas[inds]
-        for(mm in 1:nrow(y)){
-          y[mm,]<-bc.trans(y[mm,], best.lambda[mm])
-        }
-        out$lambda<-best.lambda
-      }else{
-        ###--------------------
-        like<-colSums(like.mat)
-        
-        inds<-which(like==max(like))
-        if (length(inds)>1 || length(inds)==0) { stop('Error in Box-Cox routine.') }
-        if (inds==length(lambdas) || inds==1) { stop('Make range of lambdas bigger') }
-        best.lambda<-lambdas[inds]
-        
-        for(mm in 1:nrow(y)){
-          y[mm,]<-bc.trans(y[mm,], best.lambda)
-        }
-        out$lambda<-best.lambda
-        # rm(x, y.mm, pos=1)
-      }
-    }
-    if(detrend){
-      x<-1:ncol(indata)
-      for(mm in 1:nrow(y)){
-        y[mm,]<-residuals(lm(y[mm,]~x, na.action=na.exclude))#$residuals
-      }
-    }
-    if(rescale){
-      for(mm in 1:nrow(y)){
-        y[mm,]<-y[mm,]-mean(y[mm,], na.rm=T)
-        y[mm,]<-y[mm,]/sd(y[mm,], na.rm=T)
-      }
-    }
-    out$cleandat<-y
-    suppressWarnings(rm(x, y.mm, pos=1))
   }
-  return(out)
+  
+  if (clev==4)
+  {
+    #optimal Box-Cox
+    optlambdas<-NA*numeric(dim(cdat)[1])
+    for (crow in 1:dim(cdat)[1])
+    {
+      thisrow<-cdat[crow,]
+        
+      #set minimum value to smallest difference between consecutive sorted values
+      if (!is.finite(mints))
+      {
+        diffs<-diff(sort(thisrow))
+        mints<-min(diffs[diffs!=0]) 
+      }
+      thisrow<-thisrow-min(thisrow)+mints
+      
+      alllikes<-NA*numeric(length(lambdas))
+      for (clam in 1:length(lambdas))
+      {
+        alllikes[clam]<-boxcoxloglike(lambdas[clam],thisrow)
+      }
+      plot(lambdas,alllikes,type='l')
+      inds<-which(alllikes==max(alllikes))
+      if (length(inds)>1)
+      {
+        warning("Warning from cleandat: more than one optimal value of lambda, the first was used")
+        inds<-inds[1]
+      }
+      if (inds==1 || inds==length(lambdas))
+      {
+        warning("Warning from cleandat: boundary optimal lambda, use wider range")
+      }
+      optlambdas[crow]<-lambdas[inds]
+      cdat[crow,]<-bctrans(thisrow,optlambdas[crow])
+    }
+  }
+  
+  if (clev>=2)
+  {
+    #detrend and de-mean
+    for (crow in 1:dim(cdat)[1])
+    {
+      thisrow<-cdat[crow,]
+      cdat[crow,]<-residuals(lm(thisrow~times))
+    }
+  }
+  
+  if (clev>=3)
+  {
+    #standardize variance to 1
+    for (crow in 1:dim(dat)[1])
+    {
+      cdat[crow,]<-cdat[crow,]/sd(cdat[crow,])
+    }
+  }
+  
+  if (wasvect)
+  {
+    cdat<-as.vector(cdat)  
+  }
+  
+  return(list(cdat=cdat,clev=clev,optlambdas=optlambdas))
 }

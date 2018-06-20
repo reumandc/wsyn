@@ -22,7 +22,11 @@ boxcoxloglike<-function(lambda,dat)
 {
   tdat<-bctrans(dat,lambda)
   x<-1:length(tdat)
-  loglik<-logLik(lm(tdat~x))
   
-  return(loglik[[1]])
+  #the Jacobian term, from eq. 9 of Box & Cox (1964) (see reference above)
+  jacterm<-(lambda-1)*sum(log(dat))  
+
+  loglik<-logLik(lm(tdat~x))[[1]]+jacterm
+  
+  return(loglik)
 }
