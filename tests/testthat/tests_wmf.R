@@ -47,9 +47,9 @@ test_that("test for qualitatively correct output",{
   res<-wmf(dat,times)
   #Make a plot to check visually. Expected to look like panel panel k of supp fig 1 in the 
   #reference cited above
-  image(get_times(res),log2(get_timescales(res)),Mod(get_values(res)))
-  lines(c(1,100),log2(c(10,10)))
-  lines(c(1,100),log2(c(5,5)))
+  #image(get_times(res),log2(get_timescales(res)),Mod(get_values(res)))
+  #lines(c(1,100),log2(c(10,10)))
+  #lines(c(1,100),log2(c(5,5)))
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
   expect_known_hash(res,hash="d51dccaeffaf81a9f0f8f03066465f71")   
