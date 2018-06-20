@@ -13,6 +13,8 @@ Description: This package contains tools for a wavelet-based approach to analyzi
 License: GPL (>=3)
 Encoding: UTF-8
 LazyData: true
+Imports:
+    stats (>= 3.4.4)
 Suggests: testthat,
     knitr,
     rmarkdown
