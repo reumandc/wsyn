@@ -21,7 +21,11 @@ test_that("test error catching not covered elsewhere",{
   dat<-rnorm(100)
   clev<-4
   mints<-(-1)
-  expect_error(cleandat(dat=dat,times=times,clev=clev,mints=mints),"Error in cleandat: mints, if specified and if clev is 4, must be positive")
+  expect_error(cleandat(dat=dat,times=times,clev=clev,mints=mints),
+               "Error in cleandat: if clev is 4, mints must be NA, NaN, or a positive number")
+  
+  expect_error(cleandat(dat=dat,times=times,clev=clev,mints=Inf),
+               "Error in cleandat: if clev is 4, mints must be NA, NaN, or a positive number")
 })
 
 test_that("clev is 1",{
@@ -57,12 +61,12 @@ test_that("clev is 3",{
 
 test_that("clev is 4",{
   set.seed(101)
-  times<-1:100
-  dat<-.1*times+rnorm(100,mean=0,sd=.025*times+.5)+1
-  plot(times,dat)
-  hist(residuals(lm(dat~times)))
+  times<-seq(1,100,1)
+  dat<-.1*times+rnorm(length(times),mean=0,sd=.025*times+.5)+1
+  #plot(times,dat)
+  #hist(residuals(lm(dat~times)))
   clev<-4
-  #res<-cleandat(dat,times,clev)
+  res<-cleandat(dat,times,clev,lambdas=seq(-2,2,.01),mints=NaN)
   
   #test format
   expect_type(res,"list")
@@ -73,18 +77,43 @@ test_that("clev is 4",{
   expect_type(res$cdat,"double")
   expect_equal(length(res$cdat),length(times))
   expect_equal(mean(res$cdat),0)
+  expect_equal(unname(coef(lm(res$cdat~times))),c(0,0))
   
-  #see if the output is well behaved
-  res<-cleandat(dat,times,clev,lambdas=seq(-2,2,.01),mints=NA)
-  plot(times,res$cdat)
-  coef(lm(res$cdat~times))
-  hist(res$cdat)
-  res$optlambdas
- 
-  altres<-boxcox(dat~times)
+  #see if the output is the same as a direct call to boxcox
+  altres<-boxcox(dat~times,interp=FALSE,lambda=seq(-2,2,.01),plotit=FALSE)
   altoptlambda<-altres$x[altres$y==max(altres$y)]
-  altoptlambda
+  expect_equal(res$optlambdas,altoptlambda)
   altcdat<-bctrans(dat,altoptlambda)
-  hist(residuals(lm(altcdat~times)))
-  plot(times,altcdat)
+  altcdat<-residuals(lm(altcdat~times))
+  altcdat<-altcdat/sd(altcdat)
+  expect_equal(unname(altcdat),res$cdat)
+})
+
+test_that("clev is 4, test directly against formulas of Box Cox paper",{
+  #the data
+  set.seed(301)
+  times<-seq(1,20,.1)
+  dat<-.1*times+2+exp(rnorm(length(times),mean=0,sd=.5))
+
+  #use cleandata
+  cd<-cleandat(dat,times,clev=4,lambdas=seq(-2,2,by=0.001),mints=NaN)
+  
+  #use formulas of Box & Cox, 1964, specifically equations 8 and 9
+  #Box, GEP and Cox, DR (1964) An analysis of transformations (with discussion). Journal of the Royal Statistical Society B, 26, 211–252.
+  bcproflik<-function(dat,times,lambda)
+  {
+    tdat<-bctrans(dat,lambda)
+    sse<-sum((residuals(lm(tdat~times)))^2)
+    n<-length(dat)
+    return(-0.5*n*log(sse/n)+(lambda-1)*sum(log(dat)))
+  }
+  pl<-NA*numeric(length(lambdas))
+  for (counter in 1:length(lambdas))
+  {
+    pl[counter]<-bcproflik(dat,times,lambdas[counter])
+  }
+  optlambda2<-lambdas[pl==max(pl)]
+  
+  expect_equal(optlambda2,cd$optlambda)
+  #we continue to rely on boxcox instead of some version of the above because boxcox is much faster
 })

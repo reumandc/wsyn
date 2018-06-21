@@ -6,7 +6,7 @@
 #' @param times The times of measurement
 #' @param clev The level of cleaning to do, 1 through 4. See details. 
 #' @param lambdas A vector of lambdas to test for optimal Box-Cox transformation, if Box-Cox is performed. Ignored for \code{clev<4}. Defaults to seq(-10,10, by=0.01). The best of these is used.
-#' @param mints If \code{clev==4}, then time series are shifted to have this minimum value. Default NA means use the smallest difference between consecutive, distinct sorted values.
+#' @param mints If \code{clev==4}, then time series are shifted to have this minimum value. Default NA means use the smallest difference between consecutive, distinct sorted values. NaN means perform no shift.
 #' 
 #' @return \code{cleandat} returns a list containing the cleaned data, \code{clev}, and the optimal lambdas from the 
 #' Box-Cox procedure (\code{NA} for \code{clev<4}, see Details).
@@ -39,9 +39,9 @@ cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
   {
     stop("Error in cleandat: clev must be 1, 2, 2, or 4")
   }
-  if (clev==4 && is.finite(mints) && mints<=0)
+  if (clev==4 && !(is.na(mints) || is.nan(mints) || (is.finite(mints) && mints>0)))
   {
-    stop("Error in cleandat: mints, if specified and if clev is 4, must be positive")
+    stop("Error in cleandat: if clev is 4, mints must be NA, NaN, or a positive number")
   }
   errcheck_times(times,"cleandat")
   if (!is.numeric(dat))
@@ -94,21 +94,19 @@ cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
     {
       thisrow<-cdat[crow,]
         
-      #set minimum value to smallest difference between consecutive sorted values
-      if (!is.finite(mints))
+      #set minimum value
+      if (!is.nan(mints))
       {
-        diffs<-diff(sort(thisrow))
-        mints<-min(diffs[diffs!=0]) 
+        if (is.na(mints))
+        {
+          diffs<-diff(sort(thisrow))
+          mints<-min(diffs[diffs!=0]) 
+        }
+        thisrow<-thisrow-min(thisrow)+mints
       }
-      thisrow<-thisrow-min(thisrow)+mints
       
-      alllikes<-NA*numeric(length(lambdas))
-      for (clam in 1:length(lambdas))
-      {
-        alllikes[clam]<-boxcoxloglike(lambdas[clam],thisrow)
-      }
-      plot(lambdas,alllikes,type='l')
-      inds<-which(alllikes==max(alllikes))
+      bxcxres<-boxcox(thisrow~times,lambda=lambdas,plotit=FALSE,interp=FALSE)
+      inds<-which(bxcxres$y==max(bxcxres$y))
       if (length(inds)>1)
       {
         warning("Warning from cleandat: more than one optimal value of lambda, the first was used")
@@ -118,7 +116,7 @@ cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
       {
         warning("Warning from cleandat: boundary optimal lambda, use wider range")
       }
-      optlambdas[crow]<-lambdas[inds]
+      optlambdas[crow]<-bxcxres$x[inds]
       cdat[crow,]<-bctrans(thisrow,optlambdas[crow])
     }
   }

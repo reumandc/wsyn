@@ -14,7 +14,8 @@ License: GPL (>=3)
 Encoding: UTF-8
 LazyData: true
 Imports:
-    stats (>= 3.4.4)
+    stats (>= 3.4.4),
+    MASS (>= 7.3-50)
 Suggests: testthat,
     knitr,
     rmarkdown
