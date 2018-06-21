@@ -26,17 +26,31 @@ test_that("test for an actual wt object",{
   times<-c(time1,time2)
   res<-wt(t.series, times)
   
+  Test_plotmag_wt_1<-function(){plotmag(object=res)}
+  expect_doppelganger("Test_plotmag_wt_1",Test_plotmag_wt_1)
+  
   #make a plot and save a pdf so I can check it visually and then get the hash for testing of future reprodicibility
-  pres<-plotmag(object=res,filename="Test_plotmagwt")
-  #it looked good so I just check the hash
-  myfile <- system.file("Test_plotmagwt.pdf")
-  #Hash below was obtained by running tests the first time and seeing what hash it reported when the comparison
-  #failed the first time. Using digest::digest(file(myfile)) did not work because when I run the above from 
-  #the command line, the working directory was whatever it was, whereas when test() is run, the working directory
-  #is tests/testthat, which means the hash will differ even if the plot is the same. Alternatively you could make
-  #your working directory be tests/testthat when you run the above from the command line, and then you could 
-  #probably use digest::digest(file(myfile)) to get the hash the first time.
-  expect_known_hash(res,hash="1661d4fb42b6f127552b7bb27793435f")   
+  #pres<-plotmag(object=res,filename="Test_plotmagwt1")
+  #It looked good so I just check the hash. Here are things I checked visually:
+  #1) the colorbar appeared to go from about 0.002166182 to 4.761293271, which was the range of values
+  #2) peak at 15 yrs for first half, peak at 8 for second half
+  #3) times go from 1 to 200
+  #expect_equal(digest::digest("Test_plotmagwt1.pdf",file=TRUE),"16fb95b1bdcbe65381d3e4fdd52ab63c")   
+  
+  #try without the colorbar
+  #pres<-plotmag(object=res,colorbar=FALSE,filename="Test_plotmagwt2")
+  #myfile2 <- system.file("Test_plotmagwt2.pdf")
+  #expect_known_hash(file(myfile2),"c876ef50585fb7dc25e4142203b8972c")
+  
+  #use neat=T
+  #pres<-plotmag(object=res,neat=TRUE,filename="Test_plotmagwt3")
+  #myfile3 <- system.file("Test_plotmagwt3.pdf")
+  #expect_known_hash(file(myfile3),"064913ac0fbe346580fc475eebff7e40")
+  
+  
+  #try wider z axis limits
+  
+  
 })
 
 #test_that("test for an actual wmf object",{

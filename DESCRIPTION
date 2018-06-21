@@ -19,6 +19,7 @@ Imports:
     fields (>= 9.6),
     graphics (>= 3.4.4)
 Suggests: testthat,
+    vdiffr,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
