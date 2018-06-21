@@ -18,6 +18,11 @@ Progress:
 9) compile again as a package
 10) stopping point - mean field methods implemented. next step coherence methods.
 
+for formatting the documentation at top:
+1) use \code{} for TRUE and FALSE. Do not use T and F.
+
+general
+1) It will be possible to be a bit more consistent with use of get and set methods instead of $
 
 wt.r:
 #TODO: make this a compiled function using cmpfun in the compiler package
