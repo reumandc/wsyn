@@ -96,7 +96,8 @@ test_that("clev is 4, test directly against formulas of Box Cox paper",{
   dat<-.1*times+2+exp(rnorm(length(times),mean=0,sd=.5))
 
   #use cleandata
-  cd<-cleandat(dat,times,clev=4,lambdas=seq(-2,2,by=0.001),mints=NaN)
+  lambdas<-seq(-2,2,by=0.001)
+  cd<-cleandat(dat,times,clev=4,lambdas=lambdas,mints=NaN)
   
   #use formulas of Box & Cox, 1964, specifically equations 8 and 9
   #Box, GEP and Cox, DR (1964) An analysis of transformations (with discussion). Journal of the Royal Statistical Society B, 26, 211–252.

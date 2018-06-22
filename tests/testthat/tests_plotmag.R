@@ -8,7 +8,7 @@ test_that("test the default method, which just throws an error",{
 test_that("test for an actual wt object",{
   #because plotmag.wt does not exist (the wt method is inherited from tts), we are effectively testing the tts method here
   
-  #this test based on the first example in fig S2 of Sheppard et al, "Synchrony is more than its
+  #**this test based on the first example in fig S2 of Sheppard et al, "Synchrony is more than its
   #top-down and climatic parts: interacting Moran effects on phytoplankton in British seas"
   set.seed(101)
   time1<-1:100
@@ -27,37 +27,142 @@ test_that("test for an actual wt object",{
   res<-wt(t.series, times)
   
   Test_plotmag_wt_1<-function(){plotmag(object=res)}
-  expect_doppelganger("Test_plotmag_wt_1",Test_plotmag_wt_1)
-  
-  #make a plot and save a pdf so I can check it visually and then get the hash for testing of future reprodicibility
-  #pres<-plotmag(object=res,filename="Test_plotmagwt1")
-  #It looked good so I just check the hash. Here are things I checked visually:
-  #1) the colorbar appeared to go from about 0.002166182 to 4.761293271, which was the range of values
-  #2) peak at 15 yrs for first half, peak at 8 for second half
-  #3) times go from 1 to 200
-  #expect_equal(digest::digest("Test_plotmagwt1.pdf",file=TRUE),"16fb95b1bdcbe65381d3e4fdd52ab63c")   
+  expect_doppelganger(title="Test-plotmag-wt-1",fig=Test_plotmag_wt_1)
   
   #try without the colorbar
-  #pres<-plotmag(object=res,colorbar=FALSE,filename="Test_plotmagwt2")
-  #myfile2 <- system.file("Test_plotmagwt2.pdf")
-  #expect_known_hash(file(myfile2),"c876ef50585fb7dc25e4142203b8972c")
+  Test_plotmag_wt_2<-function(){plotmag(object=res,colorbar=FALSE)}
+  expect_doppelganger(title="Test-plotmag-wt-2",fig=Test_plotmag_wt_2)
   
   #use neat=T
-  #pres<-plotmag(object=res,neat=TRUE,filename="Test_plotmagwt3")
-  #myfile3 <- system.file("Test_plotmagwt3.pdf")
-  #expect_known_hash(file(myfile3),"064913ac0fbe346580fc475eebff7e40")
+  Test_plotmag_wt_3<-function(){plotmag(object=res,neat=TRUE)}
+  expect_doppelganger(title="Test-plotmag-wt-3",fig=Test_plotmag_wt_3)
+
+  #try wider z axis limits, and with a test title
+  Test_plotmag_wt_4<-function(){plotmag(object=res,zlim=c(-1,6),title="test")}
+  expect_doppelganger(title="Test-plotmag-wt-4",fig=Test_plotmag_wt_4)
   
+  #**this test based on the second example in fig S2 of Sheppard et al, "Synchrony is more than its
+  #top-down and climatic parts: interacting Moran effects on phytoplankton in British seas"
+  set.seed(201)
+  timeinc<-1 #one sample per year
+  startfreq<-0.2 #cycles per year
+  endfreq<-0.1 #cycles per year
+  times<-1:200
+  f<-seq(from=startfreq,by=(endfreq-startfreq)/(length(times)-1),to=endfreq) #frequency for each sample
+  phaseinc<-2*pi*cumsum(f*timeinc)
+  t.series<-sin(phaseinc)
+  t.series<-t.series-mean(t.series)
+  res<-wt(t.series, times)
   
-  #try wider z axis limits
-  
-  
+  Test_plotmag_wt_5<-function(){plotmag(object=res)}
+  expect_doppelganger(title="Test-plotmag-wt-5",fig=Test_plotmag_wt_5)
 })
 
-#test_that("test for an actual wmf object",{
-#  #because plotmag.wt does not exist (the wt method is inherited from tts), we are effectively testing the tts method here  
-#})
+test_that("test for an actual wmf object",{
+  #because plotmag.wt does not exist (the wt method is inherited from tts), we are effectively testing the tts method here  
+  
+  #**this test based on supplementary figure 1 in Sheppard et al, Nature Climate Change, 
+  #2016, doi: 10.1038/NCLIMATE2881
+  set.seed(101)
+  x1<-0:50
+  x2<-51:100
+  x<-c(x1,x2)
+  ts1<-c(sin(2*pi*x1/10),sin(2*pi*x2/5))+1.1
+  dat<-matrix(NA,11,length(x))
+  for (counter in 1:dim(dat)[1])
+  {
+    ts2<-3*sin(2*pi*x/3+2*pi*runif(1))+3.1
+    ts3<-rnorm(length(x),0,1.5)
+    dat[counter,]<-ts1+ts2+ts3    
+    dat[counter,]<-dat[counter,]-mean(dat[counter,])
+  }
+  times<-x
+  res<-wmf(dat,times)
+  
+  Test_plotmag_wmf_1<-function(){plotmag(object=res)}
+  expect_doppelganger(title="Test-plotmag-wmf-1",fig=Test_plotmag_wmf_1)
+  
+  #try without the colorbar
+  Test_plotmag_wmf_2<-function(){plotmag(object=res,colorbar=FALSE)}
+  expect_doppelganger(title="Test-plotmag-wmf-2",fig=Test_plotmag_wmf_2)
+  
+  #use neat=T
+  Test_plotmag_wmf_3<-function(){plotmag(object=res,neat=TRUE)}
+  expect_doppelganger(title="Test-plotmag-wmf-3",fig=Test_plotmag_wmf_3)
+  
+  #try wider z axis limits, and with a test title
+  Test_plotmag_wmf_4<-function(){plotmag(object=res,zlim=c(-1,6),title="test")}
+  expect_doppelganger(title="Test-plotmag-wmf-4",fig=Test_plotmag_wmf_4)
+})
 
-#test_that("test for an actual wpmf object",{
-#
-#})
+test_that("test for an actual wpmf object, quick signif method",{
+  #**this test based on supplementary figure 1 in Sheppard et al, Nature Climate Change, 
+  #2016, doi: 10.1038/NCLIMATE2881. We used the wmf there, but we could also have used
+  #the wpmf
+  set.seed(101)
+  x1<-0:50
+  x2<-51:100
+  x<-c(x1,x2)
+  ts1<-c(sin(2*pi*x1/10),sin(2*pi*x2/5))+1.1
+  dat<-matrix(NA,11,length(x))
+  for (counter in 1:dim(dat)[1])
+  {
+    ts2<-3*sin(2*pi*x/3+2*pi*runif(1))+3.1
+    ts3<-rnorm(length(x),0,1.5)
+    dat[counter,]<-ts1+ts2+ts3    
+    dat[counter,]<-dat[counter,]-mean(dat[counter,])
+  }
+  times<-x
+  res<-wpmf(dat,times,sigmethod="quick")
+  
+  Test_plotmag_wpmf_quick<-function(){plotmag(object=res)}
+  expect_doppelganger(title="Test-plotmag-wpmf-quick",fig=Test_plotmag_wpmf_quick)
+})
 
+test_that("test for an actual wpmf object, fft signif method",{
+  #**this test based on supplementary figure 1 in Sheppard et al, Nature Climate Change, 
+  #2016, doi: 10.1038/NCLIMATE2881. We used the wmf there, but we could also have used
+  #the wpmf
+  set.seed(101)
+  x1<-0:50
+  x2<-51:100
+  x<-c(x1,x2)
+  ts1<-c(sin(2*pi*x1/10),sin(2*pi*x2/5))+1.1
+  dat<-matrix(NA,11,length(x))
+  for (counter in 1:dim(dat)[1])
+  {
+    ts2<-3*sin(2*pi*x/3+2*pi*runif(1))+3.1
+    ts3<-rnorm(length(x),0,1.5)
+    dat[counter,]<-ts1+ts2+ts3    
+    dat[counter,]<-dat[counter,]-mean(dat[counter,])
+  }
+  times<-x
+  res<-wpmf(dat,times,sigmethod="fft",nrand=25)
+  
+  Test_plotmag_wpmf_fft<-function(){plotmag(object=res)}
+  expect_doppelganger(title="Test-plotmag-wpmf-fft",fig=Test_plotmag_wpmf_fft)
+})
+
+test_that("test for an actual wpmf object, aaft signif method",{
+  #**this test based on supplementary figure 1 in Sheppard et al, Nature Climate Change, 
+  #2016, doi: 10.1038/NCLIMATE2881. We used the wmf there, but we could also have used
+  #the wpmf
+  set.seed(101)
+  x1<-0:50
+  x2<-51:100
+  x<-c(x1,x2)
+  ts1<-c(sin(2*pi*x1/10),sin(2*pi*x2/5))+1.1
+  dat<-matrix(NA,11,length(x))
+  for (counter in 1:dim(dat)[1])
+  {
+    ts2<-3*sin(2*pi*x/3+2*pi*runif(1))+3.1
+    ts3<-rnorm(length(x),0,1.5)
+    dat[counter,]<-ts1+ts2+ts3    
+    dat[counter,]<-dat[counter,]-mean(dat[counter,])
+  }
+  times<-x
+  res<-wpmf(dat,times,sigmethod="aaft",nrand=20)
+  
+  Test_plotmag_wpmf_aaft<-function(){plotmag(object=res)}
+  expect_doppelganger(title="Test-plotmag-wpmf-aaft",fig=Test_plotmag_wpmf_aaft)
+})
