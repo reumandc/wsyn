@@ -13,9 +13,9 @@ Progress:
   -DONE go back and use log 2 on the timescales axis in plots in tests_wmf
 5) DONE check and unit test cleandat
 6) DONE write the magnitude plotter functions, and unit tests. perhaps these should go in the methods files? maybe not. think more
-6.5) Go back and add joint Box-Cox to cleandat, and unit tests
-6.75) write the phase plotter functions, and uni tests.
-7) get the .Rmds going and compile everything as a package
+6.5) DONE Go back and add joint Box-Cox to cleandat, and unit tests
+6.75) get the .Rmds going and compile everything as a package
+7) write the phase plotter functions, and unit tests. Consolidate into one plotphase.R file, as you did for the magnitude plotters.
 8) start a vignette, covering the code you have written so far
 9) compile again as a package
 10) stopping point - mean field methods implemented. next step coherence methods.
