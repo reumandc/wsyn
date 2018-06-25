@@ -2,9 +2,21 @@
 % Please edit documentation in R/plotmag.R
 \name{plotmag}
 \alias{plotmag}
+\alias{plotmag.tts}
+\alias{plotmag.wpmf}
+\alias{plotmag.default}
 \title{For plotting the magnitude of values in \code{tts} objects}
 \usage{
 plotmag(object, ...)
+
+\method{plotmag}{tts}(object, zlims = NULL, neat = TRUE, colorfill = NULL,
+  colorbar = TRUE, title = NULL, filename = NA, ...)
+
+\method{plotmag}{wpmf}(object, zlims = NULL, neat = TRUE,
+  colorfill = NULL, sigthresh = 0.95, colorbar = TRUE, title = NULL,
+  filename = NA, ...)
+
+\method{plotmag}{default}(object, ...)
 }
 \arguments{
 \item{object}{An object of class \code{tts} or some class that inherits from \code{tts}}
@@ -17,13 +29,13 @@ plotmag(object, ...)
 
 \item{colorfill}{Color spectrum to use, set through colorRampPalette. Default value NULL produces jet colors from Matlab.}
 
-\item{sigthresh}{Significance threshold(s) for \code{wpmf} objects. Numeric vector with values between 0 and 1 (typically 0.95, 0.99, 0.999, etc.). Contours are plotted at these values.}
-
 \item{colorbar}{Logical. Should a colorbar legend be plotted?}
 
 \item{title}{Title for the top of the plot.}
 
 \item{filename}{Filename (without extension), for saving as pdf. Default value NA saves no file and uses the defauly graphics device.}
+
+\item{sigthresh}{Significance threshold(s) for \code{wpmf} objects. Numeric vector with values between 0 and 1 (typically 0.95, 0.99, 0.999, etc.). Contours are plotted at these values.}
 }
 \description{
 For plotting the magnitude of values in \code{tts} objects (and derived classes) 

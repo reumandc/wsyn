@@ -18,7 +18,7 @@
 #' \item{values}{A matrix of complex numbers containing the wavelet phasor mean field, of dimensions \code{length(times)} by the number of timescales. Entries not considered reliable (longer timescales, near the edges of the time span) are set to NA.}
 #' \item{times}{The times associated with the \code{wpmf}}
 #' \item{timescales}{The timescales associated with the \code{wpmf}}
-#' \item{signif} A list with information from the significance testing. Format depends on \code{sigmethod} (see details).
+#' \item{signif}{A list with information from the significance testing. Format depends on \code{sigmethod} (see details).}
 #' \item{dat}{The data matrix (locations by time) from which the \code{wpmf} was computed}
 #' 
 #' @note The wavelet phasor mean field was developed by Lawrence Sheppard and Daniel Reuman. R code by Thomas Anderson and Jon Walter

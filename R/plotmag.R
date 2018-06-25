@@ -18,7 +18,7 @@ plotmag<-function(object,...)
   UseMethod("plotmag",object)
 }
 
-#' @rdname
+#' @rdname plotmag
 #' @export
 plotmag.tts<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,colorbar=TRUE,title=NULL,filename=NA,...)
 {
@@ -77,7 +77,7 @@ plotmag.tts<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,colorbar=TRUE,t
 
 #plotmag.wmf not necessary - inherits from tts
 
-#' @rdname 
+#' @rdname plotmag
 #' @export
 plotmag.wpmf<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,sigthresh=0.95,colorbar=TRUE,title=NULL,filename=NA,...)
 {
@@ -158,7 +158,7 @@ plotmag.wpmf<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,sigthresh=0.95
   return(NULL) 
 }
 
-#' @rdname 
+#' @rdname plotmag
 #' @export
 plotmag.default<-function(object,...)
 {
