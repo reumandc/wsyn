@@ -15,10 +15,14 @@ Progress:
 6) DONE write the magnitude plotter functions, and unit tests. perhaps these should go in the methods files? maybe not. think more
 6.5) DONE Go back and add joint Box-Cox to cleandat, and unit tests
 6.75) get the .Rmds going and compile everything as a package
-7) write the phase plotter functions, and unit tests. Consolidate into one plotphase.R file, as you did for the magnitude plotters.
 8) start a vignette, covering the code you have written so far
 9) compile again as a package
 10) stopping point - mean field methods implemented. next step coherence methods.
+11) Work on coherence functionality, inc unit tests and vignette and making the package compile. Need to start with a design phase and working out appropriate S3 classes. See some thoughts below.
+12) everything you need for deer
+13) synmat for kelp and Jon's bird stuff
+14) write the phase plotter functions, and unit tests. Consolidate into one plotphase.R file, as you did for the magnitude plotters.
+
 
 for formatting the documentation at top:
 1) use \code{} for TRUE and FALSE. Do not use T and F.
@@ -32,12 +36,6 @@ wt.r:
 #TODO: make the truncation occur before the computation rather than after
 #TODO: Not clear from the docs what the resulting behavior is for the default
 #value NULL of scale.max.input. Likewise for other related funcs (wmf, wpmf, etc)
-
-The arguments of wt, wmf, and wpmf are similar, but the docs describing them
-differ sometimes. Why the inconsistency? Revisit all three sets of argument
-docs for consistency and accuracy. Likewise for the docs of the outputs.
-
-First line of wpmf:   Why is this called freqs if it is timescales? Possibly confusing.
 
 
 Ideas I emailed to myself 2018 05 06:
