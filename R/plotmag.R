@@ -15,7 +15,9 @@
 #' 
 #' @export
 #' @importFrom fields image.plot
-#' @importFrom graphics image
+#' @importFrom graphics image axis par
+#' @importFrom grDevices colorRampPalette pdf dev.off
+#' @importFrom stats quantile
 
 plotmag<-function(object,...)
 {
@@ -48,31 +50,31 @@ plotmag.tts<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,colorbar=TRUE,t
   if(is.null(colorfill)){
     jetcolors <- c("#00007F", "blue", "#007FFF", "cyan", 
                    "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")
-    colorfill<-colorRampPalette(jetcolors)
+    colorfill<-grDevices::colorRampPalette(jetcolors)
   }
   ylocs<-pretty(timescales,n=8)
   xlocs<-pretty(times,n=8)
   
   if (!is.na(filename))
   {
-    pdf(paste0(filename,".pdf"))
+    grDevices::pdf(paste0(filename,".pdf"))
   }
   if (!colorbar)
   {
     graphics::image(x=times,y=log2(timescales),z=wav,xlab="Time",zlim=zlims,
           ylab="Timescale",axes=F,col=colorfill(100),main=title,...)
-    axis(1,at = xlocs,labels=xlocs)
-    axis(2,at = log2(ylocs),labels = ylocs)
+    graphics::axis(1,at = xlocs,labels=xlocs)
+    graphics::axis(2,at = log2(ylocs),labels = ylocs)
   }else
   {
     fields::image.plot(x=times,y=log2(timescales),z=wav,xlab="Time",zlim=zlims,
           ylab="Timescale",axes=F,col=colorfill(100),main=title,...)
-    axis(1,at = xlocs,labels=xlocs)
-    axis(2,at = log2(ylocs),labels = ylocs)
+    graphics::axis(1,at = xlocs,labels=xlocs)
+    graphics::axis(2,at = log2(ylocs),labels = ylocs)
   }
   if (!is.na(filename))
   {
-    dev.off()
+    grDevices::dev.off()
   }
   return(NULL)
 }
@@ -116,34 +118,34 @@ plotmag.wpmf<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,sigthresh=0.95
   if(is.null(colorfill)){
     jetcolors <- c("#00007F", "blue", "#007FFF", "cyan", 
                    "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")
-    colorfill<-colorRampPalette(jetcolors)
+    colorfill<-grDevices::colorRampPalette(jetcolors)
   }
   ylocs<-pretty(timescales,n=8)
   xlocs<-pretty(times,n=8)
   
   if (!is.na(filename))
   {
-    pdf(paste0(filename,".pdf"))
+    grDevices::pdf(paste0(filename,".pdf"))
   }
   if (!colorbar)
   {
     graphics::image(x=times,y=log2(timescales),z=wav,xlab="Time",zlim=zlims,
           ylab="Timescale",axes=F,col=colorfill(100),main=title,...)
-    axis(1,at = xlocs,labels=xlocs)
-    axis(2,at = log2(ylocs),labels = ylocs)
+    graphics::axis(1,at = xlocs,labels=xlocs)
+    graphics::axis(2,at = log2(ylocs),labels = ylocs)
   }else
   {
     fields::image.plot(x=times,y=log2(timescales),z=wav,xlab="Time",zlim=zlims,
                ylab="Timescale",axes=F,col=colorfill(100),main=title,...)
-    axis(1,at = xlocs,labels=xlocs)
-    axis(2,at = log2(ylocs),labels = ylocs)
+    graphics::axis(1,at = xlocs,labels=xlocs)
+    graphics::axis(2,at = log2(ylocs),labels = ylocs)
   }
   if (!all(is.na(signif)))
   {
-    par(new=T)
+    graphics::par(new=T)
     if (signif[[1]]=="quick")
     {
-      q<-quantile(signif[[2]],sigthresh)
+      q<-stats::quantile(signif[[2]],sigthresh)
       graphics::contour(x=times,y=log2(timescales),z=wav,levels=q,drawlabels=F,lwd=2,
               xaxs="i",xaxt="n",yaxt="n",xaxp=c(0,1,5),las = 1,frame=F)
     }
@@ -157,7 +159,7 @@ plotmag.wpmf<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,sigthresh=0.95
   }
   if (!is.na(filename))
   {
-    dev.off()
+    grDevices::dev.off()
   }
   return(NULL) 
 }

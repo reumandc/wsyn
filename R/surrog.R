@@ -26,6 +26,7 @@
 #' #Not yet written, but need some
 #' 
 #' @export 
+#' @importFrom stats qnorm rnorm fft 
 
 surrog<-function(dat,nsurrogs,surrtype,syncpres)
 {
@@ -67,7 +68,7 @@ surrog<-function(dat,nsurrogs,surrtype,syncpres)
   if (surrtype=="aaft")
   {
     #get appropriate quantiles of a standard normal
-    normquant<-qnorm((1:dim(dat)[2])/(dim(dat)[2]+1))
+    normquant<-stats::qnorm((1:dim(dat)[2])/(dim(dat)[2]+1))
     
     #find out of there are ties
     areties<-FALSE
@@ -102,7 +103,7 @@ surrog<-function(dat,nsurrogs,surrtype,syncpres)
         fftdat[[counter]]<-matrix(complex(real=NA, imaginary=NA), nrow=nrow(datorig), ncol=ncol(datorig))
         for (row in 1:nrow(datorig))
         {
-          fftdat[[counter]][row,]<-fft(dat[[counter]][row,])
+          fftdat[[counter]][row,]<-stats::fft(dat[[counter]][row,])
         }
         fftmod[[counter]]<-Mod(fftdat[[counter]])
         fftarg[[counter]]<-Arg(fftdat[[counter]])
@@ -116,14 +117,14 @@ surrog<-function(dat,nsurrogs,surrtype,syncpres)
         if (syncpres)
         {
           #synchrony preserving surrogates only need one set of phase pertubations, used for all time series
-          h<-Arg(fft(rnorm(ncol(datorig))))
+          h<-Arg(stats::fft(stats::rnorm(ncol(datorig))))
           randomizedphases<-
             (matrix(rep(h, times=nrow(datorig)), nrow(datorig), ncol(datorig), byrow=TRUE)+fftarg[[counter]]) %% (2*pi)
         }else
         {
           #need separate independent phase perturbations for each time series
-          h<-matrix(rnorm(ncol(datorig)*nrow(datorig)),nrow(datorig),ncol(datorig))
-          randomizedphases<-(fftarg[[counter]]+t(apply(X=h,MARGIN=1,FUN=function(x){Arg(fft(x))}))) %% (2*pi)
+          h<-matrix(stats::rnorm(ncol(datorig)*nrow(datorig)),nrow(datorig),ncol(datorig))
+          randomizedphases<-(fftarg[[counter]]+t(apply(X=h,MARGIN=1,FUN=function(x){Arg(stats::fft(x))}))) %% (2*pi)
         }
         mpdres[[counter]]<-matrix(complex(modulus=fftmod[[counter]], 
                                           argument=randomizedphases),nrow(datorig), ncol(datorig))

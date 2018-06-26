@@ -18,6 +18,8 @@
 #'     
 #' @examples
 #' #Not yet written, but need some
+#' 
+#' @importFrom stats fft rnorm
 
 fftsurrog<-function(dat,nsurrogs,syncpres)
 {
@@ -25,7 +27,7 @@ fftsurrog<-function(dat,nsurrogs,syncpres)
   fftdat<-matrix(complex(real=NA, imaginary=NA), nrow=nrow(dat), ncol=ncol(dat))
   for(row in 1:nrow(dat))
   {
-    fftdat[row,]<-fft(dat[row,])
+    fftdat[row,]<-stats::fft(dat[row,])
   }
   fftmod<-Mod(fftdat)
   fftarg<-Arg(fftdat)
@@ -39,20 +41,20 @@ fftsurrog<-function(dat,nsurrogs,syncpres)
     if (syncpres)
     {
       #synchrony preserving surrogates only need one set of phase pertubations, used for all time series
-      h<-Arg(fft(rnorm(ncol(dat))))
+      h<-Arg(stats::fft(stats::rnorm(ncol(dat))))
       randomizedphases<-(matrix(rep(h, times=nrow(dat)), nrow(dat), ncol(dat), byrow=TRUE)+fftarg) %% (2*pi)
     }else
     {
       #need separate independent phase perturbations for each time series
-      h<-matrix(rnorm(ncol(dat)*nrow(dat)),nrow(dat),ncol(dat))
-      randomizedphases<-(fftarg+t(apply(X=h,MARGIN=1,FUN=function(x){Arg(fft(x))}))) %% (2*pi)
+      h<-matrix(stats::rnorm(ncol(dat)*nrow(dat)),nrow(dat),ncol(dat))
+      randomizedphases<-(fftarg+t(apply(X=h,MARGIN=1,FUN=function(x){Arg(stats::fft(x))}))) %% (2*pi)
     }
     fftsurrog<-matrix(complex(modulus=fftmod, argument=randomizedphases),nrow(dat), ncol(dat))
     
     # inverse transform
     invmat<-matrix(NA, nrow(dat), ncol(dat))
     for(i in 1:nrow(dat)){
-      invmat[i,]<-fft(fftsurrog[i,], inverse=T)/(ncol(fftsurrog))
+      invmat[i,]<-stats::fft(fftsurrog[i,], inverse=T)/(ncol(fftsurrog))
     }
     res[[n]]<-Re(invmat)
   }

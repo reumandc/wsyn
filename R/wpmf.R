@@ -46,6 +46,7 @@
 #' #wmf<-wpmf(obs,times=time)
 #' 
 #' @export
+#' @importFrom stats runif
 
 wpmf<-function(dat,times,scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1, sigmethod="none", nrand=1000)
 {
@@ -74,7 +75,7 @@ wpmf<-function(dat,times,scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1, si
   if (sigmethod=="quick")
   {
     #just make nrand mags of sums of random phasors and return 
-    rndphas<-matrix(complex(modulus=1,argument=2*pi*runif((dim(dat)[1])*nrand)),dim(dat)[1],nrand)
+    rndphas<-matrix(complex(modulus=1,argument=2*pi*stats::runif((dim(dat)[1])*nrand)),dim(dat)[1],nrand)
     signif<-list(sigmethod="quick",magsumrndphas=Mod(apply(FUN=mean,MARGIN=2,X=rndphas)))
   }
   if (sigmethod=="fft")

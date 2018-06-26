@@ -74,7 +74,7 @@ cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
     for (counter in 1:dim(dat)[1])
     {
       thisrow<-dat[counter,]
-      if (isTRUE(all.equal(sd(residuals(stats::lm(thisrow~times))),0)))
+      if (isTRUE(all.equal(sd(stats::residuals(stats::lm(thisrow~times))),0)))
       {
         stop("Error in cleandat: cannot perform clev 3 or greater cleaning on time series that are constant or a perfect linear trend")
       }

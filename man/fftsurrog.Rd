@@ -21,6 +21,7 @@ For internal use, no error checking
 }
 \examples{
 #Not yet written, but need some
+
 }
 \references{
 Sheppard, LW, et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881

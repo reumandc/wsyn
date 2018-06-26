@@ -30,6 +30,7 @@
 #' res<-wt(x,times=1:1000)
 #' 
 #' @export
+#' @importFrom stats fft
 
 wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1)
 {
@@ -57,7 +58,7 @@ wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f
   wavsize <- ceiling(sqrt(-(2*s2[m.last]*s2[m.last])*log(0.001)));
   
   #preparations for finding components  
-  Y <- fft(c(t.series,rep(0,2*wavsize)))
+  Y <- stats::fft(c(t.series,rep(0,2*wavsize)))
   lenY<-length(Y)
   freqs<-seq(from=0, by=1, to=lenY-1)/lenY;
   freqs2<-c(seq(from=0, by=1, to=floor(lenY/2)), seq(from=-(ceiling(lenY/2)-1), 
@@ -71,13 +72,13 @@ wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f
     #begin calculating wavelet
     
     #margin determines how close large wavelets can come to the edges of the timeseries
-    margin=margin2[stage];
+    margin<-margin2[stage];
     
     #perform convolution
     XX <- (2*pi*s.scale)^(0.5)*(exp(-s.scale^2*(2*pi*(freqs-((f0/s.scale))))^2/2) - 
                                   (exp(-s.scale^2*(2*pi*(freqs2))^2/2))*
                                   (exp(-0.5*(2*pi*f0)^2)))*exp(-1i*2*pi*wavsize*freqs);
-    con <- fft((XX*Y),inverse=TRUE)
+    con <- stats::fft((XX*Y),inverse=TRUE)
     con <- con/length(con)
     
     #fit result into transform                                                                                                                      
