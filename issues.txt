@@ -14,7 +14,7 @@ Progress:
 5) DONE check and unit test cleandat
 6) DONE write the magnitude plotter functions, and unit tests. perhaps these should go in the methods files? maybe not. think more
 6.5) DONE Go back and add joint Box-Cox to cleandat, and unit tests
-6.75) get the .Rmds going and compile everything as a package
+6.75) DONE get the .Rmds going and compile everything as a package
 8) start a vignette, covering the code you have written so far
 9) compile again as a package
 10) stopping point - mean field methods implemented. next step coherence methods.

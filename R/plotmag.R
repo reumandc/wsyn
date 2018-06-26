@@ -13,6 +13,7 @@
 #' @param filename Filename (without extension), for saving as pdf. Default value NA saves no file and uses the defauly graphics device.
 #' @param ... Additional graphics parameters passed to \code{image} (\code{graphics} package) if \code{colorbar==FALSE}, or to \code{image.plot} (\code{fields} package) if \code{colorbar==TRUE}
 #' 
+#' @export
 plotmag<-function(object,...)
 {
   UseMethod("plotmag",object)
