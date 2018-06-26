@@ -35,6 +35,8 @@
 #' #Don't have any yet but need some
 #' 
 #' @export  
+#' @importFrom stats lm residuals
+#' @importFrom MASS boxcox
 
 cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
 {
@@ -72,7 +74,7 @@ cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
     for (counter in 1:dim(dat)[1])
     {
       thisrow<-dat[counter,]
-      if (isTRUE(all.equal(sd(residuals(lm(thisrow~times))),0)))
+      if (isTRUE(all.equal(sd(residuals(stats::lm(thisrow~times))),0)))
       {
         stop("Error in cleandat: cannot perform clev 3 or greater cleaning on time series that are constant or a perfect linear trend")
       }
@@ -99,7 +101,7 @@ cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
     thisrow<-setmints(thisrow,mints)    
     
     #do Box-Cox for first time series
-    bxcxres<-boxcox(thisrow~times,lambda=lambdas,plotit=FALSE,interp=FALSE)
+    bxcxres<-MASS::boxcox(thisrow~times,lambda=lambdas,plotit=FALSE,interp=FALSE)
     xfin<-bxcxres$x
     yfin<-bxcxres$y
     
@@ -113,7 +115,7 @@ cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
         thisrow<-setmints(thisrow,mints)
         
         #do Box-Cox for this row
-        bxcxres<-boxcox(thisrow~times,lambda=lambdas,plotit=FALSE,interp=FALSE)
+        bxcxres<-MASS::boxcox(thisrow~times,lambda=lambdas,plotit=FALSE,interp=FALSE)
         if (!isTRUE(all.equal(xfin,bxcxres$x))){stop("Error in cleandat: boxcox problem with independent variable")}
         yfin<-yfin+bxcxres$y
       }
@@ -151,7 +153,7 @@ cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
       #set minimum value
       thisrow<-setmints(thisrow,mints)
       
-      bxcxres<-boxcox(thisrow~times,lambda=lambdas,plotit=FALSE,interp=FALSE)
+      bxcxres<-MASS::boxcox(thisrow~times,lambda=lambdas,plotit=FALSE,interp=FALSE)
       inds<-which(bxcxres$y==max(bxcxres$y))
       if (length(inds)>1)
       {
@@ -173,7 +175,7 @@ cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
     for (crow in 1:dim(cdat)[1])
     {
       thisrow<-cdat[crow,]
-      cdat[crow,]<-residuals(lm(thisrow~times))
+      cdat[crow,]<-stats::residuals(stats::lm(thisrow~times))
     }
   }
   

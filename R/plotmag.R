@@ -14,6 +14,9 @@
 #' @param ... Additional graphics parameters passed to \code{image} (\code{graphics} package) if \code{colorbar==FALSE}, or to \code{image.plot} (\code{fields} package) if \code{colorbar==TRUE}
 #' 
 #' @export
+#' @importFrom fields image.plot
+#' @importFrom graphics image
+
 plotmag<-function(object,...)
 {
   UseMethod("plotmag",object)
@@ -56,13 +59,13 @@ plotmag.tts<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,colorbar=TRUE,t
   }
   if (!colorbar)
   {
-    image(x=times,y=log2(timescales),z=wav,xlab="Time",zlim=zlims,
+    graphics::image(x=times,y=log2(timescales),z=wav,xlab="Time",zlim=zlims,
           ylab="Timescale",axes=F,col=colorfill(100),main=title,...)
     axis(1,at = xlocs,labels=xlocs)
     axis(2,at = log2(ylocs),labels = ylocs)
   }else
   {
-    image.plot(x=times,y=log2(timescales),z=wav,xlab="Time",zlim=zlims,
+    fields::image.plot(x=times,y=log2(timescales),z=wav,xlab="Time",zlim=zlims,
           ylab="Timescale",axes=F,col=colorfill(100),main=title,...)
     axis(1,at = xlocs,labels=xlocs)
     axis(2,at = log2(ylocs),labels = ylocs)
@@ -124,13 +127,13 @@ plotmag.wpmf<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,sigthresh=0.95
   }
   if (!colorbar)
   {
-    image(x=times,y=log2(timescales),z=wav,xlab="Time",zlim=zlims,
+    graphics::image(x=times,y=log2(timescales),z=wav,xlab="Time",zlim=zlims,
           ylab="Timescale",axes=F,col=colorfill(100),main=title,...)
     axis(1,at = xlocs,labels=xlocs)
     axis(2,at = log2(ylocs),labels = ylocs)
   }else
   {
-    image.plot(x=times,y=log2(timescales),z=wav,xlab="Time",zlim=zlims,
+    fields::image.plot(x=times,y=log2(timescales),z=wav,xlab="Time",zlim=zlims,
                ylab="Timescale",axes=F,col=colorfill(100),main=title,...)
     axis(1,at = xlocs,labels=xlocs)
     axis(2,at = log2(ylocs),labels = ylocs)
@@ -141,13 +144,13 @@ plotmag.wpmf<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,sigthresh=0.95
     if (signif[[1]]=="quick")
     {
       q<-quantile(signif[[2]],sigthresh)
-      contour(x=times,y=log2(timescales),z=wav,levels=q,drawlabels=F,lwd=2,
+      graphics::contour(x=times,y=log2(timescales),z=wav,levels=q,drawlabels=F,lwd=2,
               xaxs="i",xaxt="n",yaxt="n",xaxp=c(0,1,5),las = 1,frame=F)
     }
     if (signif[[1]] %in% c("fft","aaft"))
     {
       
-      contour(x=times,y=log2(timescales),z=signif[[3]],levels=sigthresh,
+      graphics::contour(x=times,y=log2(timescales),z=signif[[3]],levels=sigthresh,
               drawlabels=F,lwd=2,xaxs="i",xaxt="n",yaxt="n",xaxp=c(0,1,5),
               las = 1,frame=F)
     }
