@@ -1,0 +1,270 @@
+---
+title: "Wavelet approaches to synchrony (wsyn) package vignette"
+author: "Lawrence Sheppard, Jonathan Walter, Thomas Anderson, Lei Zhao, Daniel Reuman"
+date: ""
+geometry: "left=1cm,right=1cm,top=2.5cm,bottom=2.8cm"
+
+output: 
+  pdf_document:
+    number_sections: yes
+    keep_tex: yes
+    fig_caption: yes
+link-citations: True
+urlcolor: blue
+
+bibliography: wsynvignette_refs.bib 
+
+vignette: >
+  %\VignetteIndexEntry{"Matrix model selection package vignette"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The `wsyn` package provides wavelet-based tools for investigating population synchrony.
+Population synchrony is the tendency for population densities measured in different locations
+to be correlated in their fluctuations through time [@Liebhold_04].
+The basic dataset that `wsyn` helps analyze is one or more time
+series of the same variable, measured in different locations at the same times; or 
+two or more variables so measured at the same times and locations. Tools are implemented
+for describing synchrony and for investigating its causes and consequences. Wavelet 
+approaches to synchrony include @Grenfell_01; @Viboud_06; @Keitt_08; @Sheppard_16; 
+@Sheppard_17; @Sheppard_18; @Walter_17; @Anderson_18. The focus here is on techniques 
+used by @Sheppard_16; @Sheppard_17; @Sheppard_18; @Walter_17; @Anderson_18.
+<!--Insert additional references from our work as they come out-->
+<!--Insert here a summary of the sections-->
+
+# Preparing the data
+\noindent A typical dataset for analysis using `wsyn` is an $N \times T$ matrix of numeric 
+values where rows correspond to sampling locations (so the number of sampling locations is $N$)
+and columns correspond to evenly spaced times during which sampling was conducted.
+
+## Missing data
+\noindent Standard implementations of wavelet trasforms require time series consisting
+of measurements taken at evenly spaced times, with no missing data. Most functions provided
+in `wsyn` make these same assumptions and throw an error if data are missing. 
+The user is left to decide on and implement a reasonable way of filling missing
+data. Measures of synchrony can be influenced by data
+filling techniques that are based on spatial interpolation. We therefore recommend
+that spatially informed filling procedures not be used. We have previously 
+used the simple approach of
+replacing missing values in a time series by the median of the non-missing values in the
+time series [@Sheppard_16]. This approach, and other related simple 
+procedures [@Sheppard_16], seem
+unlikely to artefactually produce significant synchrony, or coherence relationships with other
+variables, but rely on the percentage of missing data being fairly low and may obscure 
+detection of synchrony or significant coherence relationships if too many data are 
+missing.
+
+## De-meaning, detrending, standardizing variance, and normalizing
+\noindent A function `cleandat` is provided that performs a variety of combinations
+of data cleaning typically necessary for analyses implemented in `wsyn`, including 
+de-meaning, linear detrending, standardization of time series variance, and Box-Cox
+transformations to normalize marginal distributions of time series. Most functions in
+`wsyn` assume at least that means have been removed from time series, and throw an
+error if this is not the case. Approaches based on Fourier surrogate (section \ref{sec:surrog})
+require time series with approximately normal marginals.
+
+# Time- and timescale-specific measures of synchrony
+\noindent The function `wt` implements the complex Morlet wavelet transform on which most
+other `wsyn` functions are based. The function `wpmf` 
+implements the wavelet phasor 
+mean field and the function `wmf` implements the wavelet mean
+field. These are techniques for depicting the time and timescale dependence of synchrony,
+and are introduced in this section. S3 classes are 
+defined for `wt`, `wmf` and `wpmf`, all of which
+inherit from the generic class `tts`. See the help files for the generator functions for 
+these classes (`wt`, `wmf`, `wpmf` and `tts`, respectively) for slot names and other
+information about the classes.
+
+## The wavelet transform
+Background on the wavelet transform is available from many sources, including 
+@Addison_02, and we do not recapitulate it. We instead describe the wavelet transform
+operationally, and demonstrate the implementation 
+of the wavelet transform in `wsyn` using examples from Fig. S2 of @Sheppard_18.
+Given a time series $x(t)$, $t=1,\ldots,T$, the wavelet transform $w_\sigma(t)$
+of $x(t)$ is a complex-valued function of time, $t=1,\ldots,T$ and timescale,
+$\sigma$. The magntiude $|w_\sigma(t)|$ is an estimate of the strength of the
+oscillations in $x(t)$ at time $t$ occurring at timescale $\sigma$. The complex
+phase of $w_\sigma(t)$ gives the phase of these oscilaltions at time $t$.
+
+```{r seed_setter_1, echo=F}
+set.seed(101)
+```
+
+To demonstrate the wavelet transform, start by generating some data. Start with a sine wave of
+amplitude $1$ and period $15$ that operates for $t=1,\ldots,100$ but then disappears.
+```{r wt_example_1_ts1}
+time1<-1:100
+time2<-101:200
+times<-c(time1,time2)
+  
+ts1p1<-sin(2*pi*time1/15)
+ts1p2<-0*time2
+ts1<-c(ts1p1,ts1p2)
+  
+ts<-ts1
+```
+Then add a sine wave of amplitude $1$ and period $8$ that operates for $t=101,\ldots,200$
+but before that is absent.
+```{r wt_example_1_ts2}
+ts2p1<-0*time1
+ts2p2<-sin(2*pi*time2/8)
+ts2<-c(ts2p1,ts2p2)
+  
+ts<-ts+ts2
+```
+Then add normally distributed white noise of mean $0$ and standard deviation $0.5$.
+```{r wt_example_1_ts3}
+ts3<-rnorm(200,mean=0,sd=0.5)
+ts<-ts+ts3
+```
+Now apply the wavelet transform, obtaining an object of class `wt`. Default parameter
+values for `scale.min`, `scale.max.input`, `sigma` and `f0` are usually good enough for 
+initial data exploration.
+```{r wt_example_1_wt}
+library(wsyn)
+ts<-cleandat(ts,times,clev=1)
+wtres<-wt(ts$cdat,times)
+class(wtres)
+names(wtres)
+```
+Methods `get_times`, `get_timescales`, `get_values`, and `get_dat` extract the slots. 
+Set methods also exist, but these just throw an error since setting individual slots of
+a `wt` object will break the relationship between the slots.
+There is a `plotmag` method for the `tts` class that plots the magnitude of the transform
+against time and timescale.
+```{r wt_example_1_plot}
+plotmag(wtres)
+```
+We can see the oscillations at timescale $15$ for the first hundred time steps, and the 
+oscilaltions at timescale $8$ for the last 100 time steps. Because the wavelet transform
+is based on convolution of a wavelet function with the time series, times and timescales 
+for which the overlap of the wavelet with the time series is insufficient are unreliable
+and are omitted. This affects times closer to the edges of the time series, and is the 
+reason for the "rocketship nose cone" shape of wavelet plots. More values are omitted 
+for longer timescales because long-timescale wavelets overhang the end of the time series
+further in the convolution operation. All plots based on wavelet transforms have the same
+property.
+
+<!--Insert plotphase demo when possible-->
+
+```{r seed_setter_2, echo=F}
+set.seed(201)
+```
+
+Now we give a second example, also from Fig. S2 of @Sheppard_18. The frequency
+of oscillation changes gradually from $0.2$ cycles per year (timescale 5 years) 
+to $0.1$ cycles per year (timescale 10 years).
+```{r wt_example_2}
+timeinc<-1 #one sample per year
+startfreq<-0.2 #cycles per year
+endfreq<-0.1 #cycles per year
+times<-1:200
+f<-seq(from=startfreq,length.out=length(times),to=endfreq) #frequency for each sample
+phaseinc<-2*pi*cumsum(f*timeinc)
+t.series<-sin(phaseinc)
+t.series<-cleandat(t.series,times,1)$cdat
+res<-wt(t.series, times)
+plotmag(res)
+```
+
+<!--maybe also do a plotphase call when possible?-->
+
+## The wavelet phasor mean field
+\noindent The wavelet phasor mean field (`wpmf` function in `wsyn`) depicts the time and 
+timescale dependence of phase synchrony of a collection of time series. If $x_n(t)$, 
+$n=1,\ldots,N$, $t=1,\ldots,T$ are time series of the same variable measured in $N$ locations
+at the same times, and if $w_{n,\sigma}(t)$ is the wavelet transform of $x_n(t)$ and 
+$W_{n,\sigma}(t)=\frac{w_{n,\sigma}(t)}{|w_{n,\sigma}(t)|}$ has only the information about
+the complex phases of the transform (unit-magnitude complex numbers such as these are called
+\emph{phasors}), then the wavelet phasor mean field is 
+\begin{equation}
+\frac{1}{N} \sum_{n=1}^N W_{n,\sigma}(t).
+\end{equation}
+For combinations of $t$ and $\sigma$ for which oscillations at time $t$ and timescale
+$\sigma$ in the time series $x_n(t)$ have the same phase (they are phase synchronized),
+the phasors $W_{n,\sigma}(t)$ will all point in similar directions in the complex plane, and
+their sum will be a large-magnitude complex number.
+For combinations of $t$ and $\sigma$ for which oscillations at time $t$ and timescale
+$\sigma$ in the time series $x_n(t)$ have unrelated phases (they are not phase synchronized),
+the phasors $W_{n,\sigma}(t)$ will all point in random, unrelated 
+directions in the complex plane, and
+their sum will be a small-magnitude complex number. Therefore plotting the magnitude of the
+wavelet phasor mean field against time and timescale quantifies the time and timescale
+dependence of phase synchrony in the $x_n(t)$. 
+
+```{r seed_setter_3, echo=F}
+set.seed(101)
+```
+
+We provide an example based on supplementary figure 1 of @Sheppard_16. A related technique, 
+the wavelet mean field (section \ref{sect:wmf}), was used there, but the wavelet phasor mean
+field also applies and is demonstrated here. We construct data consisting of time series
+measured for 100 time steps in each of 11 locations. The time series have three components.
+The first component is a sine wave of amplitude $1$ and period $10$ years for the first
+half of the time series, and is a sine wave of amplitude $1$ and period $5$ for the 
+second half of the time series. This same signal is present in all $11$ time series and
+creates the synchrony among them.
+```{r wpmf_example_1_dat_1}
+times1<-0:50
+times2<-51:100
+times<-c(times1,times2)
+ts1<-c(sin(2*pi*times1/10),sin(2*pi*times2/5))+1.1
+```
+The second component is a sine wave of amplitude $1$ and period $3$ years that is 
+randomly and independently phase shifted in each of the $11$ time series. The third
+component is white noise, independently generated for each time series.
+```{r wpmf_example_1_dat_2}
+dat<-matrix(NA,11,length(times))
+for (counter in 1:dim(dat)[1])
+{
+  ts2<-3*sin(2*pi*times/3+2*pi*runif(1))+3.1
+  ts3<-rnorm(length(times),0,1.5)
+  dat[counter,]<-ts1+ts2+ts3    
+}
+dat<-cleandat(dat,times,1)$cdat
+```
+The second and third components do not generate synchrony, 
+and obscure the synchrony of the first component.
+As a result, synchrony cannot be readily detected by visually examining the time series:
+```{r wpmf_example_1_plotts}
+plot(times,dat[1,]/10+1,type='l',xlab="Time",ylab="Time series index",ylim=c(0,12))
+for (counter in 2:dim(dat)[1])
+{
+  lines(times,dat[counter,]/10+counter)
+}
+```
+
+Nor can synchrony be readily detected by examining the $55$ pairwise correlation coefficients
+between the time series, which are widely distributed and include many values above and below
+$0$:
+```{r wpmf_example_1_cors}
+cmat<-cor(t(dat))
+diag(cmat)<-NA
+cmat<-as.vector(cmat)
+cmat<-cmat[!is.na(cmat)]
+hist(cmat,30,xlab="Pearson correlation",ylab="Count")
+```
+
+But the wavelet phasor mean field sensitively reveals the synchrony and its time
+and timescale structure:
+```{r wpmf_example_1}
+res<-wpmf(dat,times,sigmethod="quick")
+plotmag(res)
+```
+
+<!--Now discuss significance via the quick method, which was already applied above-->
+
+## The wavelet mean field \label{sect:wmf}
+
+
+# Surrogates \label{sec:surrog}
+
+
+## Fourier surrogates
+
+
+## Amplitude adjusted Fourier surrogates
+
+
+## Alternative significance tests for the wavelet phasor mean field
