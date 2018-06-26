@@ -30,13 +30,16 @@ for describing synchrony and for investigating its causes and consequences. Wave
 approaches to synchrony include @Grenfell_01; @Viboud_06; @Keitt_08; @Sheppard_16; 
 @Sheppard_17; @Sheppard_18; @Walter_17; @Anderson_18. The focus here is on techniques 
 used by @Sheppard_16; @Sheppard_17; @Sheppard_18; @Walter_17; @Anderson_18.
+The techniques can also be used for data of the same format representing quantities
+not related to populations.
 <!--Insert additional references from our work as they come out-->
 <!--Insert here a summary of the sections-->
 
 # Preparing the data
 \noindent A typical dataset for analysis using `wsyn` is an $N \times T$ matrix of numeric 
 values where rows correspond to sampling locations (so the number of sampling locations is $N$)
-and columns correspond to evenly spaced times during which sampling was conducted.
+and columns correspond to evenly spaced times during which sampling was conducted (so the
+number of times sampling was conducted is $T$).
 
 ## Missing data
 \noindent Standard implementations of wavelet trasforms require time series consisting
@@ -64,28 +67,21 @@ transformations to normalize marginal distributions of time series. Most functio
 error if this is not the case. Approaches based on Fourier surrogate (section \ref{sec:surrog})
 require time series with approximately normal marginals.
 
-# Time- and timescale-specific measures of synchrony
+# The wavelet transform
 \noindent The function `wt` implements the complex Morlet wavelet transform on which most
-other `wsyn` functions are based. The function `wpmf` 
-implements the wavelet phasor 
-mean field and the function `wmf` implements the wavelet mean
-field. These are techniques for depicting the time and timescale dependence of synchrony,
-and are introduced in this section. S3 classes are 
-defined for `wt`, `wmf` and `wpmf`, all of which
-inherit from the generic class `tts`. See the help files for the generator functions for 
-these classes (`wt`, `wmf`, `wpmf` and `tts`, respectively) for slot names and other
-information about the classes.
+other `wsyn` functions are based. An S3 class is defined for `wt`, and it inherits from the
+generic class `tts`. See the help files for the generator functions `wt` and `tts` 
+for slot names and other information about these classes.
 
-## The wavelet transform
 Background on the wavelet transform is available from many sources, including 
 @Addison_02, and we do not recapitulate it. We instead describe the wavelet transform
 operationally, and demonstrate the implementation 
 of the wavelet transform in `wsyn` using examples from Fig. S2 of @Sheppard_18.
 Given a time series $x(t)$, $t=1,\ldots,T$, the wavelet transform $w_\sigma(t)$
-of $x(t)$ is a complex-valued function of time, $t=1,\ldots,T$ and timescale,
+of $x(t)$ is a complex-valued function of time, $t=1,\ldots,T$, and timescale,
 $\sigma$. The magntiude $|w_\sigma(t)|$ is an estimate of the strength of the
 oscillations in $x(t)$ at time $t$ occurring at timescale $\sigma$. The complex
-phase of $w_\sigma(t)$ gives the phase of these oscilaltions at time $t$.
+phase of $w_\sigma(t)$ gives the phase of these oscilaltions.
 
 ```{r seed_setter_1, echo=F}
 set.seed(101)
@@ -133,9 +129,10 @@ Set methods also exist, but these just throw an error since setting individual s
 a `wt` object will break the relationship between the slots.
 There is a `plotmag` method for the `tts` class that plots the magnitude of the transform
 against time and timescale.
-```{r wt_example_1_plot}
+```{r wt_example_1_plot, results=FALSE}
 plotmag(wtres)
 ```
+
 We can see the oscillations at timescale $15$ for the first hundred time steps, and the 
 oscilaltions at timescale $8$ for the last 100 time steps. Because the wavelet transform
 is based on convolution of a wavelet function with the time series, times and timescales 
@@ -153,9 +150,10 @@ set.seed(201)
 ```
 
 Now we give a second example, also from Fig. S2 of @Sheppard_18. The frequency
-of oscillation changes gradually from $0.2$ cycles per year (timescale 5 years) 
+of oscillation of the data geenerated below
+changes gradually from $0.2$ cycles per year (timescale 5 years) 
 to $0.1$ cycles per year (timescale 10 years).
-```{r wt_example_2}
+```{r wt_example_2, results=FALSE}
 timeinc<-1 #one sample per year
 startfreq<-0.2 #cycles per year
 endfreq<-0.1 #cycles per year
@@ -170,8 +168,19 @@ plotmag(res)
 
 <!--maybe also do a plotphase call when possible?-->
 
+# Time- and timescale-specific measures of synchrony
+\noindent The function `wpmf` 
+implements the wavelet phasor 
+mean field and the function `wmf` implements the wavelet mean
+field. These are techniques for depicting the time and timescale dependence of synchrony,
+and are introduced in this section. S3 classes are 
+defined for `wmf` and `wpmf`, both of which
+inherit from the generic class `tts`. See the help files for the generator functions for 
+these classes (`wmf`, `wpmf` and `tts`, respectively) for slot names and other
+information about the classes.
+
 ## The wavelet phasor mean field
-\noindent The wavelet phasor mean field (`wpmf` function in `wsyn`) depicts the time and 
+\noindent The wavelet phasor mean field (the `wpmf` function in `wsyn`) depicts the time and 
 timescale dependence of phase synchrony of a collection of time series. If $x_n(t)$, 
 $n=1,\ldots,N$, $t=1,\ldots,T$ are time series of the same variable measured in $N$ locations
 at the same times, and if $w_{n,\sigma}(t)$ is the wavelet transform of $x_n(t)$ and 
@@ -191,7 +200,8 @@ the phasors $W_{n,\sigma}(t)$ will all point in random, unrelated
 directions in the complex plane, and
 their sum will be a small-magnitude complex number. Therefore plotting the magnitude of the
 wavelet phasor mean field against time and timescale quantifies the time and timescale
-dependence of phase synchrony in the $x_n(t)$. 
+dependence of phase synchrony in the $x_n(t)$. The wavelet phasor mean field, being a mean
+of phasors, always has magnitude between $0$ and $1$.
 
 ```{r seed_setter_3, echo=F}
 set.seed(101)
@@ -248,18 +258,72 @@ hist(cmat,30,xlab="Pearson correlation",ylab="Count")
 
 But the wavelet phasor mean field sensitively reveals the synchrony and its time
 and timescale structure:
-```{r wpmf_example_1}
+```{r wpmf_example_1, results=FALSE}
 res<-wpmf(dat,times,sigmethod="quick")
 plotmag(res)
 ```
 
-<!--Now discuss significance via the quick method, which was already applied above-->
+The `wpmf` function implements assessment of the statistical significance of 
+phase synchrony in three ways, one of which is demonstrated by the contour lines on 
+the above plot (which give a $95\%$ confidence level by default - the level can be changed
+with the `sigthresh` argument to the `plotmag` method for the `wpmf` class). The method
+of significance testing the wavelet phasor mean field plot is controlled with the
+`sigmethod` argument to `wpmf`, which can be `quick` (the default), `fft` or `aaft`. The
+`quick` method compares the mean field magnitude value for each time and timescale 
+separately to a distribution of magnitudes of sums of $N$ random, independent
+phasors. 
+
+Each time/timescale
+pair is compared independently to the distribution, and the multiple testing problem is
+not accounted for, so some time/timescales pairs will come out as showing "significant"
+phase synchrony by chance, i.e., false-positive detections of phase synchrony can occur. 
+For instance, the small islands of significant synchrony at timescale
+approximately $5$ and times about $15$ and $40$ on the above plot are false positives. 
+
+Signficance is based on stochastic generation of magnitudes of sums of random phasors,
+so significance contours will differ 
+slightly on repeat runs. Increasing the number of ranomizations (argument `nrand` to `wpmf`) 
+reduces this variation. 
+
+The `quick` method can be inaccurate for very short 
+timescales. The two alternative methods, `fft` and `aaft`, mitigate this problem but
+are substantially slower. The `fft` and `aaft` methods are based on surrogate 
+datasets (section \ref{sec:surrog})
+so are discussed in section \ref{sec:wpmfsignif}.
+
+Examples of the wavelet phasor mean field technique applied to real datasets are in, 
+for instance, @Sheppard_18 (their Fig. S1) and @Anderson_18 (their Fig. 4).
 
 ## The wavelet mean field \label{sect:wmf}
+\noindent The wavelet mean field (the `wmf` function in `wsyn`) depicts the time and 
+timescale dependence of synchrony of a collection of time series $x_n(t)$ for 
+$n=1,\ldots,N$ and $t=1,\ldots,T$, taking into account both phase synchrony and 
+associations through time of magnitudes of oscillations in different time series at
+a given timescale. See @Sheppard_16 for a precise mathematical definition. 
+The plot is similar in format to a wavelet phasor mean field plot, but
+without significance contours:
+```{r wmf_example_1, results=FALSE}
+res<-wpmf(dat,times)
+plotmag(res)
+```
 
+The wavelet mean field is a more useful technique than the wavelet phasor mean field 
+insofar as it accounts for associations of magnitudes of oscillation, in addition
+to phase synchrony, but it is less useful insofar as significance contours are not
+available. The wavelet mean field also has some mathematical advantages, described in
+@Sheppard_16 and @Sheppard_18. The "wavelet Moran theorem"" and other theorems 
+described in those references use the wavelet 
+mean field, not the wavelet phasro mean field, 
+and can be used to help attribute synchrony to particular causes. 
+Thus the two techniques are often best used together: 
+significance of phase synchrony can be identified with the wavelet phasor mean field,
+and then once significance is identified, synchrony can be desribed and studied using
+the wavelet mean field. 
+
+Examples of the wavelet mean field applied to real data
+are in @Sheppard_16 and @Sheppard_18.
 
 # Surrogates \label{sec:surrog}
-
 
 ## Fourier surrogates
 
@@ -267,4 +331,8 @@ plotmag(res)
 ## Amplitude adjusted Fourier surrogates
 
 
-## Alternative significance tests for the wavelet phasor mean field
+## Alternative significance tests for the wavelet phasor mean field \label{sec:wpmfsignif}
+
+# Coherence 
+
+# References
