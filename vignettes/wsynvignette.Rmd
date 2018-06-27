@@ -311,7 +311,7 @@ The wavelet mean field is a more useful technique than the wavelet phasor mean f
 insofar as it accounts for associations of magnitudes of oscillation, in addition
 to phase synchrony, but it is less useful insofar as significance contours are not
 available. The wavelet mean field also has some mathematical advantages, described in
-@Sheppard_16 and @Sheppard_18. The "wavelet Moran theorem"" and other theorems 
+@Sheppard_16 and @Sheppard_18. The "wavelet Moran theorem" and other theorems 
 described in those references use the wavelet 
 mean field, not the wavelet phasro mean field, 
 and can be used to help attribute synchrony to particular causes. 
@@ -323,7 +323,19 @@ the wavelet mean field.
 Examples of the wavelet mean field applied to real data
 are in @Sheppard_16 and @Sheppard_18.
 
+# Coherence 
+
+
 # Surrogates \label{sec:surrog}
+\noindent Some of the text of this section was adapted, with minor modifications only, 
+from our earlier work [@Sheppard_16; @Sheppard_18; @Anderson_18]. 
+
+The level of wavelet coherence or spatial wavelet coherence consistent with the null hypothesis that there is no relationship between two variables depends on the spatial and temporal autocorrelation of the data. For instance, two variables that fluctuate regularly at the same frequency and are both highly spatially synchronous will have a phase difference that is highly consistent over time and space, and therefore will have high spatial wavelet coherence, even if they are not related. Two irregular oscillators with low spatial synchrony are less likely to show consistent phase differences over time and space if they are unrelated. We test wavelet coherences and spatial wavelet coherences for significance using resampling schemes based on surrogate datasets that randomize away phase relationship between variables while retaining, to the extent possible, the spatial and temporal autocorrelation properties and the marginal distributions of the time series. We use the widely applied Fourier surrogate and amplitude adjusted Fourier surrogate methods [@Prichard_94; @Schreiber_00], implemented 
+in the `surrog` function in `wsyn` and summarized below. Surrogates are also used for 
+applications other than measures of coherence (see, e.g., section \ref{sec:wpmfsignif}).
+
+<!--Something about aggregating over ranks to get one p-value for band, after I decide how I 
+am going to implement that. Or maybe put it as its own section below?-->
 
 ## Fourier surrogates
 
@@ -333,6 +345,5 @@ are in @Sheppard_16 and @Sheppard_18.
 
 ## Alternative significance tests for the wavelet phasor mean field \label{sec:wpmfsignif}
 
-# Coherence 
 
 # References

@@ -15,7 +15,7 @@ Progress:
 6) DONE write the magnitude plotter functions, and unit tests. perhaps these should go in the methods files? maybe not. think more
 6.5) DONE Go back and add joint Box-Cox to cleandat, and unit tests
 6.75) DONE get the .Rmds going and compile everything as a package
-8) start a vignette, covering the code you have written so far
+8) start a vignette, covering the code you have written so far - done except for surrogates, have to do that section, but leaving that until after coherence stuff is written
 9) compile again as a package
 10) stopping point - mean field methods implemented. next step coherence methods.
 11) Work on coherence functionality, inc unit tests and vignette and making the package compile. Need to start with a design phase and working out appropriate S3 classes. See some thoughts below.
@@ -26,9 +26,11 @@ Progress:
 
 for formatting the documentation at top:
 1) use \code{} for TRUE and FALSE. Do not use T and F.
+2) I foudn and deleted a comment in the header of wmpf to the effect that "the wavelet phasor mean field was developed by Sheppard and Reuman, R code written by Anderson and Walter." It was not developed by Shppard and Reuman, and now the R code is by all of us, so I changed it. Watch out for other notes like that, I think I remember seeing some.
 
 general
 1) It will be possible to be a bit more consistent with use of get and set methods instead of $
+2) you need an error checking function for scale.min, scale.max, f0, sigma, and you need to call it from the top of all functions that take these as arguments
 
 wt.r:
 #TODO: make this a compiled function using cmpfun in the compiler package
@@ -39,8 +41,7 @@ wt.r:
 
 
 Ideas I emailed to myself 2018 05 06:
-DONE Add data slots to wt wmf
-and wpmf classes? So the data can be kept with the result?
+DONE Add data slots to wt wmf and wpmf classes? So the data can be kept with the result?
 
 Make a ts class which stands for timescale, base class for
 coherence results
@@ -68,3 +69,42 @@ alternative normalizations. You have to pass in some kind of
 normalization routine. Available alternatives include no
 normalization and normalizing each time series separately by
 power. The normalization function is included in the object
+____
+
+ts has slots for timescale and for a complex vector of the same
+length - might not be necessary if I only have one coherence class. Decided to abandon it.
+
+coh class (coh for coherence)
+slots: 
+dat1, dat2 - the data, stored 
+times - times of measurement
+norm - the normalization used in computing the coherence (one of "phase", "none", "powall" (this 
+one is the normalization we used in the wavelet coherence in the aphid paper), 
+and "powind" (this one is the normalization Lawrence mentioned by the power
+of each time series individually, check this last with Lawrence when you code it))
+timescales - vector of timescales
+coh - the coherence, calculated in the usual way without scalloping, after 
+normalization as specified by "norm"  
+signif - a list with elements coh (the coherence of dat1 and dat2for significance testing, 
+equal to  coh except in the "fast" case) and scoh (a matrix with all the 
+surrogate coherences, for comparison with signif$coh)
+bandp - stores p-values across timescale bands that have been computed. it's a data frame, 
+empty on first call to the generator function for the coh class
+
+coh function, the generator of the class, has these arguments:
+dat1 - either a locations by times matrix or a vector
+dat2 - same as dat1 - they must be the same dimensions
+times - times of measurement
+norm - see above
+sigmethod - method for significance testing, one of "none", "surrog1", "surrog2", "surrog12", "fast"
+nrand - number of randomizations for significance testing
+all the parameters for the wavelet transform, e.g., f0, scale.min, etc.
+
+When you run coh, the bandp slot is NA at first until you run the last of the below functions
+
+Methods:
+set (which throw an error) and get methods for changing and extracting the slot entries
+print and summary methods
+something for plotting coherence against timescale - if bandp is not NA, puts the p-values on the plot. Call it plot.
+something for plotting ranks in surrogates against timescale - if bandp is not NA, puts the p-values on the plot. Also call it plot. Whether this or the previous or both are generated is controlled by a switch argument.
+something for p-values across timescale bands - populates bandp or adds to it. Call it cohbandsignif
