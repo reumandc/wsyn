@@ -9,8 +9,7 @@
 #' @param times A vector of time step values (e.g., years)
 #' @param scale.min The smallest scale of fluctuation that will be examined
 #' @param scale.max.input The largest scale of fluctuation that is guaranteed to be examined 
-#' @param sigma The ratio of each time scale examined relative to the next timescale.
-#' Should be greater than 1.
+#' @param sigma The ratio of each time scale examined relative to the next timescale. Should be greater than 1.
 #' @param f0 The ratio of the period of fluctuation to the width of the envelope. Defaults to 1
 #' 
 #' @return \code{wt} returns an object of class \code{wt}.  Slots are: 
@@ -19,7 +18,7 @@
 #' \item{timescales}{The timescales (1/frequency) computed for the wavelet transform}
 #' \item{dat}{the data vector from which the transform was computed}
 #' 
-#' @note Important for interpreting the phase: the phases grow through time, i.e., they turn anti-clockwise 
+#' @note Important for interpreting the phase: the phases grow through time, i.e., they turn anti-clockwise. 
 #' 
 #' @author Lawrence Sheppard \email{lwsheppard@@ku.edu}, Jonathan Walter 
 #' \email{jaw3es@@virginia.edu}, Daniel Reuman \email{reuman@@ku.edu}

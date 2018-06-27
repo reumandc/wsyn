@@ -1,5 +1,4 @@
-#' Computes the wavelet phasor mean field from a matrix of spatiotemporal data. Also the
-#' creator function for the \code{wpmf} class.
+#' Wavelet phasor mean field
 #' 
 #' Computes the wavelet phasor mean field from a matrix of spatiotemporal data. Also the
 #' creator function for the \code{wpmf} class. The \code{wpmf} class inherits from the 
@@ -9,19 +8,17 @@
 #' @param times A vector of time step values
 #' @param scale.min The smallest scale of fluctuation that will be examined
 #' @param scale.max.input The largest scale of fluctuation guaranteed to be examined
-#' @param sigma The ratio of each time scale examined relative to the next timescale
+#' @param sigma The ratio of each time scale examined relative to the next timescale. Should be greater than 1.
 #' @param f0 The ratio of the period of fluctuation to the width of the envelop
 #' @param sigmethod Method for significance testing the wmpf, one of \code{quick}, \code{fft}, \code{aaft} (see details)
 #' @param nrand The number of randomizations to be used for significance testing
 #' 
 #' @return \code{wpmf} returns an object of class \code{wpmf}. Slots are:
 #' \item{values}{A matrix of complex numbers containing the wavelet phasor mean field, of dimensions \code{length(times)} by the number of timescales. Entries not considered reliable (longer timescales, near the edges of the time span) are set to NA.}
-#' \item{times}{The times associated with the \code{wpmf}}
+#' \item{times}{The times associated with the data and the \code{wpmf}}
 #' \item{timescales}{The timescales associated with the \code{wpmf}}
 #' \item{signif}{A list with information from the significance testing. Format depends on \code{sigmethod} (see details).}
 #' \item{dat}{The data matrix (locations by time) from which the \code{wpmf} was computed}
-#' 
-#' @note The wavelet phasor mean field was developed by Lawrence Sheppard and Daniel Reuman. R code by Thomas Anderson and Jon Walter
 #' 
 #' @details For \code{sigmethod} equal to \code{quick}, the empirical wpmf is compared to a distribution of 
 #' magnitudes of sums of random phaors, using the same number of phasors as there are time series. The \code{signif}
@@ -66,7 +63,7 @@ wpmf<-function(dat,times,scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1, si
   wavarray<-wavarray$wavarray
   
   #make phasors, then take wpmf by averaging across space
-  wavarray<-wavarray/Mod(wavarray)
+  wavarray<-normforcoh(wavarray,"phase")
   wpmfres<-apply(wavarray, c(2,3), mean, na.rm=T)
   errcheck_tts(times,timescales,wpmfres,"wpmf")
   

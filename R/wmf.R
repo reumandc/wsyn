@@ -43,16 +43,12 @@ wmf<-function(dat, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f0 = 1)
   timescales<-wavarray$timescales
   wavarray<-wavarray$wavarray
   
-  #get square modulus, then average over time and location and take square root to 
+  #Get square modulus, then average over time and location and take square root to 
   #get denominator for normalization
-  normdenom<-sqrt(apply(X=(Mod(wavarray))^2,MARGIN=3,FUN=mean,na.rm=T))
+  #Then normalize each timescale by the value of the normalization denomenator for 
+  #that timescale
+  wavarray<-normforcoh(wavarray,"powall")
 
-  #normalize each timescale by the value of normdenom for that timescale
-  for (i in 1:dim(wavarray)[3])
-  {
-    wavarray[,,i]<-wavarray[,,i]/normdenom[i]
-  }
-  
   #get the wmf by averaging across space
   wmf<-apply(wavarray, c(2,3), mean, na.rm=T)
   
