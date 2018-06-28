@@ -18,6 +18,7 @@
 #' @return \code{coh} returns an object of class \code{coh}. Slots are:
 #' \item{dat1, dat2}{The input data}
 #' \item{times}{The times associated with the data}
+#' \item{sigmethod} The method for significance testing, as inputted. 
 #' \item{norm}{The normalization of the wavelet transforms that will be used in computing the coherence. Different values result in different versions of the coherence. One of "none", "phase", "powall", "powind". See details.}
 #' \item{timescales}{The timescales associated with the coherence}
 #' \item{coher}{The coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
@@ -42,22 +43,22 @@
 #' separately for each $i$ and $n$.
 #' 
 #' The slot \code{signif} is \code{NA} if \code{sigmethod} is "\code{none}". Otherwise, and
-#' if \code{sigmethod} is not "\code{fast}", then \code{signif$cohere} is the same as 
-#' \code{cohere}, and \code{signif$scohere} is a matrix of dimensions \code{nrand} by 
-#' \code{length(cohere)} with rows equal to coherences of surrogate datasets, computed using
+#' if \code{sigmethod} is not "\code{fast}", then \code{signif$coher} is the same as 
+#' \code{coher}, and \code{signif$scoher} is a matrix of dimensions \code{nrand} by 
+#' \code{length(coher)} with rows equal to coherences of surrogate datasets, computed using
 #' the normalization specified by \code{norm}. The type of surrogate used (Fourier surrogates 
 #' or amplitude adjusted Fourier surrogates, see \code{surrog}), as well as which of the 
 #' datasets surrogates are computed on (\code{dat1}, \code{dat2}, or both) is determined by 
 #' \code{sigmethod}. Synchrony-preserving surrogates are used. A variety of 
 #' statements of significance (or lack thereof) can be made
-#' by comparing \code{signif$cohere} with \code{signif$scohere} (see the \code{plot} method
+#' by comparing \code{signif$coher} with \code{signif$scoher} (see the \code{plot} method
 #' for the \code{coh} class and the function \code{cohbandsignif}). If \code{sigmethod} is 
 #' "\code{fast}", the fast algorithm of Sheppard et al. (2017) is used. In that case
-#' \code{signif$cohere} can be compared to \code{signif$scohere} to make significance 
-#' statements about the coherence in exactly the same way, but \code{signif$cohere} will no
-#' longer precisely equal \code{cohere}, and \code{cohere} should not be compared 
-#' directly to \code{signif$scohere}. Statements about significance of the coherence 
-#' should be made using \code{signif$cohere} and \code{signif$scohere}, whereas \code{cohere}
+#' \code{signif$coher} can be compared to \code{signif$scoher} to make significance 
+#' statements about the coherence in exactly the same way, but \code{signif$coher} will no
+#' longer precisely equal \code{coher}, and \code{coher} should not be compared 
+#' directly to \code{signif$scoher}. Statements about significance of the coherence 
+#' should be made using \code{signif$coher} and \code{signif$scoher}, whereas \code{coher}
 #' should be used whenever the actual value of the coherence is needed. No fast algorithm
 #' exists for \code{norm} equal to "\code{phase}" (the phase coherence; Sheppard et al, 2017),
 #' so if \code{norm} is "\code{phase}" and \code{sigmethod} is "\code{fast}", the function
@@ -84,7 +85,6 @@
 #' #Not written yet but need some
 #' 
 #' @export
-#' @importFrom stats fft
 
 coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale.max.input=NULL,sigma=1.05,f0=1)
 {
@@ -128,17 +128,17 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   
   #**get wavelet transforms
   h<-warray(dat1,times,scale.min,scale.max.input,sigma,f0)
-  W1<-h$W1
+  W1<-h$wavarray
   timescales<-h$timescales
   h<-warray(dat2,times,scale.min,scale.max.input,sigma,f0)
-  W2<-h$W2
+  W2<-h$wavarray
   
   #**normalize
   W1<-normforcoh(W1,norm)
   W2<-normforcoh(W2,norm)
   
   #**compute coherence
-  cohere<-apply(X=W1*Conj(W2),FUN=mean,MARGIN=3,na.rm=T)
+  coher<-apply(X=W1*Conj(W2),FUN=mean,MARGIN=3,na.rm=T)
   
   #**now do the significance
   
@@ -146,10 +146,11 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   if (sigmethod=="fast")
   {
     #***DAN: fill in
-    
+    stop("Fast coherence not implemented yet") 
+     
     #prepare result  
-    result<-list(dat1=dat1,dat2=dat2,times=times,norm=norm,timescales=timescales,coher=coher,
-                 signif=signif,bandp=NA)
+    result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,norm=norm,
+                 timescales=timescales,coher=coher,signif=signif,bandp=NA)
     class(result)<-c("coh","list")
     return(result)    
   }
@@ -158,8 +159,8 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   if (sigmethod=="none")
   {
     #prepare result  
-    result<-list(dat1=dat1,dat2=dat2,times=times,norm=norm,timescales=timescales,coher=coher,
-                 signif=NA,bandp=NA)
+    result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,norm=norm,
+                 timescales=timescales,coher=coher,signif=NA,bandp=NA)
     class(result)<-c("coh","list")
     return(result)    
   }
@@ -177,36 +178,38 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   }
   
   #surrogate the specified time series and take transforms and normalize
+  f<-function(x,times,scale.min,scale.max.input,sigma,f0)
+  {
+    return(warray(x,times,scale.min,scale.max.input,sigma,f0)$wavarray)
+  }
   sW1<-rep(list(W1),times=nrand)
   sW2<-rep(list(W2),times=nrand)
   if (sigmethod %in% c("fftsurrog1","fftsurrog12","aaftsurrog1","aaftsurrog12"))
   {
     sdat1<-surrog(dat1,nrand,surrtype=surr,syncpres=TRUE)
-    sW1<-lapply(FUN=warray,X=sdat1,times=times,scale.min=scale.min,scale.max.input=scale.max.input,
-              sigma=sigma,f0=f0) #take transforms
+    sW1<-lapply(FUN=f,X=sdat1,times=times,scale.min=scale.min,scale.max.input=scale.max.input,sigma=sigma,f0=f0) #take transforms
     sW1<-lapply(X=sW1,FUN=normforcoh,norm=norm) #normalize
   }
   if (sigmethod %in% c("fftsurrog2","fftsurrog12","aaftsurrog2","aaftsurrog12"))
   {
     sdat2<-surrog(dat2,nrand,surrtype=surr,syncpres=TRUE)
-    sW2<-lapply(FUN=warray,X=sdat2,times=times,scale.min=scale.min,scale.max.input=scale.max.input,
-                sigma=sigma,f0=f0) #take transforms
+    sW2<-lapply(FUN=f,X=sdat2,times=times,scale.min=scale.min,scale.max.input=scale.max.input,sigma=sigma,f0=f0) #take transforms
     sW2<-lapply(X=sW2,FUN=normforcoh,norm=norm) #normalize
   }
   
   #now compute coherences
-  scohere<-matrix(complex(real=NA,imaginary=NA),nrand,length(timescales))
+  scoher<-matrix(complex(real=NA,imaginary=NA),nrand,length(timescales))
   for (counter in 1:nrand)
   {
-    scohere[counter,]<-apply(X=sW1[[counter]]*Conj(sW2[[counter]]),FUN=mean,MARGIN=3,na.rm=T)
+    scoher[counter,]<-apply(X=sW1[[counter]]*Conj(sW2[[counter]]),FUN=mean,MARGIN=3,na.rm=T)
   }
 
   #assemble the significance results
-  signif<-list(cohere,scohere)
+  signif<-list(coher=coher,scoher=scoher)
   
   #prepare result  
-  result<-list(dat1=dat1,dat2=dat2,times=times,norm=norm,timescales=timescales,coher=coher,
-               signif=signif,bandp=NA)
+  result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,
+               norm=norm,timescales=timescales,coher=coher,signif=signif,bandp=NA)
   class(result)<-c("coh","list")
   return(result)    
 }
