@@ -1,0 +1,214 @@
+#' Coherence
+#' 
+#' Wavelet coherence and wavelet phase coherence, spatial or for single time series.
+#' Also the creator function for the \code{coh} class, which inherits from the \code{list}
+#' class.
+#' 
+#' @param dat1 A locations (rows) x time (columns) matrix (for spatial coherence), or a single time series as a vector
+#' @param dat2 Same format as dat1, same locations and times
+#' @param times The times at which measurements were made
+#' @param norm The normalization of wavelet transforms to use. Controls the version of the coherence that is performed. One of "none", "phase", "powall", "powind". See details.
+#' @param sigmethod The method for significance testing. One of "none", "fftsurrog1", "fftsurrog2", "fftsurrog12", "aaftsurrog1", "aaftsurrog2", "aaftsurrog12", "fast". See details.
+#' @param nrand Number of surrogate randomizations to use for significance testing.
+#' @param scale.min The smallest scale of fluctuation that will be examined
+#' @param scale.max.input The largest scale of fluctuation guaranteed to be examined
+#' @param sigma The ratio of each time scale examined relative to the next timescale. Should be greater than 1.
+#' @param f0 The ratio of the period of fluctuation to the width of the envelop
+#' 
+#' @return \code{coh} returns an object of class \code{coh}. Slots are:
+#' \item{dat1, dat2}{The input data}
+#' \item{times}{The times associated with the data}
+#' \item{norm}{The normalization of the wavelet transforms that will be used in computing the coherence. Different values result in different versions of the coherence. One of "none", "phase", "powall", "powind". See details.}
+#' \item{timescales}{The timescales associated with the coherence}
+#' \item{coher}{The coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
+#' \item{signif}{A list with information from the significance testing. Elements are \code{coher} and \code{scoher}. See details.}
+#' \item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. Empty on an initial call to \code{coh}, filled in by the function \code{cohbandsignif}. See details.}
+#' 
+#' @details If the dimensions of \code{dat1} and \code{dat2} are $N \times T$ ($N$ is 1 for 
+#' vector \code{dat1} and \code{dat2}), and if the wavelet transform of the $n$th row
+#' of \code{dati} is denoted $W_{i,n,\sigma}(t)$, then the coherence is the average, over all 
+#' locations $n$ and times $t$ for which wavelet transforms are avaiable, of the quantity 
+#' $w_{1,n,\sigma}(t)w_{2,n,\sigma}(t)^{*}$, where the $*$ represents complex conjugation and
+#' $w_{i,n,\sigma}(t)$ is a normalization of the wavelet transform. The normalization used depends 
+#' on \code{norm}. If \code{norm} is "\code{none}" then raw wavelet transforms are used. 
+#' If \code{norm} is "\code{phase}" then $w_{i,n,\sigma}(t)=W_{i,n,\sigma}(t)/|W_{i,n,\sigma}(t)|$,
+#' which gives the wavelet phase coherence, or the spatial wavelet phase coherence if $N>1$. 
+#' If \code{norm} is "\code{powall}" then the normalization is that descibed in the "Wavelet 
+#' mean field " section of the Methods of Sheppard et al. (2016), giving the version of the 
+#' coherence that was there called simply the wavelet coherence, or the spatial wavelet 
+#' coherence if $N>1$. If \code{norm} is "\code{powind}", then $w_{i,n,\sigma}(t)$ is obtained
+#' by dividing $W_{i,n,\sigma}(t)$ by the square root of the average of 
+#' $W_{i,n,\sigma}(t)W_{i,n,\sigma}(t)^{*}$ over the times for which it is defined; this is done 
+#' separately for each $i$ and $n$.
+#' 
+#' The slot \code{signif} is \code{NA} if \code{sigmethod} is "\code{none}". Otherwise, and
+#' if \code{sigmethod} is not "\code{fast}", then \code{signif$cohere} is the same as 
+#' \code{cohere}, and \code{signif$scohere} is a matrix of dimensions \code{nrand} by 
+#' \code{length(cohere)} with rows equal to coherences of surrogate datasets, computed using
+#' the normalization specified by \code{norm}. The type of surrogate used (Fourier surrogates 
+#' or amplitude adjusted Fourier surrogates, see \code{surrog}), as well as which of the 
+#' datasets surrogates are computed on (\code{dat1}, \code{dat2}, or both) is determined by 
+#' \code{sigmethod}. Synchrony-preserving surrogates are used. A variety of 
+#' statements of significance (or lack thereof) can be made
+#' by comparing \code{signif$cohere} with \code{signif$scohere} (see the \code{plot} method
+#' for the \code{coh} class and the function \code{cohbandsignif}). If \code{sigmethod} is 
+#' "\code{fast}", the fast algorithm of Sheppard et al. (2017) is used. In that case
+#' \code{signif$cohere} can be compared to \code{signif$scohere} to make significance 
+#' statements about the coherence in exactly the same way, but \code{signif$cohere} will no
+#' longer precisely equal \code{cohere}, and \code{cohere} should not be compared 
+#' directly to \code{signif$scohere}. Statements about significance of the coherence 
+#' should be made using \code{signif$cohere} and \code{signif$scohere}, whereas \code{cohere}
+#' should be used whenever the actual value of the coherence is needed. No fast algorithm
+#' exists for \code{norm} equal to "\code{phase}" (the phase coherence; Sheppard et al, 2017),
+#' so if \code{norm} is "\code{phase}" and \code{sigmethod} is "\code{fast}", the function
+#' throws an error.
+#' 
+#' The slot \code{bandp} is empty on a initial call to \code{coh}. It is made to hold 
+#' aggregate significance results over any timescale band of choice. It is filled in by
+#' the function \code{cohbandsignif}. See the help files for that function.
+#' 
+#' Regardless of what the variables represent, the normalized transform of dat1 is multiplied 
+#' by the conjugate of the normalized transform of dat2. Thus, positive a phase of the coherence 
+#' indicates dat1 would be leading dat2. 
+#' 
+#' @author Thomas Anderson, \email{anderstl@@gmail.com}, Jon Walter, \email{jaw3es@@virginia.edu}; Lawrence 
+#' Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}
+#' 
+#' @references 
+#' Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
+#' pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+#' Sheppard, L.W., et al. (2017) Rapid surrogate testing of wavelet coherences. European Physical 
+#' Journal, Nonlinear and Biomedical Physics, 5, 1. DOI: 10.1051/epjnbp/2017000
+#' 
+#' @examples
+#' #Not written yet but need some
+#' 
+#' @export
+#' @importFrom stats fft
+
+coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale.max.input=NULL,sigma=1.05,f0=1)
+{
+  #**error checking
+  errcheck_times(times,"coh")
+  wasvect<-FALSE
+  if (is.matrix(dat1) && is.matrix(dat2))
+  {
+    if (!isTRUE(all.equal(dim(dat1),dim(dat2))))
+    {
+      stop("Error in coh: dimensions of dat1 and dat2 must agree") 
+    }
+    errcheck_stdat(1:dim(dat1)[2],dat1,"coh")
+    errcheck_stdat(1:dim(dat2)[2],dat2,"coh")
+  }
+  if (!is.matrix(dat1) && !is.matrix(dat2))
+  {
+    errcheck_tsdat(1:length(dat1),dat1,"coh")
+    errcheck_tsdat(1:length(dat2),dat2,"coh")
+    dat1<-matrix(dat1, nrow=1, ncol=length(dat1))
+    dat2<-matrix(dat2, nrow=1, ncol=length(dat2))
+    wasvect<-TRUE
+  }
+  if ((is.matrix(dat1) && is.vector(dat2)) || (is.matrix(dat2) && is.vector(dat1)))
+  {
+    stop("Error in coh: dimensions of dat1 and dat2 must agree")
+  }
+  if (!(norm %in% c("none","phase","powall","powind")))
+  {
+    stop("Error in coh: bad value for norm")
+  }
+  if (!(sigmethod %in% c("none","fftsurrog1","fftsurrog2","fftsurrog12",
+                         "aaftsurrog1","aaftsurrog2","aaftsurrog12","fast")))
+  {
+    stop("Error in coh: bad value for sigmethod")
+  }  
+  if (sigmethod=="fast" && norm=="phase")
+  {
+    stop("Error in coh: no fast significance algorithm for phase coherence")
+  }
+  
+  #**get wavelet transforms
+  h<-warray(dat1,times,scale.min,scale.max.input,sigma,f0)
+  W1<-h$W1
+  timescales<-h$timescales
+  h<-warray(dat2,times,scale.min,scale.max.input,sigma,f0)
+  W2<-h$W2
+  
+  #**normalize
+  W1<-normforcoh(W1,norm)
+  W2<-normforcoh(W2,norm)
+  
+  #**compute coherence
+  cohere<-apply(X=W1*Conj(W2),FUN=mean,MARGIN=3,na.rm=T)
+  
+  #**now do the significance
+  
+  #*fast algorithm case
+  if (sigmethod=="fast")
+  {
+    #***DAN: fill in
+    
+    #prepare result  
+    result<-list(dat1=dat1,dat2=dat2,times=times,norm=norm,timescales=timescales,coher=coher,
+                 signif=signif,bandp=NA)
+    class(result)<-c("coh","list")
+    return(result)    
+  }
+  
+  #*no significance
+  if (sigmethod=="none")
+  {
+    #prepare result  
+    result<-list(dat1=dat1,dat2=dat2,times=times,norm=norm,timescales=timescales,coher=coher,
+                 signif=NA,bandp=NA)
+    class(result)<-c("coh","list")
+    return(result)    
+  }
+  
+  #*otherwise sigmethod is one of "fftsurrog1", "fftsurrog2", 
+  #"fftsurrog12", "aaftsurrog1", "aaftsurrog2", "aaftsurrog12"  
+  
+  #figure out what kind of surrogates to use
+  if (sigmethod %in% c("fftsurrog1","fftsurrog2","fftsurrog12"))
+  {
+    surr<-"fft"
+  }else
+  {
+    surr<-"aaft"
+  }
+  
+  #surrogate the specified time series and take transforms and normalize
+  sW1<-rep(list(W1),times=nrand)
+  sW2<-rep(list(W2),times=nrand)
+  if (sigmethod %in% c("fftsurrog1","fftsurrog12","aaftsurrog1","aaftsurrog12"))
+  {
+    sdat1<-surrog(dat1,nrand,surrtype=surr,syncpres=TRUE)
+    sW1<-lapply(FUN=warray,X=sdat1,times=times,scale.min=scale.min,scale.max.input=scale.max.input,
+              sigma=sigma,f0=f0) #take transforms
+    sW1<-lapply(X=sW1,FUN=normforcoh,norm=norm) #normalize
+  }
+  if (sigmethod %in% c("fftsurrog2","fftsurrog12","aaftsurrog2","aaftsurrog12"))
+  {
+    sdat2<-surrog(dat2,nrand,surrtype=surr,syncpres=TRUE)
+    sW2<-lapply(FUN=warray,X=sdat2,times=times,scale.min=scale.min,scale.max.input=scale.max.input,
+                sigma=sigma,f0=f0) #take transforms
+    sW2<-lapply(X=sW2,FUN=normforcoh,norm=norm) #normalize
+  }
+  
+  #now compute coherences
+  scohere<-matrix(complex(real=NA,imaginary=NA),nrand,length(timescales))
+  for (counter in 1:nrand)
+  {
+    scohere[counter,]<-apply(X=sW1[[counter]]*Conj(sW2[[counter]]),FUN=mean,MARGIN=3,na.rm=T)
+  }
+
+  #assemble the significance results
+  signif<-list(cohere,scohere)
+  
+  #prepare result  
+  result<-list(dat1=dat1,dat2=dat2,times=times,norm=norm,timescales=timescales,coher=coher,
+               signif=signif,bandp=NA)
+  class(result)<-c("coh","list")
+  return(result)    
+}
+
+
