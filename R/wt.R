@@ -7,7 +7,7 @@
 #' 
 #' @param t.series A vector timeseries of real values
 #' @param times A vector of time step values (e.g., years), spacing 1
-#' @param scale.min The smallest scale of fluctuation that will be examined
+#' @param scale.min The smallest scale of fluctuation that will be examined. At least 2.
 #' @param scale.max.input The largest scale of fluctuation that is guaranteed to be examined 
 #' @param sigma The ratio of each time scale examined relative to the next timescale. Should be greater than 1.
 #' @param f0 The ratio of the period of fluctuation to the width of the envelope. Defaults to 1.
@@ -34,7 +34,7 @@
 wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1)
 {
   errcheck_tsdat(times,t.series,"wt")
-  errcheck_wavparam(scale.min,scale.max.input,sigma,f0,"wt")
+  errcheck_wavparam(scale.min,scale.max.input,sigma,f0,times,"wt")
     
   if(is.null(scale.max.input)){
     scale.max<-length(t.series)

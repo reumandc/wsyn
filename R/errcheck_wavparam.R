@@ -6,13 +6,14 @@
 #' @param scale.max.input The largest scale of fluctuation that is guaranteed to be examined 
 #' @param sigma The ratio of each time scale examined relative to the next timescale. Should be greater than 1.
 #' @param f0 The ratio of the period of fluctuation to the width of the envelope. Defaults to 1.
+#' @param times The times data were measured at, spacing 1
 #' @param callfunc Function calling this one, for better error messaging
 #' 
 #' @return \code{errcheck_wavparam} returns nothing but throws and error if the conditions are not met
 #' 
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
 
-errcheck_wavparam<-function(scale.min,scale.max.input,sigma,f0,callfunc)
+errcheck_wavparam<-function(scale.min,scale.max.input,sigma,f0,times,callfunc)
 {
   if (!(is.numeric(scale.min) && is.numeric(sigma) && is.numeric(f0)))
   {
@@ -38,7 +39,8 @@ errcheck_wavparam<-function(scale.min,scale.max.input,sigma,f0,callfunc)
   {
     stop(paste0("Error in errcheck_wavparams called by ",callfunc,": sigma must be greater than 1"))
   }
-  m.max<-floor(log(scale.max/scale.min)/log(sigma))+1
+  if (is.null(scale.max.input)){scale.max.input<-length(times)}
+  m.max<-floor(log(scale.max.input/scale.min)/log(sigma))+1
   if (m.max<5)
   {
     stop(paste0("Error in errcheck_wavparams called by ",callfunc,": your wavelet parameters indicate you only have ",m.max," timescales, that is not very many"))

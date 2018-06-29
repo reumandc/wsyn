@@ -127,7 +127,7 @@ test_that("test for correct format of output, fast algorithm",{
   expect_equal(is.complex(res$signif$scoher),TRUE)
 })
 
-test_that("compare to a previous coherence example, fast algorrithm",{
+test_that("compare to a previous coherence example, fast algorithm",{
   #this test based on supplementary figure 5 in Sheppard et al, Nature Climate Change, 
   #2016, doi: 10.1038/NCLIMATE2881. 
   
@@ -154,15 +154,18 @@ test_that("compare to a previous coherence example, fast algorrithm",{
   artsig_x<-artsig_x[,4:104]
   artsig_x<-cleandat(artsig_x,times,1)$cdat
   artsig_y<-cleandat(artsig_y,times,1)$cdat
+  #write.csv(artsig_x,file="artsig_x.csv")
+  #write.csv(artsig_y,file="artsig_y.csv")
+  #fft_as_x<-matrix(complex(NA,NA))
   
   #call coh
-  res<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powall",sigmethod="fast",nrand=1000,
+  res<-coh(dat1=artsig_x[1,],dat2=artsig_y[1,],times=times,norm="powall",sigmethod="fftsurrog1",nrand=100,
            f0=0.5,scale.max.input=28)
   
   #Make a plot to check visually. Expected to look like panel panel g of supp fig 5 in the 
   #reference cited above in some respects 
   qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
-  plot(log(1/res$timescales),Mod(res$coher),type="l",lty="dashed",xaxt="n",col="red",
+  plot(log(1/res$timescales),10*Mod(res$coher),type="l",lty="dashed",xaxt="n",col="red",
        ylim=range(Mod(res$coher),Mod(res$signif$coher),qs))
   axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
   lines(log(1/res$timescales),Mod(res$signif$coher),type="l",xaxt="n",col="red")

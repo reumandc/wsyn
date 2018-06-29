@@ -1,3 +1,5 @@
+#' Error check for appropriate spatio-temporal data
+#' 
 #' Error checking whether a times vector and a matrix with each row a time
 #' series make a ligitimate spatio-temporal data set for wavelet analysis
 #' 

@@ -6,7 +6,7 @@
 #' 
 #' @param dat A locations (rows) x time (columns) matrix
 #' @param times A vector of time step values, spacing 1
-#' @param scale.min The smallest scale of fluctuation that will be examined
+#' @param scale.min The smallest scale of fluctuation that will be examined. At least 2.
 #' @param scale.max.input The largest scale of fluctuation guaranteed to be examined
 #' @param sigma The ratio of each time scale examined relative to the next timescale. Should be greater than 1.
 #' @param f0 The ratio of the period of fluctuation to the width of the envelop
@@ -48,7 +48,7 @@
 wpmf<-function(dat,times,scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1, sigmethod="none", nrand=1000)
 {
   errcheck_stdat(times,dat,"wpmf")
-  errcheck_wavparam(scale.min,scale.max.input,sigma,f0,"wpmf")
+  errcheck_wavparam(scale.min,scale.max.input,sigma,f0,times,"wpmf")
   
   if (sigmethod %in% c("quick","fft","aaft"))
   {

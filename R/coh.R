@@ -10,7 +10,7 @@
 #' @param norm The normalization of wavelet transforms to use. Controls the version of the coherence that is performed. One of "none", "phase", "powall", "powind". See details.
 #' @param sigmethod The method for significance testing. One of "none", "fftsurrog1", "fftsurrog2", "fftsurrog12", "aaftsurrog1", "aaftsurrog2", "aaftsurrog12", "fast". See details.
 #' @param nrand Number of surrogate randomizations to use for significance testing.
-#' @param scale.min The smallest scale of fluctuation that will be examined
+#' @param scale.min The smallest scale of fluctuation that will be examined. At least 2.
 #' @param scale.max.input The largest scale of fluctuation guaranteed to be examined
 #' @param sigma The ratio of each time scale examined relative to the next timescale. Should be greater than 1.
 #' @param f0 The ratio of the period of fluctuation to the width of the envelop
@@ -90,7 +90,7 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
 {
   #**error checking
   errcheck_times(times,"coh")
-  errcheck_wavparam(scale.min,scale.max.input,sigma,f0,"coh")
+  errcheck_wavparam(scale.min,scale.max.input,sigma,f0,times,"coh")
   
   wasvect<-FALSE
   if (is.matrix(dat1) && is.matrix(dat2))
@@ -204,6 +204,7 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
         s=s2[stage]
         #find coherence by filtering cross-spectrum
         xx=sqrt(2*pi*s)*(exp(-s^2*(2*pi*(freqs-(1-(f0/s))))^2/2) - exp(-s^2*(2*pi*freqs)^2/2)*exp(-0.5*(2*pi*f0)^2))
+        #***DAN: check with Lawrence, compute xx*Conj(xx) once here, to avoid the repetition below? Same in n>1 case.
         filt.crosspec[stage,]<-xx*Conj(xx)*xfft/tt
         filt.pow1[stage,]<-xx*Conj(xx)*xfft1/tt
         filt.pow2[stage,]<-xx*Conj(xx)*xfft2/tt
@@ -212,6 +213,7 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
         altcoh[stage]<-mean(filt.crosspec[stage,])
         altcoh.norm[stage]<-altcoh[stage]/sqrt(altpow1[stage]*altpow2[stage])
       }
+      #***DAN: I think we could replace this for loop with some matrix hadamard products for a speedup - first get it working as is
       surrcoh=matrix(NA, nrow=nrand, ncol=m.max)
       #altgreaterthan=matrix(NA, nrow=nrand, ncol=m.max)
       for(rep in 1:nrand){
@@ -222,7 +224,7 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
       }
       #altrank=colSums(altgreaterthan)
     }
-    ## Spatial coherence (multiple locations)
+    ## Spatial coherence (multiple locations) - done separately from n=1 for speed reasons
     if(n>1){
       fft1=NULL;fft2=NULL
       for(i in 1:n){
@@ -273,10 +275,11 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
     class(result)<-c("coh","list")
     return(result)    
     
-    #***DAN: signif$coher will be normalized as powall, so if the uses uses sigmethod=fast and
-    #norm not equal to powall, there are effectively two different things going on here.
-    #So the plan is, uniut test with powall and fast, and then once that works, think about
-    #dealing with different normalizations and fast
+    #***DAN: signif$coher will be normalized as powall, so if the used uses sigmethod=fast and
+    #norm not equal to powall, there are effectively two different things going on here in 
+    #terms of normalization, one for coher and once for signif.
+    #So the plan is, unit test with powall and fast, and then once that works, think about
+    #dealing with different normalizations and fast.
   }
   
   #*no significance
@@ -310,13 +313,27 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   sW2<-rep(list(W2),times=nrand)
   if (sigmethod %in% c("fftsurrog1","fftsurrog12","aaftsurrog1","aaftsurrog12"))
   {
-    sdat1<-surrog(dat1,nrand,surrtype=surr,syncpres=TRUE)
+    if (dim(dat1)[1]==1)
+    {
+      sdat1<-surrog(as.vector(dat1),nrand,surrtype=surr,syncpres=TRUE)
+      dat1<-lapply(FUN=function(x){matrix(x,1,length(x))},X=sdat1)
+    }else
+    {
+      sdat1<-surrog(dat1,nrand,surrtype=surr,syncpres=TRUE)
+    }
     sW1<-lapply(FUN=f,X=sdat1,times=times,scale.min=scale.min,scale.max.input=scale.max.input,sigma=sigma,f0=f0) #take transforms
     sW1<-lapply(X=sW1,FUN=normforcoh,norm=norm) #normalize
   }
   if (sigmethod %in% c("fftsurrog2","fftsurrog12","aaftsurrog2","aaftsurrog12"))
   {
-    sdat2<-surrog(dat2,nrand,surrtype=surr,syncpres=TRUE)
+    if (dim(dat2)[1]==1)
+    {
+      sdat2<-surrog(as.vector(dat2),nrand,surrtype=surr,syncpres=TRUE)
+      dat2<-lapply(FUN=function(x){matrix(x,1,length(x))},X=sdat2)
+    }else
+    {
+      sdat2<-surrog(dat2,nrand,surrtype=surr,syncpres=TRUE)
+    }
     sW2<-lapply(FUN=f,X=sdat2,times=times,scale.min=scale.min,scale.max.input=scale.max.input,sigma=sigma,f0=f0) #take transforms
     sW2<-lapply(X=sW2,FUN=normforcoh,norm=norm) #normalize
   }

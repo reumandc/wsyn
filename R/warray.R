@@ -2,9 +2,9 @@
 #' 
 #' @param dat A locations (rows) x time (columns) matrix
 #' @param times A vector of timestep values (e.g. years), spacing 1
-#' @param scale.min The smallest scale of fluctuation that will be examined
+#' @param scale.min The smallest scale of fluctuation that will be examined. At least 2.
 #' @param scale.max.input The largest scale of fluctuation that will be examined. Note that if this is set too high relative to the length of the timeseries it will be truncated.
-#' @param sigma The ratio of each time scale examined relative to the next timescale
+#' @param sigma The ratio of each time scale examined relative to the next timescale. Greater than 1. 
 #' @param f0 The ratio of the period of fluctuation to the width of the envelope
 #' 
 #' @return \code{warray} returns a list containing: 

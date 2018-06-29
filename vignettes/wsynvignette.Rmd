@@ -182,17 +182,24 @@ not equal to 1 in some natural unit of time can view the \code{times} vector
 as a vector of time steps, rather than times, \emph{per se}, and  
 \code{timescales} will be in units of cycles per time step.
 
-The arguments \code{scale.min}, \code{scale.max.input}, \code{sigma}, and \code{f0}
-to \code{wt} (and several other functions) are for constructing the timescales
-used wavelet analysis. The argument \code{scale.min} is the shortest timescale,
+The arguments \code{scale.min}, \code{scale.max.input}, \code{sigma}, and \code{f0}, 
+which are arguments to \code{wt} and several other functions, 
+are for constructing the timescales used for 
+wavelet analysis. The argument \code{scale.min} is the shortest timescale,
 and must be $2$ or greater. Starting from \code{scale.min}, each timescale is 
-\code{sigma} times the previous one, up to but not surpassing 
-\code{scale.max.input}. The scalloping of wavelet transforms places additional
+\code{sigma} times the previous one, up to the first timescale that equals or 
+surpasses \code{scale.max.input}. The scalloping of 
+wavelet transforms places additional
 constraints on the largest timescale examined, independently implemented, 
 so choosing larger \code{scale.max.input} will only result in longer timescales
-up to the limit of scalloping. The argument $f0$ is the ratio of the period of 
-fluctuation to the width of the envelope.
-<!--Get Lawrence to add a sentence about f0-->
+up to the limits imposed by scalloping. The argument $f0$ is the 
+ratio of the period of fluctuation to the width of the envelope.
+Higher values of f0 imply higher frequency resolution  
+(i.e., a wavelet component includes information from a narrower range 
+of Fourier components) but lower temporal resolution 
+(the component includes information from a wider range of times). 
+Resolution should be chosen appropriate to the characteristics of the 
+data [@Addison_02].
 
 # Time- and timescale-specific measures of synchrony
 \noindent The function `wpmf` 

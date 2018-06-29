@@ -1,3 +1,5 @@
+#' Error check for appropriate temporal data
+#' 
 #' Error checking whether a times vector and t.series vector make a 
 #' legitimate time series for wavelet analysis
 #' 
