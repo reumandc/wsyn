@@ -4,7 +4,7 @@
 #' Also the creator function for the \code{coh} class, which inherits from the \code{list}
 #' class.
 #' 
-#' @param dat1 A locations (rows) x time (columns) matrix (for spatial coherence), or a single time series as a vector
+#' @param dat1 A locations (rows) x time (columns) matrix (for spatial coherence), or a single time series 
 #' @param dat2 Same format as dat1, same locations and times
 #' @param times The times at which measurements were made, spacing 1
 #' @param norm The normalization of wavelet transforms to use. Controls the version of the coherence that is performed. One of "none", "phase", "powall", "powind". See details.
@@ -92,28 +92,31 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   errcheck_times(times,"coh")
   errcheck_wavparam(scale.min,scale.max.input,sigma,f0,times,"coh")
   
-  wasvect<-FALSE
-  if (is.matrix(dat1) && is.matrix(dat2))
+  wasvect1<-FALSE
+  if (is.matrix(dat1) && dim(dat1)[1]>1)
   {
-    if (!isTRUE(all.equal(dim(dat1),dim(dat2))))
-    {
-      stop("Error in coh: dimensions of dat1 and dat2 must agree") 
-    }
     errcheck_stdat(1:dim(dat1)[2],dat1,"coh")
-    errcheck_stdat(1:dim(dat2)[2],dat2,"coh")
-  }
-  if (!is.matrix(dat1) && !is.matrix(dat2))
+  }else
   {
-    errcheck_tsdat(1:length(dat1),dat1,"coh")
-    errcheck_tsdat(1:length(dat2),dat2,"coh")
+    if (!is.matrix(dat1)){wasvect1<-TRUE}
+    errcheck_tsdat(1:length(dat1),dat1,"coh") 
     dat1<-matrix(dat1, nrow=1, ncol=length(dat1))
-    dat2<-matrix(dat2, nrow=1, ncol=length(dat2))
-    wasvect<-TRUE
   }
-  if ((is.matrix(dat1) && is.vector(dat2)) || (is.matrix(dat2) && is.vector(dat1)))
+  wasvect2<-FALSE
+  if (is.matrix(dat2) && dim(dat2)[1]>1)
   {
-    stop("Error in coh: dimensions of dat1 and dat2 must agree")
+    errcheck_stdat(1:dim(dat2)[2],dat2,"coh")
+  }else
+  {
+    if (!is.matrix(dat2)){wasvect2<-TRUE}
+    errcheck_tsdat(1:length(dat2),dat2,"coh")
+    dat2<-matrix(dat2, nrow=1, ncol=length(dat2))
   }
+  if (!isTRUE(all.equal(dim(dat1),dim(dat2))))
+  {
+    stop("Error in coh: dimensions of dat1 and dat2 must agree") 
+  }
+
   if (!(norm %in% c("none","phase","powall","powind")))
   {
     stop("Error in coh: bad value for norm")
@@ -258,18 +261,22 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
         altcoh.norm[stage]<-altcoh[stage]/sqrt(altpow1[stage]*altpow2[stage])
       }
       surrcoh=matrix(NA, nrow=nrand, ncol=m.max)
+      surrcoh.norm=matrix(NA, nrow=nrand, ncol=m.max)
       #altgreaterthan=matrix(NA, nrow=nrand, ncol=m.max)
       for(rep in 1:nrand){
         ts1surrangmat=matrix(ts1surrang[rep,], nrow=m.max, ncol=tt, byrow=T) #make surrogates
         filt.crosspec.surr=filt.crosspec*exp(complex(imaginary=ts1surrangmat))
         surrcoh[rep,]=rowMeans(filt.crosspec.surr)
+        surrcoh.norm[rep,]<-surrcoh[rep,]/sqrt(altpow1*altpow2)
         #altgreaterthan[rep,]=Mod(altcoh)>Mod(surrcoh[rep,])
       }
       #altrank=colSums(altgreaterthan)
     }
-    signif<-list(coher=altcoh,scoher=surrcoh)
+    signif<-list(coher=altcoh.norm,scoher=surrcoh.norm)
     
     #prepare result  
+    if (wasvect1){dat1<-as.vector(dat1)}
+    if (wasvect2){dat2<-as.vector(dat2)}
     result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,norm=norm,
                  timescales=timescales,coher=coher,signif=signif,bandp=NA)
     class(result)<-c("coh","list")
@@ -286,6 +293,8 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   if (sigmethod=="none")
   {
     #prepare result  
+    if (wasvect1){dat1<-as.vector(dat1)}
+    if (wasvect2){dat2<-as.vector(dat2)}
     result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,norm=norm,
                  timescales=timescales,coher=coher,signif=NA,bandp=NA)
     class(result)<-c("coh","list")
@@ -313,27 +322,13 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   sW2<-rep(list(W2),times=nrand)
   if (sigmethod %in% c("fftsurrog1","fftsurrog12","aaftsurrog1","aaftsurrog12"))
   {
-    if (dim(dat1)[1]==1)
-    {
-      sdat1<-surrog(as.vector(dat1),nrand,surrtype=surr,syncpres=TRUE)
-      dat1<-lapply(FUN=function(x){matrix(x,1,length(x))},X=sdat1)
-    }else
-    {
-      sdat1<-surrog(dat1,nrand,surrtype=surr,syncpres=TRUE)
-    }
+    sdat1<-surrog(dat1,nrand,surrtype=surr,syncpres=TRUE)
     sW1<-lapply(FUN=f,X=sdat1,times=times,scale.min=scale.min,scale.max.input=scale.max.input,sigma=sigma,f0=f0) #take transforms
     sW1<-lapply(X=sW1,FUN=normforcoh,norm=norm) #normalize
   }
   if (sigmethod %in% c("fftsurrog2","fftsurrog12","aaftsurrog2","aaftsurrog12"))
   {
-    if (dim(dat2)[1]==1)
-    {
-      sdat2<-surrog(as.vector(dat2),nrand,surrtype=surr,syncpres=TRUE)
-      dat2<-lapply(FUN=function(x){matrix(x,1,length(x))},X=sdat2)
-    }else
-    {
-      sdat2<-surrog(dat2,nrand,surrtype=surr,syncpres=TRUE)
-    }
+    sdat2<-surrog(dat2,nrand,surrtype=surr,syncpres=TRUE)
     sW2<-lapply(FUN=f,X=sdat2,times=times,scale.min=scale.min,scale.max.input=scale.max.input,sigma=sigma,f0=f0) #take transforms
     sW2<-lapply(X=sW2,FUN=normforcoh,norm=norm) #normalize
   }
@@ -349,6 +344,8 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   signif<-list(coher=coher,scoher=scoher)
   
   #prepare result  
+  if (wasvect1){dat1<-as.vector(dat1)}
+  if (wasvect2){dat2<-as.vector(dat2)}
   result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,
                norm=norm,timescales=timescales,coher=coher,signif=signif,bandp=NA)
   class(result)<-c("coh","list")

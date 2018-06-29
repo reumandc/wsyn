@@ -42,6 +42,8 @@ testing with non dedault values of all of scale.min, scale.max, f0, sigma. One t
 the actual largest timescale and this should be the same for even larger scale.max.input. I said this was the case in the vignette (toward the end of the wt section), so if it turns out not to be the case, go back and change that part of the vignette
 5) DONE Add a paragraph to the vignette explaining what scale.min, scale.max, f0, sigma,
 or ask Lawrence to do it. 
+6) test coh with vectors, also with 1 by N matrices
+7) right now, when using the fast method, coh only really works with powall normalization
 
 wt.r:
 #TODO: make this a compiled function using cmpfun in the compiler package

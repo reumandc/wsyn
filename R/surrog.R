@@ -32,14 +32,14 @@ surrog<-function(dat,nsurrogs,surrtype,syncpres)
 {
   #error check
   wasvect<-FALSE
-  if (is.matrix(dat))
+  if (is.matrix(dat) && dim(dat)[1]>1)
   {
     errcheck_stdat(1:dim(dat)[2],dat,"surrog")
   }else
   {
+    if (!is.matrix(dat)){wasvect<-TRUE}
     errcheck_tsdat(1:length(dat),dat,"surrog")
     dat<-matrix(dat, nrow=1, ncol=length(dat))
-    wasvect<-TRUE
   }
   if (!(surrtype %in% c("fft","aaft")))
   {

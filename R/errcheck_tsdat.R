@@ -14,9 +14,18 @@
 errcheck_tsdat<-function(times,t.series,callfunc)
 {
   errcheck_times(times,callfunc)
+  
   if (!is.numeric(t.series))
   {
     stop(paste0("Error in errcheck_tsdat called by ",callfunc,": t.series not numeric"))
+  }
+  if (is.matrix(t.series))
+  {
+    if (dim(t.series)[1]!=1)
+    {
+      stop(paste0("Error in errcheck_tsdat called by ",callfunc,": t.series can either be a vector or matrix with one row"))
+    }
+    t.series<-as.vector(t.series)
   }
   if (length(times)!=length(t.series))
   {
@@ -26,7 +35,7 @@ errcheck_tsdat<-function(times,t.series,callfunc)
   {
     stop(paste0("Error in errcheck_times called by ",callfunc,": t.series must not contain NAs, NaNs, Infs"))
   }
-  if (round(mean(t.series,na.rm=T),10) != 0)
+  if (!isTRUE(all.equal(mean(t.series),0)))
   {
     stop(paste0("Error in errcheck_tsdat called by ",callfunc,": t.series must have zero mean"))
   }

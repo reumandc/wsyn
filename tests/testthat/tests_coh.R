@@ -2,13 +2,11 @@ context("coh")
 
 test_that("test error catching",{
   dat1<-matrix(1:9,3,3)
+  dat1<-cleandat(dat1,1:3,1)$cdat
   dat2<-matrix(1:12,3,4)
+  dat2<-cleandat(dat2,1:4,1)$cdat
   expect_error(coh(dat1,dat2,1:3,"none"),"Error in coh: dimensions of dat1 and dat2 must agree")
 
-  dat1<-1:4
-  dat2<-matrix(1:16,4,4)
-  expect_error(coh(dat1,dat2,1:4,"none"),"Error in coh: dimensions of dat1 and dat2 must agree")
-  
   dat2<-cleandat(dat2,1:4,1)$cdat
   dat1<-dat2
   expect_error(coh(dat1,dat2,1:4,"test"),"Error in coh: bad value for norm")
@@ -25,6 +23,72 @@ test_that("test for correct format of output",{
   dat2<-cleandat(dat2,times,1)$cdat
   norm<-"powall"
   sigmethod<-"fftsurrog1"
+  nrand<-10
+  res<-coh(dat1,dat2,times,norm,sigmethod,nrand)
+  
+  expect_s3_class(res,"coh")
+  expect_s3_class(res,"list")
+  expect_equal(res$dat1,dat1)
+  expect_equal(res$dat2,dat2)
+  expect_equal(res$times,times)
+  expect_equal(res$sigmethod,sigmethod)
+  expect_equal(res$norm,norm)
+  
+  #other tests that output has the correct format
+  expect_equal(is.vector(res$coher),TRUE) 
+  expect_equal(is.complex(res$coher),TRUE)
+  expect_equal(length(res$coher),length(res$timescales))
+  
+  expect_equal(is.na(res$bandp),TRUE)
+  
+  expect_equal(res$coher,res$signif$coher)
+  expect_equal(length(res$coher),dim(res$signif$scoher)[2])
+  expect_equal(nrand,dim(res$signif$scoher)[1])
+  expect_equal(is.complex(res$signif$scoher),TRUE)
+})
+
+test_that("test for correct output format using 1 by N matrix input",{
+  set.seed(101)
+  times<-1:100
+  dat1<-matrix(rnorm(100),1,100)
+  dat2<-matrix(rnorm(1000),1,100)
+  dat1<-cleandat(dat1,times,1)$cdat
+  dat2<-cleandat(dat2,times,1)$cdat
+  norm<-"powind"
+  sigmethod<-"aaftsurrog1"
+  nrand<-10
+  res<-coh(dat1,dat2,times,norm,sigmethod,nrand)
+  
+  expect_s3_class(res,"coh")
+  expect_s3_class(res,"list")
+  expect_equal(res$dat1,dat1)
+  expect_equal(res$dat2,dat2)
+  expect_equal(res$times,times)
+  expect_equal(res$sigmethod,sigmethod)
+  expect_equal(res$norm,norm)
+  
+  #other tests that output has the correct format
+  expect_equal(is.vector(res$coher),TRUE) 
+  expect_equal(is.complex(res$coher),TRUE)
+  expect_equal(length(res$coher),length(res$timescales))
+  
+  expect_equal(is.na(res$bandp),TRUE)
+  
+  expect_equal(res$coher,res$signif$coher)
+  expect_equal(length(res$coher),dim(res$signif$scoher)[2])
+  expect_equal(nrand,dim(res$signif$scoher)[1])
+  expect_equal(is.complex(res$signif$scoher),TRUE)
+})
+
+test_that("test for correct output format using vector input",{
+  set.seed(101)
+  times<-1:100
+  dat1<-rnorm(100)
+  dat2<-rnorm(100)
+  dat1<-cleandat(dat1,times,1)$cdat
+  dat2<-cleandat(dat2,times,1)$cdat
+  norm<-"phase"
+  sigmethod<-"fftsurrog2"
   nrand<-10
   res<-coh(dat1,dat2,times,norm,sigmethod,nrand)
   
@@ -154,28 +218,24 @@ test_that("compare to a previous coherence example, fast algorithm",{
   artsig_x<-artsig_x[,4:104]
   artsig_x<-cleandat(artsig_x,times,1)$cdat
   artsig_y<-cleandat(artsig_y,times,1)$cdat
-  #write.csv(artsig_x,file="artsig_x.csv")
-  #write.csv(artsig_y,file="artsig_y.csv")
-  #fft_as_x<-matrix(complex(NA,NA))
   
-  #call coh
-  res<-coh(dat1=artsig_x[1,],dat2=artsig_y[1,],times=times,norm="powall",sigmethod="fftsurrog1",nrand=100,
+  res<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powall",sigmethod="fast",nrand=1000,
            f0=0.5,scale.max.input=28)
-  
+
   #Make a plot to check visually. Expected to look like panel panel g of supp fig 5 in the 
   #reference cited above in some respects 
-  qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
-  plot(log(1/res$timescales),10*Mod(res$coher),type="l",lty="dashed",xaxt="n",col="red",
-       ylim=range(Mod(res$coher),Mod(res$signif$coher),qs))
-  axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
-  lines(log(1/res$timescales),Mod(res$signif$coher),type="l",xaxt="n",col="red")
-  for (counter in 1:dim(qs)[1])
-  {
-    lines(log(1/res$timescales),qs[counter,])
-  }
+  #qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
+  #plot(log(1/res$timescales),Mod(res$coher),type="l",lty="dashed",xaxt="n",col="red",
+  #     ylim=range(Mod(res$coher),Mod(res$signif$coher),qs))
+  #axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
+  #lines(log(1/res$timescales),Mod(res$signif$coher),type="l",xaxt="n",col="red")
+  #for (counter in 1:dim(qs)[1])
+  #{
+  #  lines(log(1/res$timescales),qs[counter,])
+  #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  #expect_known_hash(res,hash="1135b1a52b2af432f221b6f2dd6489a1")   
+  expect_known_hash(res,hash="4820ccf6c024e5238adfa8d07407f196")   
 })
 
 #test_that("test the fast coherence part of the code",{

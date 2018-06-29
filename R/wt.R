@@ -5,7 +5,7 @@
 #' \code{wt} class. The \code{wt} class inherits from the \code{tts} class, which
 #' inherits from the \code{list} class.
 #' 
-#' @param t.series A vector timeseries of real values
+#' @param t.series A timeseries of real values
 #' @param times A vector of time step values (e.g., years), spacing 1
 #' @param scale.min The smallest scale of fluctuation that will be examined. At least 2.
 #' @param scale.max.input The largest scale of fluctuation that is guaranteed to be examined 
@@ -41,6 +41,11 @@ wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f
   }
   else{
     scale.max<-scale.max.input
+  }
+  
+  if (is.matrix(t.series))
+  {
+    t.series<-as.vector(t.series)
   }
   
   #determine how many frequencies are in the range and make receptacle for results 
