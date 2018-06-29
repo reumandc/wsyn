@@ -5,7 +5,7 @@
 #' which other classes inherit (e.g., \code{wt}, \code{wmf}, \code{wpmf}). \code{tts} 
 #' inherits from the \code{list} class. 
 #' 
-#' @param times A numeric vector of evenly spaced increasing real values
+#' @param times A numeric vector of increasing real values, spacing 1
 #' @param timescales A numeric vector with positive entries
 #' @param values A complex or numeric matrix of dimensions \code{length(times)} by 
 #' \code{length(timescales)}

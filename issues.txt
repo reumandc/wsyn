@@ -22,15 +22,26 @@ Progress:
 12) everything you need for deer
 13) synmat for kelp and Jon's bird stuff
 14) write the phase plotter functions, and unit tests. Consolidate into one plotphase.R file, as you did for the magnitude plotters.
+15) print and summary methods for all the classes
 
 
 for formatting the documentation at top:
 1) use \code{} for TRUE and FALSE. Do not use T and F.
-2) I foudn and deleted a comment in the header of wmpf to the effect that "the wavelet phasor mean field was developed by Sheppard and Reuman, R code written by Anderson and Walter." It was not developed by Shppard and Reuman, and now the R code is by all of us, so I changed it. Watch out for other notes like that, I think I remember seeing some.
+2) I foudn and deleted a comment in the header of wmpf to the effect that "the wavelet phasor mean field was developed by Sheppard and Reuman, R code written by Anderson and Walter." It was not developed by Shppard and Reuman, and now the R code is by all of us, so I changed it. Watch out for other notes like that, I think I remember seeing some more.
 
 general
 1) It will be possible to be a bit more consistent with use of get and set methods instead of $
-2) you need an error checking function for scale.min, scale.max, f0, sigma, and you need to call it from the top of all functions that take these as arguments
+2) you need an error checking function for scale.min, scale.max, f0, sigma, and you need to call it from the top of all functions that take these as arguments. Also
+indicate in vignette and in help files what the constraints are. I added the vgnette para but nothing else.
+3) DONE times can ONLY be spaced with units of one, otherwise the code does not
+work as it is. This is a fundamental problem and would require changes in lots of 
+places if we wanted to add the flexibility of times spaced other than 1. So just add this requirement to your error checking. Also in docs and vignette. Everything is in 
+cycles per sample - Lawrence assumes this in his matlab code. 
+4) do a test case with Lawrence for non-integer scale.min. For that matter do some
+testing with non dedault values of all of scale.min, scale.max, f0, sigma. One thing to test is, if you use scale.max.input very large, then scallopping should produce
+the actual largest timescale and this should be the same for even larger scale.max.input. I said this was the case in the vignette (toward the end of the wt section), so if it turns out not to be the case, go back and change that part of the vignette
+5) Add a paragraph to the vignette explaining what scale.min, scale.max, f0, sigma,
+or ask Lawrence to do it. I did it, but need Lawrence to add a sentence on f0.
 
 wt.r:
 #TODO: make this a compiled function using cmpfun in the compiler package

@@ -1,7 +1,9 @@
+#' Error check \code{times}
+#' 
 #' Error check whether a vector can represent times at which data suitable 
 #' for wavelet transforms were measured
 #' 
-#' @param times Tests whether this is a numeric vector with evenly spaced increasing values
+#' @param times Tests whether this is a numeric vector with unit-spaced increasing values
 #' @param callfunc Function calling this one, for better error messaging
 #' 
 #' @return \code{errcheck_times} returns nothing but throws and error if the conditions are not met
@@ -23,12 +25,8 @@ errcheck_times<-function(times,callfunc)
     stop(paste0("Error in errcheck_times called by ",callfunc,": times must not contain NAs, NaNs, Infs"))
   }
   d<-diff(times)
-  if (!isTRUE(all.equal(rep(d[1],length(d)-1),d[2:length(d)])))
+  if (!isTRUE(all.equal(rep(1,length(d)),d)))
   {
-    stop(paste0("Error in errcheck_times called by ",callfunc,": times must be evenly spaced"))  
-  }
-  if (d[1]<=0)
-  {
-    stop(paste0("Error in errcheck_times called by ",callfunc,": times must be increasing"))
+    stop(paste0("Error in errcheck_times called by ",callfunc,": times must be unit spaced; output timescales in units of cycles per sampling interval"))  
   }
 }

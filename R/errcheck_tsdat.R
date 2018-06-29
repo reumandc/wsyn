@@ -1,7 +1,7 @@
 #' Error checking whether a times vector and t.series vector make a 
 #' legitimate time series for wavelet analysis
 #' 
-#' @param times times of measurement
+#' @param times times of measurement, spacing 1
 #' @param t.series the measurements
 #' @param callfunc the function from which this one was called, for error tracking
 #' 

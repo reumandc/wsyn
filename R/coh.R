@@ -6,7 +6,7 @@
 #' 
 #' @param dat1 A locations (rows) x time (columns) matrix (for spatial coherence), or a single time series as a vector
 #' @param dat2 Same format as dat1, same locations and times
-#' @param times The times at which measurements were made
+#' @param times The times at which measurements were made, spacing 1
 #' @param norm The normalization of wavelet transforms to use. Controls the version of the coherence that is performed. One of "none", "phase", "powall", "powind". See details.
 #' @param sigmethod The method for significance testing. One of "none", "fftsurrog1", "fftsurrog2", "fftsurrog12", "aaftsurrog1", "aaftsurrog2", "aaftsurrog12", "fast". See details.
 #' @param nrand Number of surrogate randomizations to use for significance testing.
@@ -90,6 +90,8 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
 {
   #**error checking
   errcheck_times(times,"coh")
+  errcheck_wavparam(scale.min,scale.max.input,sigma,f0,"coh")
+  
   wasvect<-FALSE
   if (is.matrix(dat1) && is.matrix(dat2))
   {
@@ -145,14 +147,136 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   #*fast algorithm case
   if (sigmethod=="fast")
   {
-    #***DAN: fill in
-    stop("Fast coherence not implemented yet") 
-     
+
+    #***DAN: Assumptions I made in translating the code, to be checked with Lawrence:
+    #1) max.scale in the reumannplatz code is the same as scale.max.input here
+    #2) min.scale in the reumannplatz code is the same as scale.min here
+    #Lawrence said yes to these
+    
+    #setup
+    n<-nrow(dat1)
+    tt<-ncol(dat1)
+    if(is.null(scale.max.input)){scale.max.input<-tt} #***DAN: changed to tt from what it was in the reummannplatz version on advice of Lawrence
+    
+    #Generate random phases for surrogates with correct symmetry properties ##
+    rrr<-2*pi*(matrix(runif(nrand*floor((tt-1)/2)),nrow=nrand,ncol=floor((tt-1)/2))-0.5)
+    if(tt%%2==0){ # timeseries has even length
+      ts1surrang<-cbind(pi*round(runif(nrand)),rrr,pi*round(runif(nrand)),-rrr[,ncol(rrr):1])
+      #***DAN: check with Lawrence - round(runif(nrand)) makes random 0s and 1s, is that what is needed here?
+      #If so, it would be a bit faster to use sample.int(2,nrand,replace=T)-1
+      #If not, this needs to be fixed
+      #Likewise a couple lines down, it's the same thing
+      #***Lawrence says it is the way he wants it now, so OK can replace with call to sample.int
+    }
+    if(tt%%2!=0){ # timeseries has odd length
+      ts1surrang<-cbind(pi*round(runif(nrand)), rrr, -rrr[,ncol(rrr):1])
+    }
+    
+    #Size calculations
+    #min.scale<-f0*scale.min #smallest envelope width
+    #max.scale<-f0*scale.max.input #largest envelope width
+    #m.max<-floor(log(max.scale/min.scale)/log(sigma))+1 #number of timescales to use
+    s2<-timescales*f0 #***DAN: s2 is a wavelet width, not an oscillation period. We actually computed s2 in wt.R and then got timescales by dividing by f0, so undo that here
+    m.max<-length(s2)
+    #min.scale*sigma^(0:(m.max-1)) #vector of timescales
+    #***DAN: is this block of code still necessary? We calculated the timescale vector on line 132
+    #I compared s2 and timescales for the data created in tests_coh.R, lines 56-78, and found they
+    #differ. timescales was length 56 and s2 was length 55, and the first 55 elements of timescales
+    #were double the values of s2. Bug somewhere?
+    #There may be a problem in wt.R for cases where the time step is not 1 - look at that function, too.
+    #***DAN: Dan and Lawrence looked at this together and it looks OK now
+    
+    ## One location wavelet coherence
+    if(n==1){
+      fft1 = fft(dat1); fft2 = fft(dat2) #fft signals 1 and 2
+      xfft = fft1*Conj(fft2)
+      xfft1 = fft1*Conj(fft1)
+      xfft2 = fft2*Conj(fft2)#get cross-spectrum and spectra
+      freqs = seq(from=0, to=1-(1/tt), by=1/tt)
+      filt.crosspec = matrix(NA, nrow=m.max, ncol=tt)
+      filt.pow1 = matrix(NA, nrow=m.max, ncol=tt)
+      filt.pow2 = matrix(NA, nrow=m.max, ncol=tt)
+      altcoh=rep(NA, m.max)
+      altpow1=rep(NA, m.max)
+      altpow2=rep(NA, m.max)
+      altcoh.norm=rep(NA, m.max)
+      for(stage in 1:m.max){
+        s=s2[stage]
+        #find coherence by filtering cross-spectrum
+        xx=sqrt(2*pi*s)*(exp(-s^2*(2*pi*(freqs-(1-(f0/s))))^2/2) - exp(-s^2*(2*pi*freqs)^2/2)*exp(-0.5*(2*pi*f0)^2))
+        filt.crosspec[stage,]<-xx*Conj(xx)*xfft/tt
+        filt.pow1[stage,]<-xx*Conj(xx)*xfft1/tt
+        filt.pow2[stage,]<-xx*Conj(xx)*xfft2/tt
+        altpow1[stage]<-mean(filt.pow1[stage,])
+        altpow2[stage]<-mean(filt.pow2[stage,])
+        altcoh[stage]<-mean(filt.crosspec[stage,])
+        altcoh.norm[stage]<-altcoh[stage]/sqrt(altpow1[stage]*altpow2[stage])
+      }
+      surrcoh=matrix(NA, nrow=nrand, ncol=m.max)
+      #altgreaterthan=matrix(NA, nrow=nrand, ncol=m.max)
+      for(rep in 1:nrand){
+        ts1surrangmat=matrix(ts1surrang[rep,], nrow=m.max, ncol=tt, byrow=T) #make surrogates
+        filt.crosspec.surr=filt.crosspec*exp(complex(imaginary=ts1surrangmat))
+        surrcoh[rep,]=rowMeans(filt.crosspec.surr)
+        #altgreaterthan[rep,]=abs(altcoh)>abs(surrcoh[rep,])
+      }
+      #altrank=colSums(altgreaterthan)
+    }
+    ## Spatial coherence (multiple locations)
+    if(n>1){
+      fft1=NULL;fft2=NULL
+      for(i in 1:n){
+        fft1<-rbind(fft1, fft(dat1[i,]))
+        fft2<-rbind(fft2, fft(dat2[i,]))
+      } #fft signals 1 and 2
+      xfft<-fft1*Conj(fft2) #get cross-spectra
+      xfft1 = fft1*Conj(fft1)
+      xfft2 = fft2*Conj(fft2)
+      sxfft<-apply(xfft, 2, mean) #average cross-spectra across locations
+      sxfft1<-apply(xfft1, 2, mean)
+      sxfft2<-apply(xfft2, 2, mean)
+      freqs = seq(from=0, to=1-(1/tt), by=1/tt)
+      filt.crosspec = matrix(NA, nrow=m.max, ncol=tt)
+      filt.pow1 = matrix(NA, nrow=m.max, ncol=tt)
+      filt.pow2 = matrix(NA, nrow=m.max, ncol=tt)
+      altcoh=rep(NA, m.max)
+      altpow1=rep(NA, m.max)
+      altpow2=rep(NA, m.max)
+      altcoh.norm=rep(NA, m.max)
+      for(stage in 1:m.max){
+        s=s2[stage]
+        #find coherence by filtering cross-spectrum
+        xx=sqrt(2*pi*s)*(exp(-s^2*(2*pi*(freqs-(1-(f0/s))))^2/2) - exp(-s^2*(2*pi*freqs)^2/2)*exp(-0.5*(2*pi*f0)^2))
+        filt.crosspec[stage,]<-xx*Conj(xx)*sxfft/tt
+        filt.pow1[stage,]<-xx*Conj(xx)*sxfft1/tt
+        filt.pow2[stage,]<-xx*Conj(xx)*sxfft2/tt
+        altpow1[stage]<-mean(filt.pow1[stage,])
+        altpow2[stage]<-mean(filt.pow2[stage,])
+        altcoh[stage]<-mean(filt.crosspec[stage,])
+        altcoh.norm[stage]<-altcoh[stage]/sqrt(altpow1[stage]*altpow2[stage])
+      }
+      surrcoh=matrix(NA, nrow=nrand, ncol=m.max)
+      #altgreaterthan=matrix(NA, nrow=nrand, ncol=m.max)
+      for(rep in 1:nrand){
+        ts1surrangmat=matrix(ts1surrang[rep,], nrow=m.max, ncol=tt, byrow=T) #make surrogates
+        filt.crosspec.surr=filt.crosspec*exp(complex(imaginary=ts1surrangmat))
+        surrcoh[rep,]=rowMeans(filt.crosspec.surr)
+        #altgreaterthan[rep,]=Mod(altcoh)>Mod(surrcoh[rep,])
+      }
+      #altrank=colSums(altgreaterthan)
+    }
+    signif<-list(coher=altcoh,scoher=surrcoh)
+    
     #prepare result  
     result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,norm=norm,
                  timescales=timescales,coher=coher,signif=signif,bandp=NA)
     class(result)<-c("coh","list")
     return(result)    
+    
+    #***DAN: signif$coher will be normalized as powall, so if the uses uses sigmethod=fast and
+    #norm not equal to powall, there are effectively two different things going on here.
+    #So the plan is, uniut test with powall and fast, and then once that works, think about
+    #dealing with different normalizations and fast
   }
   
   #*no significance

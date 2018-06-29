@@ -6,7 +6,7 @@
 #' \code{tts} class, which inherits from the \code{list} class.
 #' 
 #' @param dat A locations (rows) x time (columns) matrix
-#' @param times A vector of time step values (e.g., years)
+#' @param times A vector of time step values (e.g., years), spacing 1
 #' @param scale.min The smallest scale of fluctuation that will be examined
 #' @param scale.max.input The largest scale of fluctuation that will be examined. Note that if this is set too high relative to the length of the timeseries it will be truncated.
 #' @param sigma The ratio of each time scale examined relative to the next timescale
@@ -37,6 +37,7 @@ wmf<-function(dat, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f0 = 1)
   
   #check suitability of data
   errcheck_stdat(times,dat,"wmf")
+  errcheck_wavparam(scale.min,scale.max.input,sigma,f0,"wmf")
   
   #do all the transforms
   wavarray<-warray(dat, times, scale.min, scale.max.input, sigma, f0)

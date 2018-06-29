@@ -6,11 +6,11 @@
 #' inherits from the \code{list} class.
 #' 
 #' @param t.series A vector timeseries of real values
-#' @param times A vector of time step values (e.g., years)
+#' @param times A vector of time step values (e.g., years), spacing 1
 #' @param scale.min The smallest scale of fluctuation that will be examined
 #' @param scale.max.input The largest scale of fluctuation that is guaranteed to be examined 
 #' @param sigma The ratio of each time scale examined relative to the next timescale. Should be greater than 1.
-#' @param f0 The ratio of the period of fluctuation to the width of the envelope. Defaults to 1
+#' @param f0 The ratio of the period of fluctuation to the width of the envelope. Defaults to 1.
 #' 
 #' @return \code{wt} returns an object of class \code{wt}.  Slots are: 
 #' \item{values}{A matrix of complex numbers, of dimensions \code{length(t.series)} by the number of timescales. Entries not considered reliable (longer timescales, near the edges of the time span) are set to NA.}
@@ -34,7 +34,8 @@
 wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1)
 {
   errcheck_tsdat(times,t.series,"wt")
-
+  errcheck_wavparam(scale.min,scale.max.input,sigma,f0,"wt")
+    
   if(is.null(scale.max.input)){
     scale.max<-length(t.series)
   }
@@ -45,9 +46,8 @@ wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f
   #determine how many frequencies are in the range and make receptacle for results 
   scale.min <- f0*scale.min
   scale.max <- f0*scale.max
-  
-  m.max <- floor(log(scale.max/scale.min)/log(sigma))+1
-  s2 <- scale.min*sigma^seq(from=0, by=1, to=m.max)
+  m.max <- floor(log(scale.max/scale.min)/log(sigma))+1 #number of timescales
+  s2 <- scale.min*sigma^seq(from=0, by=1, to=m.max) #widths of wavelet envelopes
   margin2 <- ceiling(sqrt(-(2*s2*s2)*log(0.5)))
   translength <- length(t.series)
   m.last <- max(which(margin2<0.5*translength))

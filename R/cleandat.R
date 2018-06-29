@@ -3,7 +3,7 @@
 #' A data cleaning function for optimal Box-Cox transformation, detrending, standarizing variance, de-meaning
 #' 
 #' @param dat A locations x time data matrix, or a time series vector (for 1 location)
-#' @param times The times of measurement
+#' @param times The times of measurement, spacing 1
 #' @param clev The level of cleaning to do, 1 through 5. See details. 
 #' @param lambdas A vector of lambdas to test for optimal Box-Cox transformation, if Box-Cox is performed. Ignored for \code{clev<4}. Defaults to seq(-10,10, by=0.01). See details.
 #' @param mints If \code{clev} is 4 or 5, then time series are shifted to have this minimum value before Box-Cox transformation. Default NA means use the smallest difference between consecutive, distinct sorted values. NaN means perform no shift.

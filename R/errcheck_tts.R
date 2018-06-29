@@ -1,6 +1,6 @@
 #' Error check whether inputs are suitable for a tts object
 #' 
-#' @param times times of measurement
+#' @param times times of measurement, spacing 1
 #' @param timescale timescales of analysis
 #' @param values a times by timescales matrix
 #' @param callfunc the function from which this one was called, for error tracking

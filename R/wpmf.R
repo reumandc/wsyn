@@ -5,7 +5,7 @@
 #' \code{tts} class, which inherits from the \code{list} class.
 #' 
 #' @param dat A locations (rows) x time (columns) matrix
-#' @param times A vector of time step values
+#' @param times A vector of time step values, spacing 1
 #' @param scale.min The smallest scale of fluctuation that will be examined
 #' @param scale.max.input The largest scale of fluctuation guaranteed to be examined
 #' @param sigma The ratio of each time scale examined relative to the next timescale. Should be greater than 1.
@@ -48,6 +48,8 @@
 wpmf<-function(dat,times,scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1, sigmethod="none", nrand=1000)
 {
   errcheck_stdat(times,dat,"wpmf")
+  errcheck_wavparam(scale.min,scale.max.input,sigma,f0,"wpmf")
+  
   if (sigmethod %in% c("quick","fft","aaft"))
   {
     #error check rnand

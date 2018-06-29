@@ -168,6 +168,32 @@ plotmag(res)
 
 <!--maybe also do a plotphase call when possible?-->
 
+The \code{times} argument to \code{wt} (and several other functions, see below)
+is tightly constrained. It must be a numeric vector of unit-spaced times 
+(\code{diff(times)} is a vector of 1s) with
+no missing entries. It must be the same length as the data and correspond to the
+timing of measurement of the data. For the most common use cases, the unit 
+spacing of times will be natural in some time unit, i.e., sampling is typically
+conducted with frequency once per time unit for some natural time unit (e.g., 
+once per year, month, day, week, fortnight). In those cases, \code{timescales}
+in output and on plots will have units cycles per time unit for the time unit 
+of sampling. Applications with sampling time step
+not equal to 1 in some natural unit of time can view the \code{times} vector
+as a vector of time steps, rather than times, \emph{per se}, and  
+\code{timescales} will be in units of cycles per time step.
+
+The arguments \code{scale.min}, \code{scale.max.input}, \code{sigma}, and \code{f0}
+to \code{wt} (and several other functions) are for constructing the timescales
+used wavelet analysis. The argument \code{scale.min} is the shortest timescale,
+and must be $2$ or greater. Starting from \code{scale.min}, each timescale is 
+\code{sigma} times the previous one, up to but not surpassing 
+\code{scale.max.input}. The scalloping of wavelet transforms places additional
+constraints on the largest timescale examined, independently implemented, 
+so choosing larger \code{scale.max.input} will only result in longer timescales
+up to the limit of scalloping. The argument $f0$ is the ratio of the period of 
+fluctuation to the width of the envelope.
+<!--Get Lawrence to add a sentence about f0-->
+
 # Time- and timescale-specific measures of synchrony
 \noindent The function `wpmf` 
 implements the wavelet phasor 

@@ -153,7 +153,7 @@ test_that("clev is 4, test directly against formulas of Box Cox paper",{
 test_that("clev is 5, test directly against formulas of Box Cox paper",{
   #the data
   set.seed(301)
-  times<-seq(1,20,.1)
+  times<-seq(1,200,1)
   dat<-.1*times+2+exp(rnorm(length(times),mean=0,sd=.5))
 
   #use cleandat
