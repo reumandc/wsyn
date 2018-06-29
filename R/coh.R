@@ -174,13 +174,13 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
     ## One location wavelet coherence
     if(n==1)
     {
-      fft1<-fft(dat1)
-      fft2<-fft(dat2) #fft signals 1 and 2
-      xfft<-fft1*Conj(fft2)
+      fft1<-fft(dat1) #fft signals 1 and 2
+      fft2<-fft(dat2) 
+      xfft<-fft1*Conj(fft2) #get cross-spectrum and spectra
       xfft1<-fft1*Conj(fft1)
-      xfft2<-fft2*Conj(fft2) #get cross-spectrum and spectra
+      xfft2<-fft2*Conj(fft2) 
       freqs<-seq(from=0, to=1-(1/tt), by=1/tt)
-      filt.crosspec<-matrix(NA, nrow=m.max, ncol=tt)
+      filt.crosspec<-matrix(NA, nrow=m.max, ncol=tt) #initialize
       filt.pow1<-matrix(NA, nrow=m.max, ncol=tt)
       filt.pow2<-matrix(NA, nrow=m.max, ncol=tt)
       for(stage in 1:m.max)
@@ -188,16 +188,16 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
         s<-s2[stage]
         #find coherence by filtering cross-spectrum
         xx<-sqrt(2*pi*s)*(exp(-s^2*(2*pi*(freqs-(1-(f0/s))))^2/2) - exp(-s^2*(2*pi*freqs)^2/2)*exp(-0.5*(2*pi*f0)^2))
-        m2xx<-xx*Conj(xx)
-        filt.crosspec[stage,]<-m2xx*xfft/tt
-        filt.pow1[stage,]<-m2xx*xfft1/tt
-        filt.pow2[stage,]<-m2xx*xfft2/tt
+        m2xx<-xx*Conj(xx)/tt
+        filt.crosspec[stage,]<-m2xx*xfft
+        filt.pow1[stage,]<-m2xx*xfft1
+        filt.pow2[stage,]<-m2xx*xfft2
       }
       altpow1<-rowMeans(filt.pow1)
       altpow2<-rowMeans(filt.pow2)
       altcoh<-rowMeans(filt.crosspec)
       altcoh.norm<-altcoh/sqrt(altpow1*altpow2)
-      #***DAN: I think we could replace this for loop with some matrix hadamard products for a speedup - first get it working as is
+
       surrcoh<-matrix(NA, nrow=nrand, ncol=m.max)
       for(rep in 1:nrand)
       {
@@ -205,7 +205,9 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
         filt.crosspec.surr<-filt.crosspec*exp(complex(imaginary=ts1surrangmat))
         surrcoh[rep,]<-rowMeans(filt.crosspec.surr)
       }
+      surrcoh.norm<-surrcoh/matrix(rep(sqrt(altpow1*altpow2),each=nrow(surrcoh)),nrow(surrcoh),ncol(surrcoh))
     }
+    
     ## Spatial coherence (multiple locations) - done separately from n=1 for speed reasons
     if(n>1)
     {
@@ -218,7 +220,7 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
       sxfft1<-apply(xfft1, 2, mean)
       sxfft2<-apply(xfft2, 2, mean)
       freqs<-seq(from=0, to=1-(1/tt), by=1/tt)
-      filt.crosspec<-matrix(NA, nrow=m.max, ncol=tt)
+      filt.crosspec<-matrix(NA, nrow=m.max, ncol=tt) #initialize
       filt.pow1<-matrix(NA, nrow=m.max, ncol=tt)
       filt.pow2<-matrix(NA, nrow=m.max, ncol=tt)
       for(stage in 1:m.max)
@@ -226,24 +228,24 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
         s<-s2[stage]
         #find coherence by filtering cross-spectrum
         xx<-sqrt(2*pi*s)*(exp(-s^2*(2*pi*(freqs-(1-(f0/s))))^2/2) - exp(-s^2*(2*pi*freqs)^2/2)*exp(-0.5*(2*pi*f0)^2))
-        m2xx<-xx*Conj(xx)
-        filt.crosspec[stage,]<-m2xx*sxfft/tt
-        filt.pow1[stage,]<-m2xx*sxfft1/tt
-        filt.pow2[stage,]<-m2xx*sxfft2/tt
+        m2xx<-xx*Conj(xx)/tt
+        filt.crosspec[stage,]<-m2xx*sxfft
+        filt.pow1[stage,]<-m2xx*sxfft1
+        filt.pow2[stage,]<-m2xx*sxfft2
       }
       altpow1<-rowMeans(filt.pow1)
       altpow2<-rowMeans(filt.pow2)
       altcoh<-rowMeans(filt.crosspec)
       altcoh.norm<-altcoh/sqrt(altpow1*altpow2)
+      
       surrcoh<-matrix(NA, nrow=nrand, ncol=m.max)
-      surrcoh.norm<-matrix(NA, nrow=nrand, ncol=m.max)
       for(rep in 1:nrand)
       {
         ts1surrangmat<-matrix(ts1surrang[rep,], nrow=m.max, ncol=tt, byrow=T) #make surrogates
         filt.crosspec.surr<-filt.crosspec*exp(complex(imaginary=ts1surrangmat))
         surrcoh[rep,]<-rowMeans(filt.crosspec.surr)
-        surrcoh.norm[rep,]<-surrcoh[rep,]/sqrt(altpow1*altpow2)
       }
+      surrcoh.norm<-surrcoh/matrix(rep(sqrt(altpow1*altpow2),each=nrow(surrcoh)),nrow(surrcoh),ncol(surrcoh))
     }
     signif<-list(coher=altcoh.norm,scoher=surrcoh.norm)
     
@@ -255,7 +257,7 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
     class(result)<-c("coh","list")
     return(result)    
     
-    #***DAN: signif$coher will be normalized as powall, so if the used uses sigmethod=fast and
+    #***DAN: signif$coher will be normalized as powall, so if the user uses sigmethod=fast and
     #norm not equal to powall, there are effectively two different things going on here in 
     #terms of normalization, one for coher and once for signif.
     #So the plan is, unit test with powall and fast, and then once that works, think about

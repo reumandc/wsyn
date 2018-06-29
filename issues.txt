@@ -43,7 +43,8 @@ the actual largest timescale and this should be the same for even larger scale.m
 5) DONE Add a paragraph to the vignette explaining what scale.min, scale.max, f0, sigma,
 or ask Lawrence to do it. 
 6) DONE test coh with vectors, also with 1 by N matrices
-7) right now, when using the fast method, coh only really works with powall normalization
+7) right now, when using the fast method, coh only really works with powall normalization, for powind or none, it could be made to work, but right now it will
+do powall normalization on the components of signif and powing or none on coher
 
 wt.r:
 #TODO: make this a compiled function using cmpfun in the compiler package

@@ -235,7 +235,25 @@ test_that("compare to a previous coherence example, fast algorithm",{
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="4820ccf6c024e5238adfa8d07407f196")   
+  expect_known_hash(res,hash="3b0518131c490f49091ceeb9aeb0a475")   
+  
+  #now look at just the first time series to make sure things work
+  #in that case
+  res<-coh(dat1=artsig_x[2,],dat2=artsig_y[2,],times=times,norm="powall",sigmethod="fast",nrand=1000,
+           f0=0.5,scale.max.input=28)
+  #make a plot
+  qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
+  plot(log(1/res$timescales),Mod(res$coher),type="l",lty="dashed",xaxt="n",col="red",
+       ylim=range(Mod(res$coher),Mod(res$signif$coher),qs))
+  axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
+  lines(log(1/res$timescales),Mod(res$signif$coher),type="l",xaxt="n",col="red")
+  for (counter in 1:dim(qs)[1])
+  {
+    lines(log(1/res$timescales),qs[counter,])
+  }
+  #It looked good so I commented it out, now just check future runs are always the same.
+  #Hash below was obtained using digest::digest(res).
+  expect_known_hash(res,hash="5fb28337e85b3de6374df635fde6b6b7")  
 })
 
 #test_that("test the fast coherence part of the code",{
