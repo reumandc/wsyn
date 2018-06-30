@@ -68,7 +68,7 @@ error if this is not the case. Approaches based on Fourier surrogate (section \r
 require time series with approximately normal marginals.
 
 # The wavelet transform
-\noindent The function `wt` implements the complex Morlet wavelet transform on which most
+\noindent The function `wt` implements the complex Morlet wavelet transform, on which most
 other `wsyn` functions are based. An S3 class is defined for `wt`, and it inherits from the
 generic class `tts`. See the help files for the generator functions `wt` and `tts` 
 for slot names and other information about these classes.
@@ -168,33 +168,33 @@ plotmag(res)
 
 <!--maybe also do a plotphase call when possible?-->
 
-The \code{times} argument to \code{wt} (and several other functions, see below)
+The `times` argument to `wt` (and several other functions, see below)
 is tightly constrained. It must be a numeric vector of unit-spaced times 
-(\code{diff(times)} is a vector of 1s) with
+(`diff(times)` is a vector of 1s) with
 no missing entries. It must be the same length as the data and correspond to the
 timing of measurement of the data. For the most common use cases, the unit 
 spacing of times will be natural in some time unit, i.e., sampling is typically
 conducted with frequency once per time unit for some natural time unit (e.g., 
-once per year, month, day, week, fortnight). In those cases, \code{timescales}
+once per year, month, day, week, fortnight). In those cases, `timescales`
 in output and on plots will have units cycles per time unit for the time unit 
 of sampling. Applications with sampling time step
-not equal to 1 in some natural unit of time can view the \code{times} vector
-as a vector of time steps, rather than times, \emph{per se}, and  
-\code{timescales} will be in units of cycles per time step.
+not equal to 1 in some natural unit of time can view the `times` vector
+as a vector of time steps, rather than times, \emph{per se}, and  `timescales` 
+will be in units of cycles per time step.
 
-The arguments \code{scale.min}, \code{scale.max.input}, \code{sigma}, and \code{f0}, 
-which are arguments to \code{wt} and several other functions, 
+The arguments `scale.min`, `scale.max.input`, `sigma`, and `f0`, 
+which are arguments to `wt` and several other functions, 
 are for constructing the timescales used for 
-wavelet analysis. The argument \code{scale.min} is the shortest timescale,
-and must be $2$ or greater. Starting from \code{scale.min}, each timescale is 
-\code{sigma} times the previous one, up to the first timescale that equals or 
-surpasses \code{scale.max.input}. The scalloping of 
-wavelet transforms places additional
-constraints on the largest timescale examined, independently implemented, 
-so choosing larger \code{scale.max.input} will only result in longer timescales
-up to the limits imposed by scalloping. The argument $f0$ is the 
+wavelet analysis. The argument `scale.min` is the shortest timescale,
+and must be $2$ or greater. Starting from `scale.min`, each timescale is 
+`sigma` times the previous one, up to the first timescale that equals or 
+surpasses `scale.max.input`. The scalloping of 
+wavelet transforms places additional, independently implemented
+constraints on the largest timescale examined 
+so choosing larger `scale.max.input` will only result in longer timescales
+up to the limits imposed by scalloping. The argument `f0` is the 
 ratio of the period of fluctuation to the width of the envelope.
-Higher values of f0 imply higher frequency resolution  
+Higher values of `f0` imply higher frequency resolution 
 (i.e., a wavelet component includes information from a narrower range 
 of Fourier components) but lower temporal resolution 
 (the component includes information from a wider range of times). 
@@ -346,11 +346,11 @@ to phase synchrony, but it is less useful insofar as significance contours are n
 available. The wavelet mean field also has some mathematical advantages, described in
 @Sheppard_16 and @Sheppard_18. The "wavelet Moran theorem" and other theorems 
 described in those references use the wavelet 
-mean field, not the wavelet phasro mean field, 
+mean field, not the wavelet phasor mean field, 
 and can be used to help attribute synchrony to particular causes. 
 Thus the two techniques are often best used together: 
 significance of phase synchrony can be identified with the wavelet phasor mean field,
-and then once significance is identified, synchrony can be desribed and studied using
+and then once significance is identified, synchrony can be described and studied using
 the wavelet mean field. 
 
 Examples of the wavelet mean field applied to real data
@@ -358,6 +358,8 @@ are in @Sheppard_16 and @Sheppard_18.
 
 # Coherence 
 
+<!--Just do it here without mentioning significance, and then intro surrogates in the next
+section, and then come back to signifiacnce-->
 
 # Surrogates \label{sec:surrog}
 \noindent Some of the text of this section was adapted, with minor modifications only, 
@@ -377,6 +379,9 @@ am going to implement that. Or maybe put it as its own section below?-->
 
 
 ## Alternative significance tests for the wavelet phasor mean field \label{sec:wpmfsignif}
+
+
+# Assessing significance of coherence
 
 
 # References

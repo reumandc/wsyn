@@ -38,7 +38,8 @@ test_that("test for correct format of output",{
   expect_equal(is.vector(res$coher),TRUE) 
   expect_equal(is.complex(res$coher),TRUE)
   expect_equal(length(res$coher),length(res$timescales))
-  
+
+  expect_equal(is.na(res$ranks),TRUE)
   expect_equal(is.na(res$bandp),TRUE)
   
   expect_equal(res$coher,res$signif$coher)
@@ -71,7 +72,8 @@ test_that("test for correct output format using 1 by N matrix input",{
   expect_equal(is.vector(res$coher),TRUE) 
   expect_equal(is.complex(res$coher),TRUE)
   expect_equal(length(res$coher),length(res$timescales))
-  
+
+  expect_equal(is.na(res$ranks),TRUE)
   expect_equal(is.na(res$bandp),TRUE)
   
   expect_equal(res$coher,res$signif$coher)
@@ -105,6 +107,7 @@ test_that("test for correct output format using vector input",{
   expect_equal(is.complex(res$coher),TRUE)
   expect_equal(length(res$coher),length(res$timescales))
   
+  expect_equal(is.na(res$ranks),TRUE)
   expect_equal(is.na(res$bandp),TRUE)
   
   expect_equal(res$coher,res$signif$coher)
@@ -156,7 +159,7 @@ test_that("compare to a previous coherence example",{
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="1135b1a52b2af432f221b6f2dd6489a1")   
+  expect_known_hash(res,hash="c7f8a20f157b4ce8d882cd80dc102af7")   
 })
 
 test_that("test for correct format of output, fast algorithm",{
@@ -184,6 +187,7 @@ test_that("test for correct format of output, fast algorithm",{
   expect_equal(is.complex(res$coher),TRUE)
   expect_equal(length(res$coher),length(res$timescales))
   
+  expect_equal(is.na(res$ranks),TRUE)
   expect_equal(is.na(res$bandp),TRUE)
   
   expect_equal(length(res$coher),dim(res$signif$scoher)[2])
@@ -208,6 +212,7 @@ test_that("test for correct format of output, fast algorithm",{
   expect_equal(is.complex(res$coher),TRUE)
   expect_equal(length(res$coher),length(res$timescales))
   
+  expect_equal(is.na(res$ranks),TRUE)
   expect_equal(is.na(res$bandp),TRUE)
   
   expect_equal(length(res$coher),dim(res$signif$scoher)[2])
@@ -232,6 +237,7 @@ test_that("test for correct format of output, fast algorithm",{
   expect_equal(is.complex(res$coher),TRUE)
   expect_equal(length(res$coher),length(res$timescales))
   
+  expect_equal(is.na(res$ranks),TRUE)
   expect_equal(is.na(res$bandp),TRUE)
   
   expect_equal(length(res$coher),dim(res$signif$scoher)[2])
@@ -283,7 +289,7 @@ test_that("compare to a previous coherence example, fast algorithm",{
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="3b0518131c490f49091ceeb9aeb0a475")   
+  expect_known_hash(res,hash="42aed40ac387313abc06227f9032984c")   
   
   #now look at just the first time series to make sure things work
   #in that case
@@ -301,7 +307,7 @@ test_that("compare to a previous coherence example, fast algorithm",{
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="5fb28337e85b3de6374df635fde6b6b7")  
+  expect_known_hash(res,hash="572086b835578caf96b68292d6b15c6a")  
 })
 
 test_that("compare to a previous coherence example, fast algorithm, norm equals none",{
@@ -348,7 +354,7 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="509580bde6ca28171c1f37fd52f0cf17")   
+  expect_known_hash(res,hash="d174fec0baa7cff11e2f5f4f84caed0f")   
   
   #now look at just the first time series to make sure things work
   #in that case
@@ -366,7 +372,7 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="ffe4fcb77e463ddf00f8f8ca9aa4264a")  
+  expect_known_hash(res,hash="08e64e69a01928b6630e5dd9035a1280")  
 })
 
 #need a test of like the above, with n==1 and n>1 cases, for the fast algorithm

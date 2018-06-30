@@ -23,6 +23,7 @@
 #' \item{timescales}{The timescales associated with the coherence}
 #' \item{coher}{The coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
 #' \item{signif}{A list with information from the significance testing. Elements are \code{coher} and \code{scoher}. See details.}
+#' \item{ranks}{A list with ranking information for \code{signif}. \code{NA} until \code{plotranks} is called, see documentation for \code{plotranks}.}
 #' \item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. Empty on an initial call to \code{coh}, filled in by the function \code{cohbandsignif}. See details.}
 #' 
 #' @details If the dimensions of \code{dat1} and \code{dat2} are $N \times T$ ($N$ is 1 for 
@@ -261,15 +262,9 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
     if (wasvect1){dat1<-as.vector(dat1)}
     if (wasvect2){dat2<-as.vector(dat2)}
     result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,norm=norm,
-                 timescales=timescales,coher=coher,signif=signif,bandp=NA)
+                 timescales=timescales,coher=coher,signif=signif,ranks=NA,bandp=NA)
     class(result)<-c("coh","list")
     return(result)    
-    
-    #***DAN: signif$coher will be normalized as powall, so if the user uses sigmethod=fast and
-    #norm not equal to powall, there are effectively two different things going on here in 
-    #terms of normalization, one for coher and once for signif.
-    #So the plan is, unit test with powall and fast, and then once that works, think about
-    #dealing with different normalizations and fast.
   }
   
   #*no significance
@@ -279,7 +274,7 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
     if (wasvect1){dat1<-as.vector(dat1)}
     if (wasvect2){dat2<-as.vector(dat2)}
     result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,norm=norm,
-                 timescales=timescales,coher=coher,signif=NA,bandp=NA)
+                 timescales=timescales,coher=coher,signif=NA,ranks=NA,bandp=NA)
     class(result)<-c("coh","list")
     return(result)    
   }
@@ -330,7 +325,7 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   if (wasvect1){dat1<-as.vector(dat1)}
   if (wasvect2){dat2<-as.vector(dat2)}
   result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,
-               norm=norm,timescales=timescales,coher=coher,signif=signif,bandp=NA)
+               norm=norm,timescales=timescales,coher=coher,signif=signif,ranks=NA,bandp=NA)
   class(result)<-c("coh","list")
   return(result)    
 }

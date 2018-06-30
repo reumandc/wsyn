@@ -16,9 +16,9 @@ Progress:
 6.5) DONE Go back and add joint Box-Cox to cleandat, and unit tests
 6.75) DONE get the .Rmds going and compile everything as a package
 8) start a vignette, covering the code you have written so far - done except for surrogates, have to do that section, but leaving that until after coherence stuff is written
-9) compile again as a package
-10) stopping point - mean field methods implemented. next step coherence methods.
-11) Work on coherence functionality, inc unit tests and vignette and making the package compile. Need to start with a design phase and working out appropriate S3 classes. See some thoughts below.
+9) DONE compile again as a package
+10) DONE stopping point - mean field methods implemented. next step coherence methods.
+11) Work on coherence functionality, inc unit tests and vignette and making the package compile. Need to start with a design phase and working out appropriate S3 classes. See some thoughts below. - IMPLEMENTED COH, STILL NEED PLOTTERS, THENA  VIGNETTE
 12) everything you need for deer
 13) synmat for kelp and Jon's bird stuff
 14) write the phase plotter functions, and unit tests. Consolidate into one plotphase.R file, as you did for the magnitude plotters.
@@ -45,6 +45,7 @@ or ask Lawrence to do it.
 6) DONE test coh with vectors, also with 1 by N matrices
 7) right now, when using the fast method, coh does not work with norm=powind
 8) DONE error check the fast algorithm, n=1 case
+9) Add examples to example sections of docs everywhere
 
 wt.r:
 #TODO: make this a compiled function using cmpfun in the compiler package
@@ -119,6 +120,12 @@ When you run coh, the bandp slot is NA at first until you run the last of the be
 Methods:
 set (which throw an error) and get methods for changing and extracting the slot entries
 print and summary methods
-something for plotting coherence against timescale - if bandp is not NA, puts the p-values on the plot. Call it plot.
-something for plotting ranks in surrogates against timescale - if bandp is not NA, puts the p-values on the plot. Also call it plot. Whether this or the previous or both are generated is controlled by a switch argument.
+something for plotting coherence against timescale - if bandp is not NA, puts the p-values on the plot. Call it plotmag.
+something for plotting ranks in surrogates against timescale - if bandp is not NA, puts the p-values on the plot. Call it plotrank
 something for p-values across timescale bands - populates bandp or adds to it. Call it cohbandsignif
+you will also need a plotphase and a way of calculating averages phases across bands
+
+exports: plotmag, plotrank, cohbandsignif, plotphase, avgphase
+internals: addranks
+
+order: addranks, cohbandsignif, plotmag, plotrank, plotphase, avgphase

@@ -91,6 +91,21 @@ set_signif.coh<-function(obj,newval)
   stop("Error in set_signif: signif should not be altered for a coh object")
 }
 
+set_ranks<-function(obj,newval)
+{
+  UseMethod("set_ranks",obj)
+}
+
+set_ranks.default<-function(obj,newval)
+{
+  stop("Error in set_ranks: set_ranks not defined for this class")
+}
+
+set_ranks.coh<-function(obj,newval)
+{
+  stop("Error in set_ranks: ranks should not be altered for a coh object")
+}
+
 set_bandp<-function(obj,newval)
 {
   UseMethod("set_bandp",obj)
@@ -195,6 +210,21 @@ get_coher.coh<-function(obj)
 get_signif.coh<-function(obj)
 {
   return(obj$signif)
+}
+
+get_ranks<-function(obj)
+{
+  UseMethod("get_ranks",obj)
+}
+
+get_ranks.default<-function(obj)
+{
+  stop("Error in get_ranks: get_ranks not defined for this class")
+}
+
+get_ranks.coh<-function(obj)
+{
+  return(obj$bandp)
 }
 
 get_bandp<-function(obj)
