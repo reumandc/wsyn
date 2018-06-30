@@ -2,13 +2,12 @@
 % Please edit documentation in R/errcheck_tsdat.R
 \name{errcheck_tsdat}
 \alias{errcheck_tsdat}
-\title{Error checking whether a times vector and t.series vector make a 
-legitimate time series for wavelet analysis}
+\title{Error check for appropriate temporal data}
 \usage{
 errcheck_tsdat(times, t.series, callfunc)
 }
 \arguments{
-\item{times}{times of measurement}
+\item{times}{times of measurement, spacing 1}
 
 \item{t.series}{the measurements}
 

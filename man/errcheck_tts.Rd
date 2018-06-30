@@ -7,7 +7,7 @@
 errcheck_tts(times, timescales, values, callfunc)
 }
 \arguments{
-\item{times}{times of measurement}
+\item{times}{times of measurement, spacing 1}
 
 \item{values}{a times by timescales matrix}
 

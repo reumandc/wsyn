@@ -196,7 +196,9 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
       altpow1<-rowMeans(filt.pow1)
       altpow2<-rowMeans(filt.pow2)
       altcoh<-rowMeans(filt.crosspec)
-      altcoh.norm<-altcoh/sqrt(altpow1*altpow2)
+      if (norm=="powall"){altcoh.norm<-altcoh/sqrt(altpow1*altpow2)}
+      if (norm=="none"){altcoh.norm<-altcoh}
+      if (norm=="powind"){stop("Error in coh: norm=powind and sigmethod=fast not implemented yet")}
 
       surrcoh<-matrix(NA, nrow=nrand, ncol=m.max)
       for(rep in 1:nrand)
@@ -205,7 +207,9 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
         filt.crosspec.surr<-filt.crosspec*exp(complex(imaginary=ts1surrangmat))
         surrcoh[rep,]<-rowMeans(filt.crosspec.surr)
       }
-      surrcoh.norm<-surrcoh/matrix(rep(sqrt(altpow1*altpow2),each=nrow(surrcoh)),nrow(surrcoh),ncol(surrcoh))
+      if (norm=="powall"){surrcoh.norm<-surrcoh/matrix(rep(sqrt(altpow1*altpow2),each=nrow(surrcoh)),nrow(surrcoh),ncol(surrcoh))}
+      if (norm=="none"){surrcoh.norm<-surrcoh}
+      if (norm=="powind"){stop("Error in coh: norm=powind and sigmethod=fast not implemented yet")}
     }
     
     ## Spatial coherence (multiple locations) - done separately from n=1 for speed reasons
@@ -236,7 +240,9 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
       altpow1<-rowMeans(filt.pow1)
       altpow2<-rowMeans(filt.pow2)
       altcoh<-rowMeans(filt.crosspec)
-      altcoh.norm<-altcoh/sqrt(altpow1*altpow2)
+      if (norm=="powall"){altcoh.norm<-altcoh/sqrt(altpow1*altpow2)}
+      if (norm=="none"){altcoh.norm<-altcoh}
+      if (norm=="powind"){stop("Error in coh: norm=powind and sigmethod=fast not implemented yet")}
       
       surrcoh<-matrix(NA, nrow=nrand, ncol=m.max)
       for(rep in 1:nrand)
@@ -245,7 +251,9 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
         filt.crosspec.surr<-filt.crosspec*exp(complex(imaginary=ts1surrangmat))
         surrcoh[rep,]<-rowMeans(filt.crosspec.surr)
       }
-      surrcoh.norm<-surrcoh/matrix(rep(sqrt(altpow1*altpow2),each=nrow(surrcoh)),nrow(surrcoh),ncol(surrcoh))
+      if (norm=="powall"){surrcoh.norm<-surrcoh/matrix(rep(sqrt(altpow1*altpow2),each=nrow(surrcoh)),nrow(surrcoh),ncol(surrcoh))}
+      if (norm=="none"){surrcoh.norm<-surrcoh}
+      if (norm=="powind"){stop("Error in coh: norm=powind and sigmethod=fast not implemented yet")}
     }
     signif<-list(coher=altcoh.norm,scoher=surrcoh.norm)
     

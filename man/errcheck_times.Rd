@@ -2,13 +2,12 @@
 % Please edit documentation in R/errcheck_times.R
 \name{errcheck_times}
 \alias{errcheck_times}
-\title{Error check whether a vector can represent times at which data suitable 
-for wavelet transforms were measured}
+\title{Error check \code{times}}
 \usage{
 errcheck_times(times, callfunc)
 }
 \arguments{
-\item{times}{Tests whether this is a numeric vector with evenly spaced increasing values}
+\item{times}{Tests whether this is a numeric vector with unit-spaced increasing values}
 
 \item{callfunc}{Function calling this one, for better error messaging}
 }

@@ -9,7 +9,7 @@ cleandat(dat, times, clev, lambdas = seq(-10, 10, by = 0.01), mints = NA)
 \arguments{
 \item{dat}{A locations x time data matrix, or a time series vector (for 1 location)}
 
-\item{times}{The times of measurement}
+\item{times}{The times of measurement, spacing 1}
 
 \item{clev}{The level of cleaning to do, 1 through 5. See details.}
 

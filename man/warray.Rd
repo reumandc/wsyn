@@ -10,13 +10,13 @@ warray(dat, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05,
 \arguments{
 \item{dat}{A locations (rows) x time (columns) matrix}
 
-\item{times}{A vector of timestep values (e.g. years)}
+\item{times}{A vector of timestep values (e.g. years), spacing 1}
 
-\item{scale.min}{The smallest scale of fluctuation that will be examined}
+\item{scale.min}{The smallest scale of fluctuation that will be examined. At least 2.}
 
 \item{scale.max.input}{The largest scale of fluctuation that will be examined. Note that if this is set too high relative to the length of the timeseries it will be truncated.}
 
-\item{sigma}{The ratio of each time scale examined relative to the next timescale}
+\item{sigma}{The ratio of each time scale examined relative to the next timescale. Greater than 1.}
 
 \item{f0}{The ratio of the period of fluctuation to the width of the envelope}
 }
@@ -30,7 +30,8 @@ warray(dat, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05,
 Creates an array of wavelet transforms from input timeseries
 }
 \note{
-Important for interpreting the phase: the phases grow through time, i.e., they turn anti-clockwise
+Important for interpreting the phase: the phases grow through time, i.e., they 
+turn anti-clockwise. This function is internal, no error checking.
 }
 \examples{
 #***DAN has not checked this example, and it won't work until I get cleandat working anyway
@@ -38,7 +39,6 @@ Important for interpreting the phase: the phases grow through time, i.e., they t
 #dat<-matrix(rpois(20*length(time),20),nrow=20,ncol=length(time)) #generate fake count data for 20 locations
 #dat<-CleanData(dat,normalize=F,detrend=T)$cleandat #detrend each site's time series, saving the cleaned data
 #dat.array<-warray(dat,times=time)
-
 }
 \author{
 Lauren Hallett, \email{hallett@uoregon.edu}; Lawrence Sheppard, \email{lwsheppard@ku.edu};

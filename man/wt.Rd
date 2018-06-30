@@ -9,18 +9,17 @@ wt(t.series, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05,
   f0 = 1)
 }
 \arguments{
-\item{t.series}{A vector timeseries of real values}
+\item{t.series}{A timeseries of real values}
 
-\item{times}{A vector of time step values (e.g., years)}
+\item{times}{A vector of time step values (e.g., years), spacing 1}
 
-\item{scale.min}{The smallest scale of fluctuation that will be examined}
+\item{scale.min}{The smallest scale of fluctuation that will be examined. At least 2.}
 
 \item{scale.max.input}{The largest scale of fluctuation that is guaranteed to be examined}
 
-\item{sigma}{The ratio of each time scale examined relative to the next timescale.
-Should be greater than 1.}
+\item{sigma}{The ratio of each time scale examined relative to the next timescale. Should be greater than 1.}
 
-\item{f0}{The ratio of the period of fluctuation to the width of the envelope. Defaults to 1}
+\item{f0}{The ratio of the period of fluctuation to the width of the envelope. Defaults to 1.}
 }
 \value{
 \code{wt} returns an object of class \code{wt}.  Slots are: 
@@ -35,7 +34,7 @@ Computes the wavelet transform of a timeseries. Also the creator function for th
 inherits from the \code{list} class.
 }
 \note{
-Important for interpreting the phase: the phases grow through time, i.e., they turn anti-clockwise
+Important for interpreting the phase: the phases grow through time, i.e., they turn anti-clockwise.
 }
 \examples{
 x<-sin(2*pi*seq(1,1000,1)/20)+rnorm(1000,mean=0,sd=0.1) #generate sinusoidal data

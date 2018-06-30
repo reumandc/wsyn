@@ -2,13 +2,12 @@
 % Please edit documentation in R/errcheck_stdat.R
 \name{errcheck_stdat}
 \alias{errcheck_stdat}
-\title{Error checking whether a times vector and a matrix with each row a time
-series make a ligitimate spatio-temporal data set for wavelet analysis}
+\title{Error check for appropriate spatio-temporal data}
 \usage{
 errcheck_stdat(times, dat, callfunc)
 }
 \arguments{
-\item{times}{the times of measurement}
+\item{times}{the times of measurement, spacing 1}
 
 \item{dat}{each row is a time series - must have at least two rows}
 

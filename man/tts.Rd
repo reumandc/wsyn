@@ -7,7 +7,7 @@
 tts(times, timescales, values)
 }
 \arguments{
-\item{times}{A numeric vector of evenly spaced increasing real values}
+\item{times}{A numeric vector of increasing real values, spacing 1}
 
 \item{timescales}{A numeric vector with positive entries}
 
