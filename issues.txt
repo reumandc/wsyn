@@ -30,7 +30,7 @@ for formatting the documentation at top:
 2) I foudn and deleted a comment in the header of wmpf to the effect that "the wavelet phasor mean field was developed by Sheppard and Reuman, R code written by Anderson and Walter." It was not developed by Shppard and Reuman, and now the R code is by all of us, so I changed it. Watch out for other notes like that, I think I remember seeing some more.
 
 general
-1) It will be possible to be a bit more consistent with use of get and set methods instead of $
+1) DECIDED NOT TO BOTHER It will be possible to be a bit more consistent with use of get and set methods instead of $
 2) DONE you need an error checking function for scale.min, scale.max, f0, sigma, and you need to call it from the top of all functions that take these as arguments. Also
 indicate in vignette and in help files what the constraints are. 
 3) DONE times can ONLY be spaced with units of one, otherwise the code does not

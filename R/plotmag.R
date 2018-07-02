@@ -13,6 +13,16 @@
 #' @param filename Filename (without extension), for saving as pdf. Default value NA saves no file and uses the defauly graphics device.
 #' @param ... Additional graphics parameters passed to \code{image} (\code{graphics} package) if \code{colorbar==FALSE}, or to \code{image.plot} (\code{fields} package) if \code{colorbar==TRUE}
 #' 
+#' @author Thomas Anderson, \email{anderstl@@gmail.com}, Jon Walter, \email{jaw3es@@virginia.edu}; Lawrence 
+#' Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}
+#' 
+#' @references 
+#' Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
+#' pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+#' 
+#' @examples
+#' #Not written yet but need some
+#' 
 #' @export
 #' @importFrom fields image.plot
 #' @importFrom graphics image axis par
