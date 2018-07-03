@@ -6,7 +6,7 @@
 #' @param cohobj An object of class \code{coh}, must have a non-\code{NA} \code{signif} slot
 #' @param band A length-two numeric vector indicating a timescale band
 #' 
-#' @result \code{cohbandtest} returns an object of the same class as its first input but with a
+#' @return \code{cohbandtest} returns an object of the same class as its first input but with a
 #' \code{bandp} object added. Or if there was already a \code{bandp} object, the output has a 
 #' \code{bandp} object with an additional row. The \code{bandp} object is a data frame with three
 #' columns, the first two indicating the timescale band and the third an associated p-value for

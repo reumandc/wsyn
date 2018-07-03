@@ -37,7 +37,8 @@ coh(dat1, dat2, times, norm, sigmethod = "none", nrand = 1000,
 \item{timescales}{The timescales associated with the coherence}
 \item{coher}{The coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
 \item{signif}{A list with information from the significance testing. Elements are \code{coher} and \code{scoher}. See details.}
-\item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. Empty on an initial call to \code{coh}, filled in by the function \code{cohbandsignif}. See details.}
+\item{ranks}{A list with ranking information for \code{signif}. \code{NA} until \code{plotranks} is called, see documentation for \code{plotranks}.}
+\item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. Empty on an initial call to \code{coh}, filled in by the function \code{cohbandtest}. See details.}
 }
 \description{
 Wavelet coherence and wavelet phase coherence, spatial or for single time series.

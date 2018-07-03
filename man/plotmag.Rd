@@ -3,23 +3,35 @@
 \name{plotmag}
 \alias{plotmag}
 \alias{plotmag.tts}
+\alias{plotmag.wt}
+\alias{plotmag.wmf}
 \alias{plotmag.wpmf}
+\alias{plotmag.coh}
 \alias{plotmag.default}
-\title{For plotting the magnitude of values in \code{tts} objects}
+\title{For plotting the magnitude of values in \code{tts} and \code{coh} objects}
 \usage{
 plotmag(object, ...)
 
 \method{plotmag}{tts}(object, zlims = NULL, neat = TRUE, colorfill = NULL,
   colorbar = TRUE, title = NULL, filename = NA, ...)
 
+\method{plotmag}{wt}(object, zlims = NULL, neat = TRUE, colorfill = NULL,
+  colorbar = TRUE, title = NULL, filename = NA, ...)
+
+\method{plotmag}{wmf}(object, zlims = NULL, neat = TRUE, colorfill = NULL,
+  colorbar = TRUE, title = NULL, filename = NA, ...)
+
 \method{plotmag}{wpmf}(object, zlims = NULL, neat = TRUE,
   colorfill = NULL, sigthresh = 0.95, colorbar = TRUE, title = NULL,
   filename = NA, ...)
 
+\method{plotmag}{coh}(object, sigthresh = c(0.95, 0.99), bandprows = "all",
+  filename = NA)
+
 \method{plotmag}{default}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{tts} or some class that inherits from \code{tts}}
+\item{object}{An object of class \code{tts} or some class that inherits from \code{tts} or of class \code{coh}}
 
 \item{...}{Additional graphics parameters passed to \code{image} (\code{graphics} package) if \code{colorbar==FALSE}, or to \code{image.plot} (\code{fields} package) if \code{colorbar==TRUE}}
 
@@ -33,11 +45,33 @@ plotmag(object, ...)
 
 \item{title}{Title for the top of the plot.}
 
-\item{filename}{Filename (without extension), for saving as pdf. Default value NA saves no file and uses the defauly graphics device.}
+\item{filename}{Filename (without extension), for saving as pdf. Default value NA saves no file and uses the default graphics device.}
 
-\item{sigthresh}{Significance threshold(s) for \code{wpmf} objects. Numeric vector with values between 0 and 1 (typically 0.95, 0.99, 0.999, etc.). Contours are plotted at these values.}
+\item{sigthresh}{Significance threshold(s). Numeric vector with values between 0 and 1. Typically 0.95, 0.99, 0.999, etc. For \code{wpmf} objects, contours are plotted at these values; for \code{coh} objects the threshholds are plotted on coherence plots.}
+
+\item{bandprows}{The rows of \code{object$bandp} for which to display results in \code{coh} plots}
 }
 \description{
 For plotting the magnitude of values in \code{tts} objects (and derived classes) 
-against time and timescale
+against time and timescale, and \code{coh} objects against timescale
+}
+\details{
+For \code{coh} objects, object$coher is plotted using a solid red line, and 
+object$signif$coher is plotted using a dashed red line. The two coherences agree except
+for \code{sigmethod="fast"}, for which they are close. The dashed line is what should be
+compared to the distribution of surrogate coherences (black lines, if \code{signif} is 
+not \code{NA}). Horizontal axis ticks are labeled as timescales, but are spaced on the 
+axis as log(1/timescale), i.e., log frequencies.
+}
+\examples{
+#Not written yet but need some
+
+}
+\references{
+Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
+pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+}
+\author{
+Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; Lawrence 
+Sheppard, \email{lwsheppard@ku.edu}; Daniel Reuman, \email{reuman@ku.edu}
 }

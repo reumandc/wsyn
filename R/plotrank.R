@@ -1,5 +1,27 @@
 #' Plots \code{ranks} slot for \code{coh} objects
 #' 
+#' Plots the \code{ranks} slot for \code{coh} objects to help identify statistical significance of coherence
+#' 
+#' @param object A \code{coh} object. Must have a non-\code{NA} \code{signif} slot.
+#' @param sigthresh Significance threshold(s). Numeric vector with values between 0 and 1. Typically 0.95, 0.99, 0.999, etc. The threshhold(s) are plotted on the rank plot as dashed horizontal line(s).
+#' @param bandprows The rows of \code{object$bandp} for which to display p-value results in the plot
+#' @param filename Filename (without extension), for saving as pdf. Default value NA saves no file and uses the default graphics device.
+#' 
+#' @details The plot shows \code{object$ranks$coher} versus \code{log(1/object$timescales)}.
+#' Horizontal axis ticks are labeled as timescales, but are spaced on the axis as 
+#' log(1/timescale), i.e., log frequencies. p-values from \code{object$bandp} are displayed
+#' above the rank plot.
+#' 
+#' @author Thomas Anderson, \email{anderstl@@gmail.com}, Jon Walter, \email{jaw3es@@virginia.edu}; Lawrence 
+#' Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}
+#' 
+#' @references 
+#' Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
+#' pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+#' 
+#' @examples
+#' #Not written yet but need some
+#' 
 #' @exportMethod 
 #' @importFrom graphics axis
 #' @importFrom grDevices pdf dev.off
