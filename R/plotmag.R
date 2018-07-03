@@ -198,6 +198,13 @@ plotmag.wpmf<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,sigthresh=0.95
 #' @export
 plotmag.coh<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA)
 {
+  #extract the needed slots
+  timescales<-get_timescales(object)
+  coher<-get_coher(object)
+  signif<-get_signif(object)
+  bandp<-get_bandp(object)
+  
+  #error catch
   if (any(sigthresh>=1 | sigthresh<=0))
   {
     stop("Error in plotmag.coh: inappropriate value for sigthresh")
@@ -214,12 +221,6 @@ plotmag.coh<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA)
     }
   }
   
-  #extract the needed slots
-  timescales<-get_timescales(object)
-  coher<-get_coher(object)
-  signif<-get_signif(object)
-  bandp<-get_bandp(object)
-  
   if (!is.na(filename))
   {
     grDevices::pdf(paste0(filename,".pdf"))
@@ -231,7 +232,7 @@ plotmag.coh<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA)
     plot(log(1/timescales),Mod(coher),type="l",lty="solid",xaxt="n",col="red",
          xlab="Timescales",ylab="|Coherence|")
     xlocs<-c(min(timescales),pretty(timescales,n=8))
-    axis(side=1,at=log(1/xlocs),labels=xlocs) 
+    graphics::axis(side=1,at=log(1/xlocs),labels=xlocs) 
     
     if (!is.na(filename))
     {
@@ -243,7 +244,7 @@ plotmag.coh<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA)
   #from here on is if signif is present
   
   #get quantiles for surrogate coherences
-  qs<-apply(X=Mod(signif$scoher),FUN=quantile,MARGIN=2,prob=sigthresh)
+  qs<-apply(X=Mod(signif$scoher),FUN=stats::quantile,MARGIN=2,prob=sigthresh)
   if (length(sigthresh)==1){qs<-matrix(qs,1,length(qs))}
   
   #if bandp is absent, just plot the lines, no p-values
@@ -253,7 +254,7 @@ plotmag.coh<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA)
     plot(log(1/timescales),Mod(coher),type="l",lty="solid",xaxt="n",col="red",
          ylim=rg,xlab="Timescales",ylab="|Coherence|")
     xlocs<-c(min(timescales),pretty(timescales,n=8))
-    axis(side=1,at=log(1/xlocs),labels=xlocs) 
+    graphics::axis(side=1,at=log(1/xlocs),labels=xlocs) 
     lines(log(1/timescales),Mod(signif$coher),type="l",lty="dashed",col="red")
     for (counter in 1:dim(qs)[1])
     {
@@ -276,7 +277,7 @@ plotmag.coh<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA)
   plot(log(1/timescales),Mod(coher),type="l",lty="solid",xaxt="n",col="red",
        ylim=rg,xlab="Timescales",ylab="|Coherence|")
   xlocs<-c(min(timescales),pretty(timescales,n=8))
-  axis(side=1,at=log(1/xlocs),labels=xlocs) 
+  graphics::axis(side=1,at=log(1/xlocs),labels=xlocs) 
   lines(log(1/timescales),Mod(signif$coher),type="l",lty="dashed",col="red")
   for (counter in 1:dim(qs)[1])
   {

@@ -198,9 +198,18 @@ test_that("test for an actual coh object",{
   #make the coh object
   res<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powall",sigmethod="fast",nrand=500,
            f0=0.5,scale.max.input=28)
+  
+  #do some error checking
+  expect_error(plotmag(res,sigthresh=1.1),"Error in plotmag.coh: inappropriate value for sigthresh")
+  
+  #add ranks and bandp
   res<-cohbandtest(res,c(2,4))
   res<-cohbandtest(res,c(4,30))
   res<-cohbandtest(res,c(8,12))
+
+  #more error checking
+  expect_error(plotmag(res,bandprows="test"),"Error in plotmag.coh: non-numeric value for bandprows")
+  expect_error(plotmag(res,bandprows=c(1,4)),"Error in plotmag.coh: bandprows must contain row numbers for bandp")
   
   #do the plot for testing
   Test_plotmag_coh<-function(){plotmag(object=res)}

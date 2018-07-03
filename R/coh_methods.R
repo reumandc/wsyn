@@ -224,7 +224,7 @@ get_ranks.default<-function(obj)
 
 get_ranks.coh<-function(obj)
 {
-  return(obj$bandp)
+  return(obj$ranks)
 }
 
 get_bandp<-function(obj)
