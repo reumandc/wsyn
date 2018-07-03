@@ -22,7 +22,7 @@ Progress:
 DONE addranks
 DONE cohbandsignif
 DONE plotmag
-plotrank
+DONE plotrank
 plotphase
 avgphase
 vignette - make sure to cover all these new functions
