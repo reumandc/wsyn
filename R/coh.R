@@ -86,6 +86,7 @@
 #' #Not written yet but need some
 #' 
 #' @export
+#' @importFrom stats fft
 
 coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale.max.input=NULL,sigma=1.05,f0=1)
 {
@@ -146,9 +147,9 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   #**compute coherence
   coher<-apply(X=W1*Conj(W2),FUN=mean,MARGIN=3,na.rm=T)
   
-  #**now do the significance
+  #**now do the different cases for how significance is computed
   
-  #*no significance
+  #*no significance requested by user - just return
   if (sigmethod=="none")
   {
     #prepare result  
@@ -186,11 +187,10 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
     
     if ((norm %in% c("powall","none")) || (norm=="powind" && n==1))
     {
-      ## One location wavelet coherence - in this case, powind is the same as powall
       if(n==1)
-      {
-        fft1<-fft(dat1) #fft signals 1 and 2
-        fft2<-fft(dat2) 
+      { # One location wavelet coherence - in this case, powind is the same as powall
+        fft1<-stats::fft(dat1) #fft signals 1 and 2
+        fft2<-stats::fft(dat2) 
         xfft<-fft1*Conj(fft2) #get cross-spectrum and spectra
         xfft1<-fft1*Conj(fft1)
         xfft2<-fft2*Conj(fft2) 
@@ -278,9 +278,7 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
       xfft2<-fft2*Conj(fft2)
       freqs<-seq(from=0, to=1-(1/tt), by=1/tt)
       filt.crosspec<-matrix(NA, nrow=m.max, ncol=tt) #initialize
-      #filt.pow1<-matrix(NA, nrow=m.max, ncol=tt)
-      #filt.pow2<-matrix(NA, nrow=m.max, ncol=tt)
-      altcoh<-NA*numeric(m.max)
+      altcoh.norm<-NA*numeric(m.max)
       for(stage in 1:m.max)
       {
         #filter the ffts
@@ -304,22 +302,19 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
         sxfft<-colMeans(nxfft) #1 by tt object, average cross spectrum appropriate to this scale, normalization incorporated
         
         filt.crosspec[stage,]<-xx*Conj(xx)*sxfft/tt
-        
-        #normalized coherence for this stage
-        altcoh[stage]<-mean(filt.crosspec[stage,])
       }
       #normalized coherence for this stage
-      #altcoh<-rowMeans(filt.crosspec)
+      altcoh.norm<-rowMeans(filt.crosspec)
       
-      surrcoh<-matrix(NA, nrow=nrand, ncol=m.max)
+      surrcoh.norm<-matrix(NA, nrow=nrand, ncol=m.max)
       for(rep in 1:nrand)
       {
         ts1surrangmat<-matrix(ts1surrang[rep,], nrow=m.max, ncol=tt, byrow=T) #make surrogates
         filt.crosspec.surr<-filt.crosspec*exp(complex(imaginary=ts1surrangmat))
-        surrcoh[rep,]<-rowMeans(filt.crosspec.surr)
+        surrcoh.norm[rep,]<-rowMeans(filt.crosspec.surr)
       }
       
-      signif<-list(coher=altcoh,scoher=surrcoh)  
+      signif<-list(coher=altcoh.norm,scoher=surrcoh.norm)  
     }
     
     #prepare result  
@@ -332,7 +327,8 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   }
   
   #*otherwise sigmethod is one of "fftsurrog1", "fftsurrog2", 
-  #"fftsurrog12", "aaftsurrog1", "aaftsurrog2", "aaftsurrog12"  
+  #"fftsurrog12", "aaftsurrog1", "aaftsurrog2", "aaftsurrog12",
+  #all handled below
   
   #figure out what kind of surrogates to use
   if (sigmethod %in% c("fftsurrog1","fftsurrog2","fftsurrog12"))
