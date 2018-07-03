@@ -319,7 +319,6 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
         surrcoh[rep,]<-rowMeans(filt.crosspec.surr)
       }
       
-      
       signif<-list(coher=altcoh,scoher=surrcoh)  
     }
     
