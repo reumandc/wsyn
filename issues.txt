@@ -19,6 +19,13 @@ Progress:
 9) DONE compile again as a package
 10) DONE stopping point - mean field methods implemented. next step coherence methods.
 11) Work on coherence functionality, inc unit tests and vignette and making the package compile. Need to start with a design phase and working out appropriate S3 classes. See some thoughts below. - IMPLEMENTED COH, STILL NEED PLOTTERS, THENA  VIGNETTE
+DONE addranks
+DONE cohbandsignif
+plotmag
+plotrank
+plotphase
+avgphase
+vignette - make sure to cover all these new functions
 12) everything you need for deer
 13) synmat for kelp and Jon's bird stuff
 14) write the phase plotter functions, and unit tests. Consolidate into one plotphase.R file, as you did for the magnitude plotters.
