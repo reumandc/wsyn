@@ -21,7 +21,7 @@ Progress:
 11) Work on coherence functionality, inc unit tests and vignette and making the package compile. Need to start with a design phase and working out appropriate S3 classes. See some thoughts below. - IMPLEMENTED COH, STILL NEED PLOTTERS, THENA  VIGNETTE
 DONE addranks
 DONE cohbandsignif
-plotmag
+DONE plotmag
 plotrank
 plotphase
 avgphase

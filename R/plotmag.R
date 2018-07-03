@@ -1,17 +1,25 @@
-#' For plotting the magnitude of values in \code{tts} objects 
+#' For plotting the magnitude of values in \code{tts} and \code{coh} objects 
 #' 
 #' For plotting the magnitude of values in \code{tts} objects (and derived classes) 
-#' against time and timescale
+#' against time and timescale, and \code{coh} objects against timescale
 #'
-#' @param object An object of class \code{tts} or some class that inherits from \code{tts}
+#' @param object An object of class \code{tts} or some class that inherits from \code{tts} or of class \code{coh}
 #' @param zlims z axis limits. If specified, must encompass the range of \code{Mod(get_values(object))}. Default NULL uses this range.
 #' @param neat Logical. Should timescales with no values be trimmed?
 #' @param colorfill Color spectrum to use, set through colorRampPalette. Default value NULL produces jet colors from Matlab.
-#' @param sigthresh Significance threshold(s) for \code{wpmf} objects. Numeric vector with values between 0 and 1 (typically 0.95, 0.99, 0.999, etc.). Contours are plotted at these values.
+#' @param sigthresh Significance threshold(s). Numeric vector with values between 0 and 1. Typically 0.95, 0.99, 0.999, etc. For \code{wpmf} objects, contours are plotted at these values; for \code{coh} objects the threshholds are plotted on coherence plots.
 #' @param colorbar Logical. Should a colorbar legend be plotted?
 #' @param title Title for the top of the plot.
 #' @param filename Filename (without extension), for saving as pdf. Default value NA saves no file and uses the defauly graphics device.
+#' @param bandprows The rows of \code{object$bandp} for which to display results in \code{coh} plots
 #' @param ... Additional graphics parameters passed to \code{image} (\code{graphics} package) if \code{colorbar==FALSE}, or to \code{image.plot} (\code{fields} package) if \code{colorbar==TRUE}
+#' 
+#' @details For \code{coh} objects, object$coher is plotted using a solid red line, and 
+#' object$signif$coher is plotted using a dashed red line. The two coherences agree except
+#' for \code{sigmethod="fast"}, for which they are close. The dashed line is what should be
+#' compared to the distribution of surrogate coherences (black lines, if \code{signif} is 
+#' not \code{NA}). Horizontal axis ticks are labelled as timescales, but are spaced on the 
+#' axis as log(1/timescale), i.e., log frequencies.
 #' 
 #' @author Thomas Anderson, \email{anderstl@@gmail.com}, Jon Walter, \email{jaw3es@@virginia.edu}; Lawrence 
 #' Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}
@@ -89,9 +97,21 @@ plotmag.tts<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,colorbar=TRUE,t
   return(NULL)
 }
 
-#plotmag.wt not necessary - inherits from tts
+#' @rdname plotmag
+#' @export
+#plotmag.wt just the same as tts, we define it explicitly instead of inheriting for the sake of the help files
+plotmag.wt<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,colorbar=TRUE,title=NULL,filename=NA,...)
+{
+  return(plotmag.tts(object,zlims,neat,colorfill,colorbar,title,filename,...))
+}
 
-#plotmag.wmf not necessary - inherits from tts
+#' @rdname plotmag
+#' @export
+#plotmag.wmf just the same as tts, we define it explicitly instead of inheriting for the sake of the help files
+plotmag.wmf<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,colorbar=TRUE,title=NULL,filename=NA,...)
+{
+  return(plotmag.tts(object,zlims,neat,colorfill,colorbar,title,filename,...))
+}
 
 #' @rdname plotmag
 #' @export
@@ -102,7 +122,7 @@ plotmag.wpmf<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,sigthresh=0.95
   timescales<-get_timescales(object)
   signif<-get_signif(object)
   
-  if (sigthresh>=1 || sigthresh<=0)
+  if (any(sigthresh>=1 | sigthresh<=0))
   {
     stop("Error in plotmag.wpmf: inappropriate value for sigthresh")
   }
@@ -172,6 +192,119 @@ plotmag.wpmf<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,sigthresh=0.95
     grDevices::dev.off()
   }
   return(NULL) 
+}
+
+#' @rdname plotmag
+#' @export
+plotmag.coh<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA)
+{
+  if (any(sigthresh>=1 | sigthresh<=0))
+  {
+    stop("Error in plotmag.coh: inappropriate value for sigthresh")
+  }
+  if (bandprows!="all" && !any(is.na(bandp)))
+  {
+    if (!is.numeric(bandprows))
+    {
+      stop("Error in plotmag.coh: non-numeric value for bandprows")
+    }
+    if (!all(bandprows %in% 1:dim(bandp)[1]))
+    {
+      stop("Error in plotmag.coh: bandprows must contain row numbers for bandp")
+    }
+  }
+  
+  #extract the needed slots
+  timescales<-get_timescales(object)
+  coher<-get_coher(object)
+  signif<-get_signif(object)
+  bandp<-get_bandp(object)
+  
+  if (!is.na(filename))
+  {
+    grDevices::pdf(paste0(filename,".pdf"))
+  }
+  
+  #if signif is absent, then just plot coher v timescales
+  if (any(is.na(signif)))
+  { 
+    plot(log(1/timescales),Mod(coher),type="l",lty="solid",xaxt="n",col="red",
+         xlab="Timescales",ylab="|Coherence|")
+    xlocs<-c(min(timescales),pretty(timescales,n=8))
+    axis(side=1,at=log(1/xlocs),labels=xlocs) 
+    
+    if (!is.na(filename))
+    {
+      grDevices::dev.off()
+    }
+    return(NULL)
+  } 
+    
+  #from here on is if signif is present
+  
+  #get quantiles for surrogate coherences
+  qs<-apply(X=Mod(signif$scoher),FUN=quantile,MARGIN=2,prob=sigthresh)
+  if (length(sigthresh)==1){qs<-matrix(qs,1,length(qs))}
+  
+  #if bandp is absent, just plot the lines, no p-values
+  if (any(is.na(bandp)))
+  { 
+    rg<-range(Mod(coher),Mod(signif$coher),qs,na.rm=T) 
+    plot(log(1/timescales),Mod(coher),type="l",lty="solid",xaxt="n",col="red",
+         ylim=rg,xlab="Timescales",ylab="|Coherence|")
+    xlocs<-c(min(timescales),pretty(timescales,n=8))
+    axis(side=1,at=log(1/xlocs),labels=xlocs) 
+    lines(log(1/timescales),Mod(signif$coher),type="l",lty="dashed",col="red")
+    for (counter in 1:dim(qs)[1])
+    {
+      lines(log(1/timescales),qs[counter,])
+    }
+    
+    if (!is.na(filename))
+    {
+      grDevices::dev.off()
+    }
+    return(NULL) 
+  } 
+  
+  #from here on is if signif and bandp are both present
+  
+  rg<-range(Mod(coher),Mod(signif$coher),qs,na.rm=T)
+  prc<-0.15
+  drg<-diff(rg)
+  rg[2]<-rg[2]+dim(bandp)[1]*prc*drg
+  plot(log(1/timescales),Mod(coher),type="l",lty="solid",xaxt="n",col="red",
+       ylim=rg,xlab="Timescales",ylab="|Coherence|")
+  xlocs<-c(min(timescales),pretty(timescales,n=8))
+  axis(side=1,at=log(1/xlocs),labels=xlocs) 
+  lines(log(1/timescales),Mod(signif$coher),type="l",lty="dashed",col="red")
+  for (counter in 1:dim(qs)[1])
+  {
+    lines(log(1/timescales),qs[counter,])
+  }
+  if (bandprows!="all")
+  {
+    bandp<-bandp[bandprows,]
+  }
+  for (counter in 1:dim(bandp)[1])
+  {
+    b1<-unname(bandp[counter,1])
+    b2<-unname(bandp[counter,2])
+    p<-unname(bandp[counter,3])
+    htl<-rg[2]-(counter-1/4-.1)*prc*drg
+    wwd<-.07*prc*drg
+    lines(log(1/c(b1,b2)),c(htl,htl))
+    lines(log(1/c(b1,b1)),c(htl-wwd,htl+wwd))
+    lines(log(1/c(b2,b2)),c(htl-wwd,htl+wwd))
+    htt<-rg[2]-(counter-1.2/2-.1)*prc*drg
+    text(mean(log(1/c(b1,b2))),htt,paste0("p=",round(p,4)),cex=0.66)
+  }
+  
+  if (!is.na(filename))
+  {
+    grDevices::dev.off()
+  }
+  return(NULL)
 }
 
 #' @rdname plotmag
