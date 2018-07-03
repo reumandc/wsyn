@@ -492,15 +492,15 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   
   #Make a plot to check visually. Expected to look like panel panel g of supp fig 5 in the 
   #reference cited above in some respects 
-  qs<-apply(X=Mod(res1$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
-  plot(log(1/res1$timescales),Mod(res1$coher),type="l",lty="dashed",xaxt="n",col="red",
-       ylim=range(Mod(res1$coher),Mod(res1$signif$coher),qs))
-  axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
-  lines(log(1/res1$timescales),Mod(res1$signif$coher),type="l",xaxt="n",col="red")
-  for (counter in 1:dim(qs)[1])
-  {
-    lines(log(1/res1$timescales),qs[counter,])
-  }
+  #qs<-apply(X=Mod(res1$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
+  #plot(log(1/res1$timescales),Mod(res1$coher),type="l",lty="dashed",xaxt="n",col="red",
+  #     ylim=range(Mod(res1$coher),Mod(res1$signif$coher),qs))
+  #axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
+  #lines(log(1/res1$timescales),Mod(res1$signif$coher),type="l",xaxt="n",col="red")
+  #for (counter in 1:dim(qs)[1])
+  #{
+  #  lines(log(1/res1$timescales),qs[counter,])
+  #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res1).
   expect_known_hash(res1,hash="5bb92582eaa7da6367d81cd6cbc034e2")   
@@ -510,15 +510,15 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   res2<-coh(dat1=artsig_x[2,],dat2=artsig_y[2,],times=times,norm="powind",sigmethod="fast",nrand=1000,
            f0=0.5,scale.max.input=28)
   #make a plot
-  qs<-apply(X=Mod(res2$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
-  plot(log(1/res2$timescales),Mod(res2$coher),type="l",lty="dashed",xaxt="n",col="red",
-       ylim=range(Mod(res2$coher),Mod(res2$signif$coher),qs))
-  axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
-  lines(log(1/res2$timescales),Mod(res2$signif$coher),type="l",xaxt="n",col="red")
-  for (counter in 1:dim(qs)[1])
-  {
-    lines(log(1/res2$timescales),qs[counter,])
-  }
+  #qs<-apply(X=Mod(res2$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
+  #plot(log(1/res2$timescales),Mod(res2$coher),type="l",lty="dashed",xaxt="n",col="red",
+  #     ylim=range(Mod(res2$coher),Mod(res2$signif$coher),qs))
+  #axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
+  #lines(log(1/res2$timescales),Mod(res2$signif$coher),type="l",xaxt="n",col="red")
+  #for (counter in 1:dim(qs)[1])
+  #{
+  #  lines(log(1/res2$timescales),qs[counter,])
+  #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res2).
   expect_known_hash(res2,hash="2875ca19d652f7e12bef7c527f8e5600")  
@@ -533,15 +533,15 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
            f0=0.5,scale.max.input=28)
   
   #Make a plot to check visually. 
-  qs<-apply(X=Mod(res3$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
-  plot(log(1/res3$timescales),Mod(res3$coher),type="l",lty="dashed",xaxt="n",col="red",
-       ylim=range(Mod(res3$coher),Mod(res3$signif$coher),qs))
-  axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
-  lines(log(1/res3$timescales),Mod(res3$signif$coher),type="l",xaxt="n",col="red")
-  for (counter in 1:dim(qs)[1])
-  {
-    lines(log(1/res3$timescales),qs[counter,])
-  }
+  #qs<-apply(X=Mod(res3$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
+  #plot(log(1/res3$timescales),Mod(res3$coher),type="l",lty="dashed",xaxt="n",col="red",
+  #     ylim=range(Mod(res3$coher),Mod(res3$signif$coher),qs))
+  #axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
+  #lines(log(1/res3$timescales),Mod(res3$signif$coher),type="l",xaxt="n",col="red")
+  #for (counter in 1:dim(qs)[1])
+  #{
+  #  lines(log(1/res3$timescales),qs[counter,])
+  #}
 
   #all the slots should be equal between res1 and res3 except the data slots
   expect_equal(res3[[3]],res1[[3]])   
