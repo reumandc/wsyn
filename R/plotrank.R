@@ -22,7 +22,7 @@
 #' @examples
 #' #Not written yet but need some
 #' 
-#' @exportMethod 
+#' @export
 #' @importFrom graphics axis
 #' @importFrom grDevices pdf dev.off
 

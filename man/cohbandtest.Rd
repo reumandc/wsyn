@@ -20,13 +20,13 @@ cohbandtest(object, ...)
 \value{
 \code{cohbandtest} returns an object of the same class as its first input but with a
 \code{bandp} object added. Or if there was already a \code{bandp} object, the output has a 
-\code{bandp} object with an additional row. The \code{bandp} object is a data frame with three
+\code{bandp} object with an additional row. The \code{bandp} object is a data frame with four
 columns, the first two indicating the timescale band and the third an associated p-value for
-the test of coherence over that band.
+the test of coherence over that band. The fourth column is the average phase over the band.
 }
 \description{
 Computes the aggregate significance of coherence across a timescale band, accounting for
-non-independence of timescales
+non-independence of timescales. Also gets the average phase across the band.
 }
 \references{
 Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 

@@ -28,7 +28,7 @@ avgphase
 vignette - make sure to cover all these new functions
 12) everything you need for deer
 13) synmat for kelp and Jon's bird stuff
-14) write the phase plotter functions, and unit tests. Consolidate into one plotphase.R file, as you did for the magnitude plotters.
+14) write the phase plotter functions, and unit tests, for tts, wt, wpmd, wmf. 
 15) print and summary methods for all the classes
 
 

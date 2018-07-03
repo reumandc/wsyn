@@ -49,7 +49,7 @@ test_that("test for a coh object",{
   #test timescales <=4 years
   cohobj<-cohbandtest(cohobj,c(2,4))
   expect_equal(class(cohobj$bandp),"data.frame")
-  expect_equal(dim(cohobj$bandp),c(1,3))
+  expect_equal(dim(cohobj$bandp),c(1,4))
   expect_gt(cohobj$bandp[1,3],.2)
   expect_equal(cohobj$bandp[1,1],2)
   expect_equal(cohobj$bandp[1,2],4)
@@ -57,7 +57,7 @@ test_that("test for a coh object",{
   #test timescales > 4 years
   cohobj<-cohbandtest(cohobj,c(4.001,30))
   expect_equal(class(cohobj$bandp),"data.frame")
-  expect_equal(dim(cohobj$bandp),c(2,3))
+  expect_equal(dim(cohobj$bandp),c(2,4))
   expect_lt(cohobj$bandp[2,3],.01)
   expect_equal(cohobj$bandp[2,1],4.001)
   expect_equal(cohobj$bandp[2,2],30)
@@ -65,7 +65,7 @@ test_that("test for a coh object",{
   #test case with only one timescale in the range
   cohobj<-cohbandtest(cohobj,c(10,10.1))
   expect_equal(class(cohobj$bandp),"data.frame")
-  expect_equal(dim(cohobj$bandp),c(3,3))
+  expect_equal(dim(cohobj$bandp),c(3,4))
   expect_lt(cohobj$bandp[3,3],.01)
   expect_equal(cohobj$bandp[3,1],10)
   expect_equal(cohobj$bandp[3,2],10.1)
