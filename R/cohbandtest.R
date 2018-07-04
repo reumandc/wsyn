@@ -74,8 +74,8 @@ cohbandtest.coh<-function(cohobj,band)
   
   #get the average phase
   x<-cohobj$coher[timescales>=band[1] & timescales<=band[2]]
-  mnphs<-Arg(mean(x/Mod(x)))
-  
+  mnphs<-mnphase(x)
+
   #form the result and return it
   if (any(is.na(cohobj$bandp)))
   {
