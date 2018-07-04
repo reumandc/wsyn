@@ -110,9 +110,8 @@ plotphase.coh<-function(object,bandprows="all",filename=NA)
   lines(range(x),c(pi,pi),type='l')
   xlocs<-c(min(timescales),pretty(timescales,n=8))
   graphics::axis(side=1,at=log(1/xlocs),labels=xlocs)
-  graphics::axis(side=2,at=c(-pi,-pi/2,0,pi/2,pi),labels=c("-pi","-pi/2","0","pi/2","pi"))
-  #***DAN: fix this display of the axis labels
-  
+  graphics::axis(side=2,at=c(-pi,-pi/2,0,pi/2,pi),labels=expression(-pi,-pi/2,0,pi/2,pi))
+
   #p-values
   if (bandprows!="all")
   {
@@ -129,8 +128,9 @@ plotphase.coh<-function(object,bandprows="all",filename=NA)
     lines(log(1/c(b1,b1)),c(htl-wwd,htl+wwd))
     lines(log(1/c(b2,b2)),c(htl-wwd,htl+wwd))
     htt<-rg[2]-(counter-1.2/2-.1)*prc*drg
-    text(mean(log(1/c(b1,b2))),htt,paste0("mn=",round(mnphs/pi,2),"pi"),cex=0.66)
-    #***DAN: make this show the symbol pi
+    valh<-round(mnphs/pi,2)
+    text(mean(log(1/c(b1,b2))),htt,
+         bquote(bar(theta) == .(valh)),cex=0.66)
   }
   
   if (!is.na(filename))

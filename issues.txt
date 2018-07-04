@@ -23,8 +23,8 @@ DONE addranks
 DONE cohbandsignif
 DONE plotmag
 DONE plotrank
-plotphase
-avgphase
+DONE plotphase
+DONE avgphase
 vignette - make sure to cover all these new functions
 12) everything you need for deer
 13) synmat for kelp and Jon's bird stuff

@@ -40,10 +40,8 @@ test_that("test for an actual coh object",{
   #more error checking
   expect_error(plotphase(res,bandprows="test"),"Error in plotphase.coh: non-numeric value for bandprows")
   expect_error(plotphase(res,bandprows=c(1,4)),"Error in plotphase.coh: bandprows must contain row numbers for bandp")
-  
-  plotphase(res)
-  
+
   #do the plot for testing
-  #Test_plotmag_coh<-function(){plotmag(object=res)}
-  #expect_doppelganger(title="Test-plotmag-coh",fig=Test_plotmag_coh)
+  Test_plotphase_coh<-function(){plotphase(res)}
+  expect_doppelganger(title="Test-plotphase-coh",fig=Test_plotphase_coh)
 })
