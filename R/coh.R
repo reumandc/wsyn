@@ -26,22 +26,30 @@
 #' \item{ranks}{A list with ranking information for \code{signif}. \code{NA} until \code{plotranks} is called, see documentation for \code{plotranks}.}
 #' \item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. Empty on an initial call to \code{coh}, filled in by the function \code{cohbandtest}. See details.}
 #' 
-#' @details If the dimensions of \code{dat1} and \code{dat2} are \eqn{N \times T} ($N$ is 1 for 
-#' vector \code{dat1} and \code{dat2}), and if the wavelet transform of the $n$th row
-#' of \code{dati} is denoted $W_{i,n,\sigma}(t)$, then the coherence is the average, over all 
-#' locations $n$ and times $t$ for which wavelet transforms are avaiable, of the quantity 
-#' \eqn{w_{1,n,\sigma}(t)w_{2,n,\sigma}(t)^{*}}, where the $*$ represents complex conjugation and
-#' $w_{i,n,\sigma}(t)$ is a normalization of the wavelet transform. The normalization used depends 
+#' @details If the dimensions of \code{dat1} and \code{dat2} are \eqn{N} by \eqn{T} 
+#' (\eqn{N} is 1 for 
+#' vector \code{dat1} and \code{dat2}), and if the wavelet transform of the \eqn{n}th row
+#' of \code{dati} is denoted \eqn{W_{i,n,\sigma}(t)}, then the coherence is the 
+#' average, over all 
+#' locations \eqn{n} and times \eqn{t} for which wavelet transforms are 
+#' avaiable, of the quantity 
+#' \eqn{w_{1,n,\sigma}(t)w_{2,n,\sigma}(t)^{*}}, where the \eqn{*} represents 
+#' complex conjugation and
+#' \eqn{w_{i,n,\sigma}(t)} is a normalization of the wavelet 
+#' transform. The normalization used depends 
 #' on \code{norm}. If \code{norm} is "\code{none}" then raw wavelet transforms are used. 
-#' If \code{norm} is "\code{phase}" then $w_{i,n,\sigma}(t)=W_{i,n,\sigma}(t)/|W_{i,n,\sigma}(t)|$,
-#' which gives the wavelet phase coherence, or the spatial wavelet phase coherence if $N>1$. 
+#' If \code{norm} is "\code{phase}" then 
+#' \eqn{w_{i,n,\sigma}(t)=W_{i,n,\sigma}(t)/|W_{i,n,\sigma}(t)|},
+#' which gives the wavelet phase coherence, or the spatial wavelet phase coherence if \eqn{N>1}. 
 #' If \code{norm} is "\code{powall}" then the normalization is that descibed in the "Wavelet 
 #' mean field " section of the Methods of Sheppard et al. (2016), giving the version of the 
 #' coherence that was there called simply the wavelet coherence, or the spatial wavelet 
-#' coherence if $N>1$. If \code{norm} is "\code{powind}", then $w_{i,n,\sigma}(t)$ is obtained
-#' by dividing $W_{i,n,\sigma}(t)$ by the square root of the average of 
-#' $W_{i,n,\sigma}(t)W_{i,n,\sigma}(t)^{*}$ over the times for which it is defined; this is done 
-#' separately for each $i$ and $n$.
+#' coherence if \eqn{N>1}. If \code{norm} is "\code{powind}", 
+#' then \eqn{w_{i,n,\sigma}(t)} is obtained
+#' by dividing \eqn{W_{i,n,\sigma}(t)} by the square root of the average of 
+#' \eqn{W_{i,n,\sigma}(t)W_{i,n,\sigma}(t)^{*}} over the times for 
+#' which it is defined; this is done 
+#' separately for each \eqn{i} and \eqn{n}.
 #' 
 #' The slot \code{signif} is \code{NA} if \code{sigmethod} is "\code{none}". Otherwise, and
 #' if \code{sigmethod} is not "\code{fast}", then \code{signif$coher} is the same as 
