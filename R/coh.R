@@ -30,7 +30,7 @@
 #' vector \code{dat1} and \code{dat2}), and if the wavelet transform of the $n$th row
 #' of \code{dati} is denoted $W_{i,n,\sigma}(t)$, then the coherence is the average, over all 
 #' locations $n$ and times $t$ for which wavelet transforms are avaiable, of the quantity 
-#' $w_{1,n,\sigma}(t)w_{2,n,\sigma}(t)^{*}$, where the $*$ represents complex conjugation and
+#' \eqn{w_{1,n,\sigma}(t)w_{2,n,\sigma}(t)^{*}}, where the $*$ represents complex conjugation and
 #' $w_{i,n,\sigma}(t)$ is a normalization of the wavelet transform. The normalization used depends 
 #' on \code{norm}. If \code{norm} is "\code{none}" then raw wavelet transforms are used. 
 #' If \code{norm} is "\code{phase}" then $w_{i,n,\sigma}(t)=W_{i,n,\sigma}(t)/|W_{i,n,\sigma}(t)|$,
