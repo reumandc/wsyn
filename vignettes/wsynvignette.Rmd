@@ -100,8 +100,10 @@ ts1<-c(ts1p1,ts1p2)
   
 ts<-ts1
 ```
+
 Then add a sine wave of amplitude $1$ and period $8$ that operates for $t=101,\ldots,200$
 but before that is absent.
+
 ```{r wt_example_1_ts2}
 ts2p1<-0*time1
 ts2p2<-sin(2*pi*time2/8)
@@ -109,14 +111,18 @@ ts2<-c(ts2p1,ts2p2)
   
 ts<-ts+ts2
 ```
+
 Then add normally distributed white noise of mean $0$ and standard deviation $0.5$.
+
 ```{r wt_example_1_ts3}
 ts3<-rnorm(200,mean=0,sd=0.5)
 ts<-ts+ts3
 ```
+
 Now apply the wavelet transform, obtaining an object of class `wt`. Default parameter
 values for `scale.min`, `scale.max.input`, `sigma` and `f0` are usually good enough for 
 initial data exploration.
+
 ```{r wt_example_1_wt}
 library(wsyn)
 ts<-cleandat(ts,times,clev=1)
@@ -124,11 +130,13 @@ wtres<-wt(ts$cdat,times)
 class(wtres)
 names(wtres)
 ```
+
 Methods `get_times`, `get_timescales`, `get_values`, and `get_dat` extract the slots. 
 Set methods also exist, but these just throw an error since setting individual slots of
 a `wt` object will break the relationship between the slots.
 There is a `plotmag` method for the `tts` class that plots the magnitude of the transform
 against time and timescale.
+
 ```{r wt_example_1_plot, results=FALSE}
 plotmag(wtres)
 ```

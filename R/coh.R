@@ -18,7 +18,7 @@
 #' @return \code{coh} returns an object of class \code{coh}. Slots are:
 #' \item{dat1, dat2}{The input data}
 #' \item{times}{The times associated with the data}
-#' \item{sigmethod} The method for significance testing, as inputted. 
+#' \item{sigmethod}{The method for significance testing, as inputted.} 
 #' \item{norm}{The normalization of the wavelet transforms that will be used in computing the coherence. Different values result in different versions of the coherence. One of "none", "phase", "powall", "powind". See details.}
 #' \item{timescales}{The timescales associated with the coherence}
 #' \item{coher}{The complex magnitude of this quantity is the coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
