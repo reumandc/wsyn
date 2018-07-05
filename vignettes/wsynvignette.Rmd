@@ -458,7 +458,20 @@ $0$ and standard deviation $3$.
 The function `cleandat` with `clev=1` (mean removal only) was used. Mean removal is
 sufficient cleaning for these artificially generated data.
 
-The function `coh` can then be used to compute the coherence between `x` and `y`:
+The relationship between the environmental and biological variables cannot 
+readily be detected using ordinary correlation methods - correlations
+through time between the $x_n(t)$ and $y_n(t)$ range widely on both sides of 0:
+
+```{r cors_range_widely}
+allcors<-c()
+for (counter in 1:dim(x)[1])
+{
+  allcors[counter]<-cor(x[counter,],y[counter,])
+}
+allcors
+```
+
+However, the function `coh` can be used to compute the coherence between `x` and `y`:
 
 ```{r coh_example_call}
 res<-coh(dat1=x,dat2=y,times=times,norm="powall",
@@ -498,6 +511,8 @@ significant (the red line is above the black lines) for timescales close to $10$
 significant for timescales close to
 $3$ years, as expected since three values of $x$ are averaged to produce one value of $y$,
 so the $3$-year periodicity in $x$ is averaged away and does not pass to $y$.
+Thus coherence reveals a (timescale-specific) relationship between $x$ and $y$ that
+correlation mathods did not reveal.
 
 Typically preferable [@Sheppard_17] is the `fast` option to `sigmethod`, because 
 far more surrogates can be used in the same computational time:
@@ -681,5 +696,7 @@ The `signif` slot of the output is a list with first element `"fft"`, second ele
 magnitudes that the empirical wavelet phasor mean field magnitude is greater than 
 (a times by timescales matrix). For `sigmethod` equal to `aaft`, AAFT 
 surrogates are used instead. 
+
+# Wavelet linear models and their uses for understanding synchrony
 
 # References
