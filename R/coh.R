@@ -26,7 +26,7 @@
 #' \item{ranks}{A list with ranking information for \code{signif}. \code{NA} until \code{plotranks} is called, see documentation for \code{plotranks}.}
 #' \item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. Empty on an initial call to \code{coh}, filled in by the function \code{cohbandtest}. See details.}
 #' 
-#' @details If the dimensions of \code{dat1} and \code{dat2} are $N$ by $T$ ($N$ is 1 for 
+#' @details If the dimensions of \code{dat1} and \code{dat2} are \eqn{N \times T} ($N$ is 1 for 
 #' vector \code{dat1} and \code{dat2}), and if the wavelet transform of the $n$th row
 #' of \code{dati} is denoted $W_{i,n,\sigma}(t)$, then the coherence is the average, over all 
 #' locations $n$ and times $t$ for which wavelet transforms are avaiable, of the quantity 

@@ -46,7 +46,7 @@ Also the creator function for the \code{coh} class, which inherits from the \cod
 class.
 }
 \details{
-If the dimensions of \code{dat1} and \code{dat2} are $N \times T$ ($N$ is 1 for 
+If the dimensions of \code{dat1} and \code{dat2} are \eqn{N \times T} ($N$ is 1 for 
 vector \code{dat1} and \code{dat2}), and if the wavelet transform of the $n$th row
 of \code{dati} is denoted $W_{i,n,\sigma}(t)$, then the coherence is the average, over all 
 locations $n$ and times $t$ for which wavelet transforms are avaiable, of the quantity 
