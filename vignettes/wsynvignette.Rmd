@@ -468,7 +468,7 @@ res<-coh(dat1=x,dat2=y,times=times,norm="powall",
 
 The normalization to be used is specified via `norm`, as described 
 above. The `powall` option corresponds to the (spatial) wavelet coherence of 
-@Sheppard_16 and @Sheppard_17. There are several alternative methods for testing the 
+@Sheppard_16. There are several alternative methods for testing the 
 significance of coherence, and the method used 
 is controlled by the `sigmethod` argument. All significance 
 methods are based on "surrogate datasets".
@@ -493,12 +493,13 @@ plotmag(res)
 ```
 
 The red line here is the coherence. The black lines are $95$th and $99$th (these are
-the default values) quantiles of coherences of surrogate datasets. Coherence is 
-significant for timescales close to $10$ years, but not significant for timescales close to
+the default values for `sigthresh`) quantiles of coherences of surrogate datasets. Coherence is 
+significant (the red line is above the black lines) for timescales close to $10$ years, but not 
+significant for timescales close to
 $3$ years, as expected since three values of $x$ are averaged to produce one value of $y$,
-so the $3$-year periodicity in $x$ is averaged away.
+so the $3$-year periodicity in $x$ is averaged away and does not pass to $y$.
 
-Typically preferable (see @Sheppard_17) is the `fast` option to `sigmethod`, because 
+Typically preferable [@Sheppard_17] is the `fast` option to `sigmethod`, because 
 far more surrogates can be used in the same computational time:
 
 ```{r coh_example_call_fast, results=FALSE}
@@ -521,7 +522,7 @@ coherence, and the solid red line, and `res$coher`, when using the actual value 
 coherence. Typically the two red lines are quite similar. For values
 of `sigmethod` other than `fast`, they are equal.
 
-The significance indicated on the above plots is a done on a timescale-by-timescale
+The significance indicated on the above plots is done on a timescale-by-timescale
 basis, and type-I errors (false positives) are not taken into account. Neither do the 
 individual timescales correspond to independent tests. A method of
 aggregating signficance across a timescale band was described by @Sheppard_16, and 
@@ -539,40 +540,146 @@ the `bandp` slot of the `coh` object (which was previously `NA` in this case).
 
 ```{r cohbandtest_display_bandp}
 get_bandp(res)
-#***DAN: for some reason this method is not loading
 ```
 
-The aggregate $p$-value is also displayed on the plot:
+Doing another timescale band adds another row to `bandp`:
 
-```{r, results=FALSE}
+```{r cohbandtest2}
+res<-cohbandtest(res,c(2,4))
+get_bandp(res)
+```
+
+The aggregate $p$-values are now displayed on the plot:
+
+```{r display_p_1, results=FALSE}
 plotmag(res)
 ```
 
-<!--Just do it here with a cursory/black-boxed description of how significance is done, and then intro surrogates in the next
-section, and then come back to signifiacnce-->
+These results show the variables $x$ and $y$ are highly significantly coherent
+across the timescale band $8$ to $12$ years, but are not signficantly coherent across
+the band $2$ to $4$ years, as expected from the way the data were generated and
+by comparing the red and black lines. 
+
+Band-aggregated $p$-values are produced essentially by averaging the rank in surrogates of the 
+empirical coherence across timescales. The same procedure is then applied to 
+each surrogate, ranking it with respect to the other surrogates and taking the mean across
+timescales. Comparing the empirical mean rank to the dsitribution of surrogate mean
+ranks gives a $p$-value [@Sheppard_16; @Sheppard_17; @Sheppard_18].
+
+One can also display a plot of the ranks of `Mod(res$signif$coher)` in the 
+distribution of `Mod(res$signif$scoher)` values at each timescale:
+
+```{r plotrank_1, results=FALSE}
+plotrank(res)
+```
+
+The vertical axis label `Fract surr gt` stands for the fraction of surrogate coherences
+that the coherence of the data is greater than at the given timescale, so values
+are between $0$ and $1$ and large values indicate significance.
+Whenever values exceed the argument `sigthresh` (which takes the default value $0.95$
+for the above call to `plotrank`), the coherence is nominally significant. The value(s)
+of `sigthresh` are displayed as dashed horizontal line(s) on the plot. This is nominal
+significance because of the multiple-testing problem. As can be seen, $p$-values stored 
+in `bandp` are also displayed on the plot, and these values 
+aggregate across timescales appropriately and alleviate the multiple-testing problem.
+
+Average phases of $\Pi_\sigma^{(12)}$ across the timescale bands of interest were also 
+computed by `cohbandtest` and stored in the `bandp` slot. Phases of $\Pi_\sigma^{(12)}$
+can be plotted against timescale and average phases in `bandp` displayed using the
+`plotphase` functions:
+
+```{r plotphase_1, results=FALSE}
+plotphase(res)
+```
+
+Average phases for timescale bands across which coherence is not significant 
+(e.g., the $2$ to $4$ year band in the above plot) are 
+random and meaningless. Average phases for bands across which coherence is 
+significant (e.g., the $8$ to $12$ band in the plot) can give valuable 
+information about the nature of the relationship
+between the variables [@Sheppard_18].
 
 # Surrogates \label{sec:surrog}
 \noindent Some of the text of this section was adapted, with minor modifications only, 
 from our earlier work [@Sheppard_16; @Sheppard_18; @Anderson_18]. 
 
-The level of wavelet coherence or spatial wavelet coherence consistent with the null hypothesis that there is no relationship between two variables depends on the spatial and temporal autocorrelation of the data. For instance, two variables that fluctuate regularly at the same frequency and are both highly spatially synchronous will have a phase difference that is highly consistent over time and space, and therefore will have high spatial wavelet coherence, even if they are not related. Two irregular oscillators with low spatial synchrony are less likely to show consistent phase differences over time and space if they are unrelated. We test wavelet coherences and spatial wavelet coherences for significance using resampling schemes based on surrogate datasets that randomize away phase relationship between variables while retaining, to the extent possible, the spatial and temporal autocorrelation properties and the marginal distributions of the time series. We use the widely applied Fourier surrogate and amplitude adjusted Fourier surrogate methods [@Prichard_94; @Schreiber_00], implemented 
+The level of coherence consistent with the null 
+hypothesis that there is no relationship between two variables depends on the spatial 
+and temporal autocorrelation of the data. For instance, two variables that fluctuate 
+regularly at the same frequency and are both highly spatially synchronous will have a 
+phase difference that is highly consistent over time and space, and therefore will have high 
+spatial wavelet coherence, even if they are not related. Two irregular oscillators with 
+low spatial synchrony are less likely to show consistent phase differences over time and 
+space if they are unrelated. We test coherences 
+for significance using resampling schemes based on surrogate datasets that randomize 
+away phase relationship between variables while retaining, to the extent possible, the 
+spatial and temporal autocorrelation properties and the marginal distributions of the 
+time series. We use the widely applied Fourier surrogate and amplitude adjusted Fourier 
+surrogate methods [@Prichard_94; @Schreiber_00], implemented 
 in the `surrog` function in `wsyn` and summarized below. Surrogates are also used for 
 applications other than measures of coherence (see, e.g., section \ref{sec:wpmfsignif}).
 
-<!--Something about aggregating over ranks to get one p-value for band, after I decide how I 
-am going to implement that. Or maybe put it as its own section below?-->
-
 ## Fourier surrogates
+\noindent Details are presented elsewhere [@Prichard_94; @Schreiber_00]. We summarize here.
+A Fourier surrogate of a time series $x(t)$ is obtained by the following steps:
+\begin{itemize}
+\item Compute the fast Fourier transform of $x(t)$, here called $X(\tau)$ for the timescale $\tau$
+\item Randomize the phases of the transform by multiplying $X(\tau)$ by a random, uniformly distributed unit-magnitude complex number; do this independently for each $\tau$
+\item Inverse transform, giving the surrogate time series
+\end{itemize}
+This procedure can be done using `surrog` with `surrtype="fft"`. 
+Because only the phases of the Fourier transform are randomized, not the magnitudes,
+autocorrelation properties of the surrogate time series are the same as that of the
+$x(t)$. 
 
+Fourier surrogates of $N$ time series $x_n(t)$ measured at locations 
+$n=1,\ldots,N$ and times $t=1,\ldots,T$ are obtained by the following steps:
+\begin{itemize}
+\item Compute the fast Fourier transform of $x_n(t)$ for each $n$, here called $X_n(\tau)$
+\item Randomize the phases of the transforms by multiplying $X_n(\tau)$ by a random, uniformly distributed unit-magnitude complex number. Do this independently for each $\tau$, but different
+random multipliers can optionally be used for each $n$ if desired, or the same phase multiplier
+can be used for all $n$, for a given $\tau$ (these are called "synchrony preserving surrogates" - see below)
+\item Inverse transform, giving the surrogate time series
+\end{itemize}
+This procedure can be done using `surrog` with `surrtype=fft`
+and with `syncpres=TRUE` (for synchrony-preserving surrogates) or with 
+`syncpres=FALSE` (for independent surrogates).
+Autocorrelation properties of individual time series are preserved, as for the $N=1$ case
+covered above. If synchrony-preserving surrogates are used, all cross-correlation 
+properties between time series are also preserved, because cross spectra are unchanged by
+the joint phase randomization. Therefore synchrony is preserved. 
 
-## Amplitude adjusted Fourier surrogates
+Fourier surrogates tend to have normal marginal distributions [@Schreiber_00]. 
+Therefore, to ensure fair 
+comparisons between statistical descriptors (such as coherences) of real and surrogate
+datasets, Fourier surrogates should only be applied to time series that themselves 
+have approximately normal marginals. The Box-Cox transformations implemented in `cleandat` can 
+help normalize data prior to analysis. If data are difficult to normalize, or as 
+an alternative, the amplitude-adjusted Fourier transform surrogates method of the
+next section can be used instead.
 
+## Amplitude-adjusted Fourier surrogates
+\noindent Amplitude-adjusted Fourier surrogates are described elsewhere [@Schreiber_00].
+Either synchrony preserving (`syncpres=TRUE`) of independent (`syncpres=FALSE`) 
+amplitude-adjusted Fourier (AAFT) surrogates can be obtained from `surrog` using 
+`surrtype="aaft"`. AAFT surrogates can be applied to non-normal data, and return
+time series with exactly the same marginal distributions as the original time series.
+AAFT surrogates have approximately the same power spectral (and cross-spectral, in the 
+case of `syncpres=TRUE`) properties as the original data.
+
+## Fast coherence
+\noindent The fast coherence algorithm implemented in `coh` (option `sigmethod="fast"`)
+implements Fourier surrgates only, and only applies for `norm` equal to `none`, `powall`, 
+or `powind`. It is described in detail elsewhere [@Sheppard_17].
 
 ## Alternatives to the "quick" method of assessing significance of wavelet phasor mean field values \label{sec:wpmfsignif}
-
-
-## Alternatives for assessing significance of coherence
-
-
+\noindent When `sigmethod` is `fft` in a call to `wpmf`, the  
+empirical wavelet phasor mean field is compared to wavelet phasor mean fields of 
+Fourier surrogate datasets. 
+The `signif` slot of the output is a list with first element `"fft"`, second element equal to 
+`nrand`, and third element the fraction of surrogate-based wavelet phasor mean field 
+magnitudes that the empirical wavelet phasor mean field magnitude is greater than 
+(a times by timescales matrix). For `sigmethod` equal to `aaft`, AAFT 
+surrogates are used instead. 
 
 # References
