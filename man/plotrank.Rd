@@ -26,7 +26,7 @@ plotrank(object, ...)
 Plots the \code{ranks} slot for \code{coh} objects to help identify statistical significance of coherence
 }
 \details{
-The plot shows \code{object$ranks$coher} versus \code{log(1/object$timescales)}.
+The plot shows the modulus of \code{object$ranks$coher} versus \code{log(1/object$timescales)}.
 Horizontal axis ticks are labeled as timescales, but are spaced on the axis as 
 log(1/timescale), i.e., log frequencies. p-values from \code{object$bandp} are displayed
 above the rank plot.

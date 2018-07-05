@@ -8,9 +8,16 @@
 \usage{
 plotphase(object, ...)
 
-\method{plotphase}{coh}()
+\method{plotphase}{coh}(object, bandprows = "all", filename = NA)
 
 \method{plotphase}{default}(object, ...)
+}
+\arguments{
+\item{object}{A \code{coh} object.}
+
+\item{bandprows}{The rows of \code{object$bandp} for which to display p-value results in the plot}
+
+\item{filename}{Filename (without extension), for saving as pdf. Default value NA saves no file and uses the default graphics device.}
 }
 \description{
 For plotting the phases of values in \code{tts} objects (and derived classes) 

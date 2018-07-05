@@ -35,7 +35,7 @@ coh(dat1, dat2, times, norm, sigmethod = "none", nrand = 1000,
 \item{sigmethod} The method for significance testing, as inputted. 
 \item{norm}{The normalization of the wavelet transforms that will be used in computing the coherence. Different values result in different versions of the coherence. One of "none", "phase", "powall", "powind". See details.}
 \item{timescales}{The timescales associated with the coherence}
-\item{coher}{The coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
+\item{coher}{The complex magnitude of this quantity is the coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
 \item{signif}{A list with information from the significance testing. Elements are \code{coher} and \code{scoher}. See details.}
 \item{ranks}{A list with ranking information for \code{signif}. \code{NA} until \code{plotranks} is called, see documentation for \code{plotranks}.}
 \item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. Empty on an initial call to \code{coh}, filled in by the function \code{cohbandtest}. See details.}

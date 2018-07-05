@@ -67,7 +67,7 @@ transformations to normalize marginal distributions of time series. Most functio
 error if this is not the case. Approaches based on Fourier surrogate (section \ref{sec:surrog})
 require time series with approximately normal marginals.
 
-# The wavelet transform
+# The wavelet transform \label{sec:wt}
 \noindent The function `wt` implements the complex Morlet wavelet transform, on which most
 other `wsyn` functions are based. An S3 class is defined for `wt`, and it inherits from the
 generic class `tts`. See the help files for the generator functions `wt` and `tts` 
@@ -357,16 +357,17 @@ Examples of the wavelet mean field applied to real data
 are in @Sheppard_16 and @Sheppard_18.
 
 # Coherence 
-\noindent Coherence is explained by @Sheppard_16 and @Sheppard_17 (among others). 
+\noindent Coherence is explained by @Sheppard_16 and @Sheppard_17, among others. 
 We summarize here some of the explanations given in those references. Let
 $x_{1,n}(t)$ and $x_{2,n}(t)$ for $n=1,\ldots,N$ and $t=1,\ldots,T$ be two variables 
 measured at the same $N$ locations and $T$ times. Let $W_{i,n,\sigma}(t)$ ($i=1,2$) be the
 corresponding wavelet transforms. The coherence of $x_{1,n}(t)$ and $x_{2,n}(t)$ is the
-magnitude of the mean, $\Pi_\sigma^{(12)}$, of the quantity 
-$w_{1,n,\sigma}(t)\overline{w_{2,n,\sigma}(t)}$ over all
-time-location pairs for which the quantity is still defined after wavelet scalloping
-is performed. The overline is complex conjugation. This quantity is a function of timescale. 
-Here the $w_{1,n,\sigma}(t)$ are wavelet transforms normalized in one of 
+magnitude of a quantity we denote $\Pi_\sigma^{(12)}$, which is in turn the mean 
+of $w_{1,n,\sigma}(t)\overline{w_{2,n,\sigma}(t)}$ over all
+time-location pairs for which this product of normalized 
+wavelet transforms is still defined after wavelet scalloping
+is performed. The overline is complex conjugation. This product is a function of timescale. 
+The $w_{1,n,\sigma}(t)$ are wavelet transforms normalized in one of 
 a few different ways (see below). Because $w_{1,n,\sigma}(t)\overline{w_{2,n,\sigma}(t)}$
 is a complex number with phase equal to the phase difference between the two wavelet components,
 the mean, $\Pi_\sigma^{(12)}$, of this quantity over times and locations has large 
@@ -376,6 +377,8 @@ locations. Coherences essentially measure the strength of association between th
 in a timescale-specific way that is also not confounded by lagged or phase-shifted 
 associations. Coherences and related quantities are analyzed in `wsyn` using the function
 `coh` and its corresponding S3 class, `coh`, and the S3 methods that go with the class.
+Methods comprise set and get methods, and `cohbandtest`, and `plotmag`, `plotrank`, and
+`plotphase`.
 
 One possible normalization is phase normalization, 
 $w_{i,n,\sigma}(t)=\frac{W_{i,n,\sigma}(t)}{|W_{i,n,\sigma}(t)|}$. Set the `norm` 
@@ -395,10 +398,89 @@ defined; this is done separately for each $i$ and $n$. The final option for `nor
 available to users of `coh` is "`none`", i.e., raw wavelet transforms
 are used. For any value of `norm` except "`phase`", the normalized 
 wavelet components $w_{i,n,\sigma}(t)$ can also have varying magnitudes, and in 
-that case the coherence is further increased if
+that case the coherence reflects not only consistencies in phase between the two
+variables over time and across locations, but is also further increased if
 there are correlations in the amplitudes of the fluctuations.
 
-<!-- Now demo it using the pedagog fig example-->
+We demonstrate coherence and its implementation in `wsyn` via some simulated data. This
+demonstrations reporoduces an example given in supplementary figure 5 of @Sheppard_16. Data
+consist of an environmental-driver variable, `x`, and a driven biological variable,
+`y`, between which we compute coherence. Both were measured at $11$ locations. The 
+environmental variable `x` was constructed as the sum of: 1) a single common signal 
+of amplitude $1$ and period $10$ years, present at all $11$ locations; 2) a single common 
+signal of amplitude $5$ and period $3$ years, also present at all $11$ locations; 3) white
+noise of mean $0$ and standard deviation 1.5, independently generated for all $11$ locations.
+
+```{r seed_setter_4, echo=F}
+set.seed(101)
+```
+
+```{r coh_example_dat_driver}
+  times<-(-3:100)
+  ts1<-sin(2*pi*times/10)
+  ts2<-5*sin(2*pi*times/3)
+  x<-matrix(NA,11,length(times)) #the driver
+  for (counter in 1:11)
+  {
+    x[counter,]=ts1+ts2+rnorm(length(times),mean=0,sd=1.5)
+  }
+```
+
+Population time series $y_n(t)$ were the moving average, over three time steps, of the 
+$x_n(t)$, plus white noise: $y_n(t)=\left( \sum_{k=0}^2 x_n(t-k) \right)/3 + \epsilon_n(t)$.
+Here the $\epsilon_n(t)$ are independent, normally distributed random variables of mean 
+$0$ and standard deviation $3$.
+
+```{r coh_example_dat_env}
+  times<-0:100
+  y<-matrix(NA,11,length(times)) #the driven
+  for (counter1 in 1:11)
+  {
+    for (counter2 in 1:101)
+    {
+      y[counter1,counter2]<-mean(x[counter1,counter2:(counter2+2)])
+    }
+  }
+  y<-y+matrix(rnorm(length(times)*11,mean=0,sd=3),11,length(times))
+  x<-x[,4:104]
+  x<-cleandat(x,times,1)$cdat 
+  y<-cleandat(y,times,1)$cdat
+```
+
+The function `cleandat` with `clev=1` (mean removal only) was used. Mean removal is
+sufficient cleaning for these artificially generated data.
+
+The function `coh` can then be used to compute the coherence between `x` and `y`:
+
+```{r coh_example_call}
+res<-coh(dat1=x,dat2=y,times=times,norm="powall",
+         sigmethod="fftsurrog1",nrand=100,
+         f0=0.5,scale.max.input=28)
+```
+
+The normalization to be used is specified via `norm`, as described 
+above. The `powall` option corresponds to the (spatial) wavelet coherence of 
+@Sheppard_16 and @Sheppard_17. There are several alternative methods for testing the 
+significance of coherence, and the method used 
+is controlled by the `sigmethod` argument. All significance 
+methods are based on "surrogate datasets".
+These are datasets that have been randomized in an appropriate way. In addition
+to computing coherence of data, coherence is also computed in the same way for 
+`nrand` surrogate datasets that represent the null hypothesis of no relationship
+between `dat1` and `dat2` while retaining other statistical features of the data. 
+See section \ref{sec:surrog} for details of surrogates and significance testing
+and allowed values of `sigmethod`. Larger values of `nrand` produce more accurate 
+significance results that are less variable on repeat runs, but also require more
+computational time. The arguments `f0` and `scale.max.input` control details of the
+wavelet transform (see section \ref{sec:wt}) and are set here to agree with values 
+used by @Sheppard_16.
+
+Coherence can be plotted using `plotmag`:
+
+```{r coh_plot}
+plotmag(res)
+```
+
 
 <!--Just do it here with a cursory/black-boxed description of how significance is done, and then intro surrogates in the next
 section, and then come back to signifiacnce-->

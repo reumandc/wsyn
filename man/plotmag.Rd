@@ -56,8 +56,8 @@ For plotting the magnitude of values in \code{tts} objects (and derived classes)
 against time and timescale, and \code{coh} objects against timescale
 }
 \details{
-For \code{coh} objects, object$coher is plotted using a solid red line, and 
-object$signif$coher is plotted using a dashed red line. The two coherences agree except
+For \code{coh} objects, the modulus of object$coher is plotted using a solid red line, and 
+the modulus of object$signif$coher is plotted using a dashed red line. The two coherences agree except
 for \code{sigmethod="fast"}, for which they are close. The dashed line is what should be
 compared to the distribution of surrogate coherences (black lines, if \code{signif} is 
 not \code{NA}). Horizontal axis ticks are labeled as timescales, but are spaced on the 
