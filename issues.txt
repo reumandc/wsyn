@@ -15,10 +15,10 @@ Progress:
 6) DONE write the magnitude plotter functions, and unit tests. perhaps these should go in the methods files? maybe not. think more
 6.5) DONE Go back and add joint Box-Cox to cleandat, and unit tests
 6.75) DONE get the .Rmds going and compile everything as a package
-8) start a vignette, covering the code you have written so far - done except for surrogates, have to do that section, but leaving that until after coherence stuff is written
+8) DONE start a vignette, covering the code you have written so far - done except for surrogates, have to do that section, but leaving that until after coherence stuff is written
 9) DONE compile again as a package
 10) DONE stopping point - mean field methods implemented. next step coherence methods.
-11) Work on coherence functionality, inc unit tests and vignette and making the package compile. Need to start with a design phase and working out appropriate S3 classes. See some thoughts below. - IMPLEMENTED COH, STILL NEED PLOTTERS, THENA  VIGNETTE
+11) DONE Work on coherence functionality, inc unit tests and vignette and making the package compile. Need to start with a design phase and working out appropriate S3 classes. See some thoughts below. - IMPLEMENTED COH, STILL NEED PLOTTERS, THENA  VIGNETTE
 DONE addranks
 DONE cohbandsignif
 DONE plotmag
@@ -26,6 +26,9 @@ DONE plotrank
 DONE plotphase
 DONE avgphase
 vignette - make sure to cover all these new functions
+12) design phase for wavelet linear models
+13) to do for wavelet linear models:
+
 12) everything you need for deer
 13) synmat for kelp and Jon's bird stuff
 14) write the phase plotter functions, and unit tests, for tts, wt, wpmd, wmf. 
@@ -65,10 +68,10 @@ wt.r:
 Ideas I emailed to myself 2018 05 06:
 DONE Add data slots to wt wmf and wpmf classes? So the data can be kept with the result?
 
-Make a ts class which stands for timescale, base class for
+DECIDED NO Make a ts class which stands for timescale, base class for
 coherence results
 
-Then wc swc wpc swpc classes that extend ts. These are for
+DID SOMETHING SIMILAR Then wc swc wpc swpc classes that extend ts. These are for
 wavelet coherence,spatial wavelet coherence, wavelet phase
 coherence and spatial wavelet phase coherence classes. These
 will also have slots for the data, and maybe a slot for the
@@ -76,31 +79,32 @@ normalization used? If you are having that slot, you may not
 need all these classes. If you are also having the data you may
 need only one class
 
-ts has slots for timescale and for a complex vector of the same
+DECIDED NO ts has slots for timescale and for a complex vector of the same
 length
 
-These classes (except ts) also have slots for coherences of
+DONE These classes (except ts) also have slots for coherences of
 surrogates, and maybe for post-ranking results.
 
-Have a wcoh and pcoh classes for wavelet and phase coherence.
+DONE Have a wcoh and pcoh classes for wavelet and phase coherence.
 Since data are included as slot(s) we do not need to specify
 spatial or not.
 
-Also have a gcoh class for general coherence. This is for
+DECIDED NOT TO DO Also have a gcoh class for general coherence. This is for
 alternative normalizations. You have to pass in some kind of
 normalization routine. Available alternatives include no
 normalization and normalizing each time series separately by
 power. The normalization function is included in the object
 ____
 
-ts has slots for timescale and for a complex vector of the same
+DECIDED NOT TO DO ts has slots for timescale and for a complex vector of the same
 length - might not be necessary if I only have one coherence class. Decided to abandon it.
 
-coh class (coh for coherence)
+DONE coh class (coh for coherence)
 slots: 
 dat1, dat2 - the data, stored 
 times - times of measurement
-norm - the normalization used in computing the coherence (one of "phase", "none", "powall" (this 
+norm - the normalization used in computing the coherence (one of "phase", "none", "powall" 
+(this 
 one is the normalization we used in the wavelet coherence in the aphid paper), 
 and "powind" (this one is the normalization Lawrence mentioned by the power
 of each time series individually, check this last with Lawrence when you code it))
@@ -113,7 +117,7 @@ surrogate coherences, for comparison with signif$coh)
 bandp - stores p-values across timescale bands that have been computed. it's a data frame, 
 empty on first call to the generator function for the coh class
 
-coh function, the generator of the class, has these arguments:
+DONE coh function, the generator of the class, has these arguments:
 dat1 - either a locations by times matrix or a vector
 dat2 - same as dat1 - they must be the same dimensions
 times - times of measurement
@@ -122,9 +126,9 @@ sigmethod - method for significance testing, one of "none", "surrog1", "surrog2"
 nrand - number of randomizations for significance testing
 all the parameters for the wavelet transform, e.g., f0, scale.min, etc.
 
-When you run coh, the bandp slot is NA at first until you run the last of the below functions
+DONE When you run coh, the bandp slot is NA at first until you run the last of the below functions
 
-Methods:
+DONE Methods:
 set (which throw an error) and get methods for changing and extracting the slot entries
 print and summary methods
 something for plotting coherence against timescale - if bandp is not NA, puts the p-values on the plot. Call it plotmag.
@@ -132,7 +136,23 @@ something for plotting ranks in surrogates against timescale - if bandp is not N
 something for p-values across timescale bands - populates bandp or adds to it. Call it cohbandsignif
 you will also need a plotphase and a way of calculating averages phases across bands
 
-exports: plotmag, plotrank, cohbandsignif, plotphase, avgphase
+DONE exports: plotmag, plotrank, cohbandsignif, plotphase, avgphase
 internals: addranks
 
-order: addranks, cohbandsignif, plotmag, plotrank, plotphase, avgphase
+DONE order: addranks, cohbandsignif, plotmag, plotrank, plotphase, avgphase
+________
+
+Design phase for wavelet linear models:
+
+Functionality needed:
+*Fit a given model - pass in data, and a normalization to use (or should we only use the power normalization), and it does the fitting and gets coefs that depend on timescale (only, not on loction). It will also need scale.min, f0, etc.
+*May want the capacity to plot the coefficients in various ways, e.g., plot their phases or magnitudes against timescale, but if you do this, do it much later
+*Compare two models. Will need to be able to plot coherences and ranks, and get p-values over a timescale band. Will have to work for fft or aaft surrogates, or via the fast algorithm. May or may not want to have the option of joint surrogates of multiple variables being dropped versus independent (across the variables) surrogates. Not sure if the latter makes any sense - discuss with Lawrence. Of course, spatially, we always use joint surrogates.
+*model-predicted synchrony plot
+*think a bit to make sure the design would permit reasonable addition, later, of functionality for doing the leave-one-out cross validation and model selection, but don't do it now.
+*proportion of synchrony explained by a model, as a function of timescale (and this can be averaged over a timescale band). See eq 47 in the supp mat of the plankton paper.
+*cross terms as a proportion of synchrony, as a function of timescale (and this can be averaged over a band). See eq. 48 of supp mat of plankton paper
+*do you want to be able to plot model synchrony or mean squared model synchrony? (remember this is distinct from model-predicted synchrony.) We used this for thinking of interaction effects.
+*do anything else with interaction effects, e.g., test their significance?
+*fractions of synchrony explained by individual predictors, and by interaction effects, as a function of timescale. Also can average these over bands.
+
