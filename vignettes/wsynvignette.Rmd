@@ -77,11 +77,11 @@ Background on the wavelet transform is available from many sources, including
 @Addison_02, and we do not recapitulate it. We instead describe the wavelet transform
 operationally, and demonstrate the implementation 
 of the wavelet transform in `wsyn` using examples from Fig. S2 of @Sheppard_18.
-Given a time series $x(t)$, $t=1,\ldots,T$, the wavelet transform $w_\sigma(t)$
+Given a time series $x(t)$, $t=1,\ldots,T$, the wavelet transform $W_\sigma(t)$
 of $x(t)$ is a complex-valued function of time, $t=1,\ldots,T$, and timescale,
-$\sigma$. The magntiude $|w_\sigma(t)|$ is an estimate of the strength of the
+$\sigma$. The magntiude $|W_\sigma(t)|$ is an estimate of the strength of the
 oscillations in $x(t)$ at time $t$ occurring at timescale $\sigma$. The complex
-phase of $w_\sigma(t)$ gives the phase of these oscilaltions.
+phase of $W_\sigma(t)$ gives the phase of these oscilaltions.
 
 ```{r seed_setter_1, echo=F}
 set.seed(101)
@@ -168,7 +168,7 @@ plotmag(res)
 
 <!--maybe also do a plotphase call when possible?-->
 
-The `times` argument to `wt` (and several other functions, see below)
+The `times` argument to `wt` (and to several other functions, see below)
 is tightly constrained. It must be a numeric vector of unit-spaced times 
 (`diff(times)` is a vector of 1s) with
 no missing entries. It must be the same length as the data and correspond to the
@@ -216,20 +216,20 @@ information about the classes.
 \noindent The wavelet phasor mean field (the `wpmf` function in `wsyn`) depicts the time and 
 timescale dependence of phase synchrony of a collection of time series. If $x_n(t)$, 
 $n=1,\ldots,N$, $t=1,\ldots,T$ are time series of the same variable measured in $N$ locations
-at the same times, and if $w_{n,\sigma}(t)$ is the wavelet transform of $x_n(t)$ and 
-$W_{n,\sigma}(t)=\frac{w_{n,\sigma}(t)}{|w_{n,\sigma}(t)|}$ has only the information about
+at the same times, and if $W_{n,\sigma}(t)$ is the wavelet transform of $x_n(t)$ and 
+$w_{n,\sigma}(t)=\frac{W_{n,\sigma}(t)}{|W_{n,\sigma}(t)|}$ has only the information about
 the complex phases of the transform (unit-magnitude complex numbers such as these are called
 \emph{phasors}), then the wavelet phasor mean field is 
 \begin{equation}
-\frac{1}{N} \sum_{n=1}^N W_{n,\sigma}(t).
+\frac{1}{N} \sum_{n=1}^N w_{n,\sigma}(t).
 \end{equation}
 For combinations of $t$ and $\sigma$ for which oscillations at time $t$ and timescale
 $\sigma$ in the time series $x_n(t)$ have the same phase (they are phase synchronized),
-the phasors $W_{n,\sigma}(t)$ will all point in similar directions in the complex plane, and
+the phasors $w_{n,\sigma}(t)$ will all point in similar directions in the complex plane, and
 their sum will be a large-magnitude complex number.
 For combinations of $t$ and $\sigma$ for which oscillations at time $t$ and timescale
 $\sigma$ in the time series $x_n(t)$ have unrelated phases (they are not phase synchronized),
-the phasors $W_{n,\sigma}(t)$ will all point in random, unrelated 
+the phasors $w_{n,\sigma}(t)$ will all point in random, unrelated 
 directions in the complex plane, and
 their sum will be a small-magnitude complex number. Therefore plotting the magnitude of the
 wavelet phasor mean field against time and timescale quantifies the time and timescale
@@ -357,8 +357,50 @@ Examples of the wavelet mean field applied to real data
 are in @Sheppard_16 and @Sheppard_18.
 
 # Coherence 
+\noindent Coherence is explained by @Sheppard_16 and @Sheppard_17 (among others). 
+We summarize here some of the explanations given in those references. Let
+$x_{1,n}(t)$ and $x_{2,n}(t)$ for $n=1,\ldots,N$ and $t=1,\ldots,T$ be two variables 
+measured at the same $N$ locations and $T$ times. Let $W_{i,n,\sigma}(t)$ ($i=1,2$) be the
+corresponding wavelet transforms. The coherence of $x_{1,n}(t)$ and $x_{2,n}(t)$ is the
+magnitude of the mean, $\Pi_\sigma^{(12)}$, of the quantity 
+$w_{1,n,\sigma}(t)\overline{w_{2,n,\sigma}(t)}$ over all
+time-location pairs for which the quantity is still defined after wavelet scalloping
+is performed. The overline is complex conjugation. This quantity is a function of timescale. 
+Here the $w_{1,n,\sigma}(t)$ are wavelet transforms normalized in one of 
+a few different ways (see below). Because $w_{1,n,\sigma}(t)\overline{w_{2,n,\sigma}(t)}$
+is a complex number with phase equal to the phase difference between the two wavelet components,
+the mean, $\Pi_\sigma^{(12)}$, of this quantity over times and locations has large 
+magnitude if 
+the phase difference between the transforms is consistent over time and across sampling 
+locations. Coherences essentially measure the strength of association between the variables 
+in a timescale-specific way that is also not confounded by lagged or phase-shifted 
+associations. Coherences and related quantities are analyzed in `wsyn` using the function
+`coh` and its corresponding S3 class, `coh`, and the S3 methods that go with the class.
 
-<!--Just do it here without mentioning significance, and then intro surrogates in the next
+One possible normalization is phase normalization, 
+$w_{i,n,\sigma}(t)=\frac{W_{i,n,\sigma}(t)}{|W_{i,n,\sigma}(t)|}$. Set the `norm` 
+argument of `coh` to "`phase`" to use this normalization.  The coherence with 
+this normalization is often called the \emph{phase coherence}, or the \emph{spatial
+phase coherence} if $N>1$ [@Sheppard_17]. Phase coherence measures 
+the extent to which the two variables have consistent phase differences over time and 
+across locations, as a function of timescale. The normalization descibed in the "Wavelet 
+mean field" section of the Methods of @Sheppard_16 gives the version of the 
+coherence that was there called the \emph{wavelet coherence}, or the 
+\emph{spatial wavelet coherence} if $N>1$. Set the `norm` 
+argument of `coh` to "`powall`" to use this normalization.
+If `norm` is "`powind`", then $w_{i,n,\sigma}(t)$ is obtained
+by dividing $W_{i,n,\sigma}(t)$ by the square root of the average of 
+$W_{i,n,\sigma}(t) \overline{W_{i,n,\sigma}(t)}$ over the times for which it is 
+defined; this is done separately for each $i$ and $n$. The final option for `norm`
+available to users of `coh` is "`none`", i.e., raw wavelet transforms
+are used. For any value of `norm` except "`phase`", the normalized 
+wavelet components $w_{i,n,\sigma}(t)$ can also have varying magnitudes, and in 
+that case the coherence is further increased if
+there are correlations in the amplitudes of the fluctuations.
+
+<!-- Now demo it using the pedagog fig example-->
+
+<!--Just do it here with a cursory/black-boxed description of how significance is done, and then intro surrogates in the next
 section, and then come back to signifiacnce-->
 
 # Surrogates \label{sec:surrog}
@@ -378,10 +420,11 @@ am going to implement that. Or maybe put it as its own section below?-->
 ## Amplitude adjusted Fourier surrogates
 
 
-## Alternative significance tests for the wavelet phasor mean field \label{sec:wpmfsignif}
+## Alternatives to the "quick" method of assessing significance of wavelet phasor mean field values \label{sec:wpmfsignif}
 
 
-# Assessing significance of coherence
+## Alternatives for assessing significance of coherence
+
 
 
 # References

@@ -7,7 +7,7 @@
 #' @param bandprows The rows of \code{object$bandp} for which to display p-value results in the plot
 #' @param filename Filename (without extension), for saving as pdf. Default value NA saves no file and uses the default graphics device.
 #' 
-#' @details The plot shows \code{object$ranks$coher} versus \code{log(1/object$timescales)}.
+#' @details The plot shows the modulus of \code{object$ranks$coher} versus \code{log(1/object$timescales)}.
 #' Horizontal axis ticks are labeled as timescales, but are spaced on the axis as 
 #' log(1/timescale), i.e., log frequencies. p-values from \code{object$bandp} are displayed
 #' above the rank plot.

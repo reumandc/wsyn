@@ -14,8 +14,8 @@
 #' @param bandprows The rows of \code{object$bandp} for which to display results in \code{coh} plots
 #' @param ... Additional graphics parameters passed to \code{image} (\code{graphics} package) if \code{colorbar==FALSE}, or to \code{image.plot} (\code{fields} package) if \code{colorbar==TRUE}
 #' 
-#' @details For \code{coh} objects, object$coher is plotted using a solid red line, and 
-#' object$signif$coher is plotted using a dashed red line. The two coherences agree except
+#' @details For \code{coh} objects, the modulus of object$coher is plotted using a solid red line, and 
+#' the modulus of object$signif$coher is plotted using a dashed red line. The two coherences agree except
 #' for \code{sigmethod="fast"}, for which they are close. The dashed line is what should be
 #' compared to the distribution of surrogate coherences (black lines, if \code{signif} is 
 #' not \code{NA}). Horizontal axis ticks are labeled as timescales, but are spaced on the 
@@ -230,7 +230,7 @@ plotmag.coh<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA)
   if (any(is.na(signif)))
   { 
     plot(log(1/timescales),Mod(coher),type="l",lty="solid",xaxt="n",col="red",
-         xlab="Timescales",ylab="|Coherence|")
+         xlab="Timescales",ylab="Coherence")
     xlocs<-c(min(timescales),pretty(timescales,n=8))
     graphics::axis(side=1,at=log(1/xlocs),labels=xlocs) 
     
@@ -252,7 +252,7 @@ plotmag.coh<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA)
   { 
     rg<-range(Mod(coher),Mod(signif$coher),qs,na.rm=T) 
     plot(log(1/timescales),Mod(coher),type="l",lty="solid",xaxt="n",col="red",
-         ylim=rg,xlab="Timescales",ylab="|Coherence|")
+         ylim=rg,xlab="Timescales",ylab="Coherence")
     xlocs<-c(min(timescales),pretty(timescales,n=8))
     graphics::axis(side=1,at=log(1/xlocs),labels=xlocs) 
     lines(log(1/timescales),Mod(signif$coher),type="l",lty="dashed",col="red")
