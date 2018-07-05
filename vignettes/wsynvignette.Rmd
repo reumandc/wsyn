@@ -411,7 +411,7 @@ variables over time and across locations, but is also further increased if
 there are correlations in the amplitudes of the fluctuations.
 
 We demonstrate coherence and its implementation in `wsyn` via some simulated data. This
-demonstrations reporoduces an example given in supplementary figure 5 of @Sheppard_16. Data
+demonstration reporoduces an example given in supplementary figure 5 of @Sheppard_16. Data
 consist of an environmental-driver variable, `x`, and a driven biological variable,
 `y`, between which we compute coherence. Both were measured at $11$ locations. The 
 environmental variable `x` was constructed as the sum of: 1) a single common signal 
@@ -427,7 +427,7 @@ set.seed(101)
   times<-(-3:100)
   ts1<-sin(2*pi*times/10)
   ts2<-5*sin(2*pi*times/3)
-  x<-matrix(NA,11,length(times)) #the driver
+  x<-matrix(NA,11,length(times)) #the driver (environmental) variable
   for (counter in 1:11)
   {
     x[counter,]=ts1+ts2+rnorm(length(times),mean=0,sd=1.5)
@@ -441,7 +441,7 @@ $0$ and standard deviation $3$.
 
 ```{r coh_example_dat_env}
   times<-0:100
-  y<-matrix(NA,11,length(times)) #the driven
+  y<-matrix(NA,11,length(times)) #the driven (biological) variable
   for (counter1 in 1:11)
   {
     for (counter2 in 1:101)
@@ -476,19 +476,77 @@ These are datasets that have been randomized in an appropriate way. In addition
 to computing coherence of data, coherence is also computed in the same way for 
 `nrand` surrogate datasets that represent the null hypothesis of no relationship
 between `dat1` and `dat2` while retaining other statistical features of the data. 
-See section \ref{sec:surrog} for details of surrogates and significance testing
+See section \ref{sec:surrog} for details of surrogates and significance testing,
 and allowed values of `sigmethod`. Larger values of `nrand` produce more accurate 
 significance results that are less variable on repeat runs, but also require more
-computational time. The arguments `f0` and `scale.max.input` control details of the
+computational time. Using `nrand` at least 1000 or 10000 for final runs is 
+recommended. This can take some time for values of `sigmethod` other than `fast` 
+(see section \ref{sec:surrog}), so `100` was used above for demonstration
+purposes only. The arguments `f0` and `scale.max.input` control details of the
 wavelet transform (see section \ref{sec:wt}) and are set here to agree with values 
 used by @Sheppard_16.
 
 Coherence can be plotted using `plotmag`:
 
-```{r coh_plot}
+```{r coh_plot, results=FALSE}
 plotmag(res)
 ```
 
+The red line here is the coherence. The black lines are $95$th and $99$th (these are
+the default values) quantiles of coherences of surrogate datasets. Coherence is 
+significant for timescales close to $10$ years, but not significant for timescales close to
+$3$ years, as expected since three values of $x$ are averaged to produce one value of $y$,
+so the $3$-year periodicity in $x$ is averaged away.
+
+Typically preferable (see @Sheppard_17) is the `fast` option to `sigmethod`, because 
+far more surrogates can be used in the same computational time:
+
+```{r coh_example_call_fast, results=FALSE}
+res<-coh(dat1=x,dat2=y,times=times,norm="powall",
+         sigmethod="fast",nrand=10000,
+         f0=0.5,scale.max.input=28)
+plotmag(res)
+```
+
+For the `fast` algorithm (section \ref{sec:surrog}) the modulus of 
+`res$signif$coher` (plotted above as the dashed red line) can be compared 
+to quantiles of the modulus of
+`res$signif$scoher` (the black lines are $95$th and $99$th quantiles) in the 
+usual way to make statements about significance of coherence,
+but the modulus of `res$signif$coher` is only approximately equal to the standard coherence, 
+which is the modulus of `res$coher` (and which is plotted above as the solid red line). Thus
+one should use the dashed red line above, and `res$signif$coher`, when making conclusions 
+about the significance of
+coherence, and the solid red line, and `res$coher`, when using the actual value of the
+coherence. Typically the two red lines are quite similar. For values
+of `sigmethod` other than `fast`, they are equal.
+
+The significance indicated on the above plots is a done on a timescale-by-timescale
+basis, and type-I errors (false positives) are not taken into account. Neither do the 
+individual timescales correspond to independent tests. A method of
+aggregating signficance across a timescale band was described by @Sheppard_16, and 
+is implemented in `cohbandtest`:
+
+```{r cohbandtest}
+res<-cohbandtest(res,c(8,12))
+```
+
+A call to `cohbandtest` computes a
+$p$-value for the aggregate significance of coherence across the specified band 
+(8 to 12 year timescales, in this case), and also computes the average phase of 
+$\Pi_\sigma^{(12)}$ across the band. This information is added as a new row to 
+the `bandp` slot of the `coh` object (which was previously `NA` in this case).
+
+```{r cohbandtest_display_bandp}
+get_bandp(res)
+#***DAN: for some reason this method is not loading
+```
+
+The aggregate $p$-value is also displayed on the plot:
+
+```{r, results=FALSE}
+plotmag(res)
+```
 
 <!--Just do it here with a cursory/black-boxed description of how significance is done, and then intro surrogates in the next
 section, and then come back to signifiacnce-->
