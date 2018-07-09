@@ -1,7 +1,7 @@
 #' Coherence
 #' 
 #' Wavelet coherence and wavelet phase coherence, spatial or for single time series.
-#' Also the creator function for the \code{coh} class, which inherits from the \code{list}
+#' Also the generator function for the \code{coh} class, which inherits from the \code{list}
 #' class.
 #' 
 #' @param dat1 A locations (rows) x time (columns) matrix (for spatial coherence), or a single time series 

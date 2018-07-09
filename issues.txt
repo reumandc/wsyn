@@ -161,7 +161,7 @@ wlm - a wlm object, the model being tested
 drop - either names or indices of variables in wlm$dat that are being dropped. Some error checking is needed to make sure these are legit, e.g., not the response variable
 signif - list with coher (appropriately normalized coherence) and scoher (appropriate normalized coherence for surrogates), signif$coher the same as wlm$coher, except for "fast" where these can differ
 ranks - similar to the ranks slot for the coh class. As in that case, not filled in on the first call to wlmtest. I rewrote addranks so it will work on either a coh or a wlmtest object. 
-bandp - similar to coh class. cohbandtest is already a method for the coh class, so I will just need to add a method for the wlmtest class. To avoid repeating myself I may want to take guts of the routine and put it into a worker function called by both methods. I should probably rename it bandtest
+bandp - similar to coh class. cohbandtest (now bandtest) is already a method for the coh class, so I will just need to add a method for the wlmtest class. To avoid repeating myself I may want to take guts of the routine and put it into a worker function called by both methods. 
 
 wlmtest generator function:
 Args:
@@ -173,6 +173,56 @@ A wlmtest object
 Notes:
 The only combinations of wlm$norm and sigmethod that will work at first will be powall with anything
 
-plotmag and plotrank methods for wlmtest objects should be pretty straightforward, as well as you will need something like addranks and cohbandtest - see thoughts above in ranks and bandp slots of the wlmtest object
+plotmag and plotrank methods for wlmtest objects should be pretty straightforward, as well as you will need something like addranks and cohbandtest - see thoughts above in ranks and bandp slots of the wlmtest object, some of this is already done (addranks), and some of it has been queued up (bandtest)
 
-You may want to have a plotcoef method for the wlm class, but this should be thought about together with plotting the phase and maybe magnitude of the response times the conjugate of the predictor, as we did in the plankton paper to help validate the models there
+You may want to have a plotcoef method for the wlm class, but this should be thought about together with plotting the phase and maybe magnitude of the response times the conjugate of the predictor, as we did in the plankton paper to help validate the models there - do this later
+
+_____
+
+
+Think about whether this design will work with the following outstanding issues:
+
+*model-predicted synchrony plot
+
+>>>make a function predsync that takes a wlm objetc and returns a tts object which is what we give on line 413 of the supp mat of the plankton paper, but without the magnitudes (and recall the Pi there is already a nonnegative real number for each timescale, before taking magnitudes). Then that can be plotted easily with the plotmag method of the tts class, or its plot v timescale of the mean over time of the squared magnitude. 
+I could write a method for a tts object that plots, vs timescale, the mean, over time, of the square magnitude. That would be an easy function. Should I call it power? Remind yourself what power is officially defined as, but regardless this would be easy. Yes, I checked with Lawrence, this is power.
+Then I could easily plot model-predicted synchrony
+
+*do you want to be able to plot model synchrony or mean squared model synchrony? (remember this is distinct from model-predicted synchrony.) We used this for thinking of interaction effects.
+
+>>>make a function modsync that takes a wlm object and returns a tts object which is what we denote r_\sigma^{(h)}(t) in the plankton paper. This is a complex-valued function of time and timescale. We can then plot its magnitude using the plotmag method of the tts class. If you want to average the square of this magnitude over time, and then plot that (which is what we do in the plankton paper), it will be easy to do so with your own code. Or I could write a method for a tts object that plots, vs timescale, the mean, over time, of the square magnitude. That would be an easy function. Should I call it power? Remind yourself what power is officially defined as, but regardless this would be easy. Yes, I checked with Lawrence, this is power.
+
+*think a bit to make sure the design would permit reasonable addition, later, of functionality for doing the leave-one-out cross validation and model selection, but don't do it now. 
+
+>>>I think this should be possible after the fact. You'll just write a function that computes a leave-one-out score, and that will make it possible for the user to get the score and compare for different models. The biggest thing to figure out is, the norm squared residuals are used in the description on p.8 of the sup mat of the plankton paper, but I was hoping to not have to ever compute residuals, just use the coherence of model with data. But I think that can be resolved later.  
+
+*Maybe also think about the "local ascociations" test you did. 
+
+>>>Probably the local associations stuff can be left out - would not be too hard with existing code. But if you do later want a local associations test, it would be easy to write a separate function that does that. It would just take two data matrices, just like coh does. Just re-read the section on location permutations in the plankton paper supp mat and you will see this would be a straightforward later addition. In fact I decided this should be done at some point, it won't be hard.
+
+*Some other blocks of text I have elsewhere have started thinking about testing phases of coefficients
+
+>>>Can safely leave this for later, I think
+
+*proportion of synchrony explained by a model, as a function of timescale (and this can be averaged over a timescale band). See eq 47 in the supp mat of the plankton paper.
+*cross terms as a proportion of synchrony, as a function of timescale (and this can be averaged over a band). See eq. 48 of supp mat of plankton paper
+*fractions of synchrony explained by individual predictors, and by interaction effects, as a function of timescale. Also can average these over bands.
+
+>>>Make one function that takes a wlm object and gives a matrix with named rows:
+timescales
+propexplained
+crossterms
+pred1
+...
+predn
+interactions
+int1w2
+int1w3
+...
+intnwn-1
+Then these can easily be plotted versus timescale or averaged over any band.
+
+*do anything else with interaction effects, e.g., test their significance?
+
+>>>Spoke with Lawrence and we think this could be handled pretty easy with the high-level functions already planned above, and no additional function is needed.
+
