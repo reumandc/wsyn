@@ -64,82 +64,6 @@ wt.r:
 #TODO: Not clear from the docs what the resulting behavior is for the default
 #value NULL of scale.max.input. Likewise for other related funcs (wmf, wpmf, etc)
 
-
-Ideas I emailed to myself 2018 05 06:
-DONE Add data slots to wt wmf and wpmf classes? So the data can be kept with the result?
-
-DECIDED NO Make a ts class which stands for timescale, base class for
-coherence results
-
-DID SOMETHING SIMILAR Then wc swc wpc swpc classes that extend ts. These are for
-wavelet coherence,spatial wavelet coherence, wavelet phase
-coherence and spatial wavelet phase coherence classes. These
-will also have slots for the data, and maybe a slot for the
-normalization used? If you are having that slot, you may not
-need all these classes. If you are also having the data you may
-need only one class
-
-DECIDED NO ts has slots for timescale and for a complex vector of the same
-length
-
-DONE These classes (except ts) also have slots for coherences of
-surrogates, and maybe for post-ranking results.
-
-DONE Have a wcoh and pcoh classes for wavelet and phase coherence.
-Since data are included as slot(s) we do not need to specify
-spatial or not.
-
-DECIDED NOT TO DO Also have a gcoh class for general coherence. This is for
-alternative normalizations. You have to pass in some kind of
-normalization routine. Available alternatives include no
-normalization and normalizing each time series separately by
-power. The normalization function is included in the object
-____
-
-DECIDED NOT TO DO ts has slots for timescale and for a complex vector of the same
-length - might not be necessary if I only have one coherence class. Decided to abandon it.
-
-DONE coh class (coh for coherence)
-slots: 
-dat1, dat2 - the data, stored 
-times - times of measurement
-norm - the normalization used in computing the coherence (one of "phase", "none", "powall" 
-(this 
-one is the normalization we used in the wavelet coherence in the aphid paper), 
-and "powind" (this one is the normalization Lawrence mentioned by the power
-of each time series individually, check this last with Lawrence when you code it))
-timescales - vector of timescales
-coh - the coherence, calculated in the usual way without scalloping, after 
-normalization as specified by "norm"  
-signif - a list with elements coh (the coherence of dat1 and dat2for significance testing, 
-equal to  coh except in the "fast" case) and scoh (a matrix with all the 
-surrogate coherences, for comparison with signif$coh)
-bandp - stores p-values across timescale bands that have been computed. it's a data frame, 
-empty on first call to the generator function for the coh class
-
-DONE coh function, the generator of the class, has these arguments:
-dat1 - either a locations by times matrix or a vector
-dat2 - same as dat1 - they must be the same dimensions
-times - times of measurement
-norm - see above
-sigmethod - method for significance testing, one of "none", "surrog1", "surrog2", "surrog12", "fast"
-nrand - number of randomizations for significance testing
-all the parameters for the wavelet transform, e.g., f0, scale.min, etc.
-
-DONE When you run coh, the bandp slot is NA at first until you run the last of the below functions
-
-DONE Methods:
-set (which throw an error) and get methods for changing and extracting the slot entries
-print and summary methods
-something for plotting coherence against timescale - if bandp is not NA, puts the p-values on the plot. Call it plotmag.
-something for plotting ranks in surrogates against timescale - if bandp is not NA, puts the p-values on the plot. Call it plotrank
-something for p-values across timescale bands - populates bandp or adds to it. Call it cohbandsignif
-you will also need a plotphase and a way of calculating averages phases across bands
-
-DONE exports: plotmag, plotrank, cohbandsignif, plotphase, avgphase
-internals: addranks
-
-DONE order: addranks, cohbandsignif, plotmag, plotrank, plotphase, avgphase
 ________
 
 Design phase for wavelet linear models:
@@ -156,3 +80,99 @@ Functionality needed:
 *do anything else with interaction effects, e.g., test their significance?
 *fractions of synchrony explained by individual predictors, and by interaction effects, as a function of timescale. Also can average these over bands.
 
+Thoughts:
+have a wlm (wavelet linear model) class with these slots:
+dat: a list with the data matrices, probably the first is the response
+times: the times of measurement
+wts: a list with all the wavelet transforms (do you actually want this? I don't see why not except if we end up creating one of these objects for each of many surrogates, we won't want to keep all the transforms). Perhaps it should be powall normalized transforms?
+timescales: 
+coefs: a list with coefficients - these are complex-valued functions of timescale, one for each predictor
+d2/resids: the measurement of how good the model is (also a function of timescale, I think)
+coher: coherence of model with response (do you actually want this? or perhaps we want it even more than d2/resids?)
+
+You need a fast, internal function that fits pre-computed transforms and just returns the coefficients and the residuals. Call this (for now) wlm_fit_intern. Or maybe it also returns coherence of the fitted model with the response. Or maybe only.
+
+You need a fitter function (user side) that takes data (and other arguments) and produces a wlm object - this is the creator for a wlm object
+
+You need a wlm_test (temporary name) function that takes a wlm object and other arguments and performs significance tests for one or more variables as specified in the other arguments. This will have several arguments specifying the nature of the test (fft surrog, aaft surrog, fast, possibly also joint v independent surrogates of the separate surrogated variables). For fft surrog or aaft surrog, this generates surrogates of the variables to be tested, recomputes transforms, then calls wlm_fit_intern, then keeps all the residual vectors (and maybe also or instead coherences of the models with the data) and throws away the coefficients, then returns this stuff somehow. 
+  Returns another type of object, or embedded in the wlm object? If the latter, then it will be easier to loose track of which test objects go with which model object, but if the latter the model object can become very complex. perhaps we want a wlm_test class whose first slot is a wlm object, indicating the model being tested. Next slots can store the variables that are removed for the test, and the algorithm used (fft, aaft, fast). Next slots after that can store the residuals for each surrogating, and in addition or instead model/response coherences for each surrogating.
+  For the fast algorithm things will prbably be different, and will probably start from the data in the wlm object instead of from the transforms
+
+Lawrence tests based on residuals d, but I would prefer to plot and test based on coherences. Mathematically it is equivalent but I would prefer to see plots that show coherence versus timescale for the real model and then for versions where some predictors have been replaced with surrogates. The problem with this is, defining coherence requires that one choose a normalization, and we only know that d minimization and coherence maximization are related for powall normalization. So at a minimum one needs to think carefully and do some math about how normalization and fitting and coherence interact. But I think actually powall is baked into the pie for this stuff, and I just will be committing to it, but check this with Lawrence.
+
+I have some code here from before that is probably pretty good and useful: Reuman/ResearchStaff/PeopleInAction/LawrenceEmmaSVN_2015/CodePackages/WaveletCode/Waveletanalysis/
+
+Everything has to work equally for single or multiple time series per variable.
+
+What about normalization options? When do those come in? I think they probably are not involved with the actual fitting (NOT TRUE THEY ARE), they only come in at that stage of working out fractions of synchrony explained and so on? Or is the powall normalization baked into the pie? It certainly is baked in to the math in Appendix S7 in the plankton paper.
+
+Qs for Lawrence
+1) joint vs. independent surrogates of separate predictor variables when testing multiple predictor variables? Or does only joint make sense? Does the fast algorithm support simultaneous removal of more than one variable? I assume in that case it'll be joint surrogates that are implemented? Could independent surrogs be implemented, if they make any sense?
+Lawrence and Dan decided to only implement the joint surrogates  - cannot find a case where it would make sense to do the indepednent surrgates
+2) Inputs and outputs of fast algorithm? Does it start from the data, or the transforms? What does it return?
+Args: data matrices
+Outputs: coherence between model and response variable, and/or squared norm of d, the residuals. Actually, these things do not count as outputs because Lawrence does not normalize in the same way, he uses these items (which are not the same as what he would get if he normalized) to get ranks (which are the same as what he would get). So actually the rank information is what is outputted, specifically modelpow and surrmodelpow, where: modelpow is power of response minus norm of d^2. Lawrence reckons he could fairly trivially post-hoc implement the right normalization. Lawrence says I can assume his algorithm will take daata and specs on which vars are dropped and spit out coher (powall norm) for model/data for real and surrogates.
+3) Is powall normalization baked into the pie? 
+See above - make it so you can put in powall, powind, or none, and make it throw a not yet implemented error for powind - Lawrence thinks he can do this later. Currently it does none, it can do powall with a rescaling, and powind will take work. For the slow algorithm, there may be some thought required for both none and definitely for powind, so maybe just implement powall right now and throw and error for the others.
+
+
+
+_____
+
+Next step in design:
+
+wlm class:
+slots:
+dat - a list of matrices, all the same dimensions, representing the data, the first is the response
+times - times of measurement
+norm - the normalization used 
+wts - list of transforms, normalized as specified in argument to generator function, but only powall works now, other options throw an error
+timescales - 
+coefs - list of complex vectors, each of length the same as timescales. these are the model coefs
+coher - appropriately normalized version of coherence of the  model and the response transforms, as specified in norm argument to geneator function, but only powall works for now
+
+wlm generator function:
+Args:
+dat - a list of matrices representing the data (or in the case of 1 location, a list of vectors)
+times - times of measurement
+resp - an index in dat of the response matrix
+pred - a vector of indices in dat of predictor matrices
+norm - powall, none, powind (phase not allowed). Everything but powall throws and error for now
+Returns:
+A wlm object with the fitted model
+What it does:
+-rearrange dat to put the response first and keep only the used predictor matrices after that; use vectors when the input data were vectors 
+-error check for things like all data matrices/vectors have same dimensions
+-compute all transforms to get wts, which should always be locations by times by timescales, even when there is only one location
+-pass wts to a fast internal fitting function to get the other slot values
+-put it all together into a list and set the class attribute
+
+wlm_fit (an internal function, no error checking):
+Args: 
+wts - the list of normalized transforms, response variable first
+norm - possibly need the normalization used, either powall, none, or powind; everything but powall throws and error for now
+Resturns: A list with these elements:
+coefs - list of complex vectors, each of length the same as timescales. these are the model coefs
+coher - coherence of the model and response transforms, normalization appropriate for the norm argument (function of timescale, real valued)
+
+wlmtest class:
+slots:
+wlm - a wlm object, the model being tested
+drop - either names or indices of variables in wlm$dat that are being dropped. Some error checking is needed to make sure these are legit, e.g., not the response variable
+signif - list with coher (appropriately normalized coherence) and scoher (appropriate normalized coherence for surrogates), signif$coher the same as wlm$coher, except for "fast" where these can differ
+ranks - similar to the ranks slot for the coh class. As in that case, not filled in on the first call to wlmtest. I rewrote addranks so it will work on either a coh or a wlmtest object. 
+bandp - similar to coh class. cohbandtest is already a method for the coh class, so I will just need to add a method for the wlmtest class. To avoid repeating myself I may want to take guts of the routine and put it into a worker function called by both methods. I should probably rename it bandtest
+
+wlmtest generator function:
+Args:
+wlm -  a wlm object
+drop - indictaes which variables are dropped, see arg with same name for wlmtest class
+sigmethod - either fft, aaft, fast
+Returns: 
+A wlmtest object
+Notes:
+The only combinations of wlm$norm and sigmethod that will work at first will be powall with anything
+
+plotmag and plotrank methods for wlmtest objects should be pretty straightforward, as well as you will need something like addranks and cohbandtest - see thoughts above in ranks and bandp slots of the wlmtest object
+
+You may want to have a plotcoef method for the wlm class, but this should be thought about together with plotting the phase and maybe magnitude of the response times the conjugate of the predictor, as we did in the plankton paper to help validate the models there

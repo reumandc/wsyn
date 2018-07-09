@@ -1,8 +1,8 @@
-context("cohbandtest")
+context("bandtest")
 
 test_that("test the default method, which just throws an error",{
   object<-list("test","this","is")
-  expect_error(cohbandtest(object),"Error in cohbandtest: method not defined for this class")
+  expect_error(bandtest(object),"Error in bandtest: method not defined for this class")
 })
 
 test_that("test for a coh object",{
@@ -38,16 +38,16 @@ test_that("test for a coh object",{
            f0=0.5,scale.max.input=28)
   
   #test error handling
-  expect_error(cohbandtest(cohobj,c(2,10)),"Error in cohbandtest: signif cannot be NA")
+  expect_error(bandtest(cohobj,c(2,10)),"Error in bandtest.coh: signif cannot be NA")
   cohobj<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powall",sigmethod="fast",nrand=1000,
               f0=0.5,scale.max.input=28)
-  expect_error(cohbandtest(cohobj,"test"),"Error in cohbandtest: band must be numeric")  
-  expect_error(cohbandtest(cohobj,5),"Error in cohbandtest: band must be a length-two numeric vector")  
-  expect_error(cohbandtest(cohobj,c(1,2,5)),"Error in cohbandtest: band must be a length-two numeric vector")  
-  expect_error(cohbandtest(cohobj,c(31,35)),"Error in cohbandtest: band must include some of the timescales")  
+  expect_error(bandtest(cohobj,"test"),"Error in bandtest.coh: band must be numeric")  
+  expect_error(bandtest(cohobj,5),"Error in bandtest.coh: band must be a length-two numeric vector")  
+  expect_error(bandtest(cohobj,c(1,2,5)),"Error in bandtest.coh: band must be a length-two numeric vector")  
+  expect_error(bandtest(cohobj,c(31,35)),"Error in bandtest.coh: band must include some of the timescales")  
   
   #test timescales <=4 years
-  cohobj<-cohbandtest(cohobj,c(2,4))
+  cohobj<-bandtest(cohobj,c(2,4))
   expect_equal(class(cohobj$bandp),"data.frame")
   expect_equal(dim(cohobj$bandp),c(1,4))
   expect_gt(cohobj$bandp[1,3],.2)
@@ -55,7 +55,7 @@ test_that("test for a coh object",{
   expect_equal(cohobj$bandp[1,2],4)
   
   #test timescales > 4 years
-  cohobj<-cohbandtest(cohobj,c(4.001,30))
+  cohobj<-bandtest(cohobj,c(4.001,30))
   expect_equal(class(cohobj$bandp),"data.frame")
   expect_equal(dim(cohobj$bandp),c(2,4))
   expect_lt(cohobj$bandp[2,3],.01)
@@ -63,7 +63,7 @@ test_that("test for a coh object",{
   expect_equal(cohobj$bandp[2,2],30)
   
   #test case with only one timescale in the range
-  cohobj<-cohbandtest(cohobj,c(10,10.1))
+  cohobj<-bandtest(cohobj,c(10,10.1))
   expect_equal(class(cohobj$bandp),"data.frame")
   expect_equal(dim(cohobj$bandp),c(3,4))
   expect_lt(cohobj$bandp[3,3],.01)

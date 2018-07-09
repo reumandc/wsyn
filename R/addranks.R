@@ -1,11 +1,12 @@
-#' Adds rank information to a \code{coh} object
+#' Adds rank information to a \code{coh} or \code{wlmtest} object
 #' 
-#' When a \code{coh} object is created, the \code{ranks} slot is NA. This function fills it in.
+#' When a \code{coh} or \code{wlmtets} object is created, the \code{ranks} slot is NA. 
+#' This function fills it in.
 #' 
-#' @param cohobj An object of class \code{coh}
+#' @param obj An object of class \code{coh} or \code{wlmtest}
 #' 
-#' @return \code{addranks} returns another \code{coh} object with ranks slotted now included.
-#' If  \code{cohobj$ranks} was not NA, the \code{cohobj} is returned as is.
+#' @return \code{addranks} returns another \code{coh} or \code{wlmtest} object with ranks 
+#' slot now included. If  \code{obj$ranks} was not NA, the object is returned as is.
 #' 
 #' @author Thomas Anderson, \email{anderstl@@gmail.com}, Jon Walter, \email{jaw3es@@virginia.edu}; Lawrence 
 #' Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}
@@ -15,15 +16,15 @@
 #' @examples
 #' #Not written yet but need some
 
-addranks<-function(cohobj)
+addranks<-function(obj)
 {
-  if (!any(is.na(cohobj$ranks)))
+  if (!any(is.na(obj$ranks)))
   {
-    return(cohobj)  
+    return(obj)  
   }
   
-  x<-Mod(cohobj$signif$coher)
-  y<-Mod(cohobj$signif$scoher)
+  x<-Mod(obj$signif$coher)
+  y<-Mod(obj$signif$scoher)
 
   nr<-nrow(y)
   nc<-ncol(y)
@@ -35,7 +36,7 @@ addranks<-function(cohobj)
     scoher[,counter]<-(rank(y[,counter])-1)/(nr-1)
   }
   
-  cohobj$ranks<-list(coher=coher,scoher=scoher)
+  obj$ranks<-list(coher=coher,scoher=scoher)
   
-  return(cohobj)
+  return(obj)
 }

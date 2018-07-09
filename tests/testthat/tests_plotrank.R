@@ -43,9 +43,9 @@ test_that("test for an actual coh object",{
   expect_error(plotrank(res,1.1),"Error in plotrank.coh: inappropriate value for sigthresh")
   
   #add ranks and bandp
-  res<-cohbandtest(res,c(2,4))
-  res<-cohbandtest(res,c(4,30))
-  res<-cohbandtest(res,c(8,12))
+  res<-bandtest(res,c(2,4))
+  res<-bandtest(res,c(4,30))
+  res<-bandtest(res,c(8,12))
   
   #more error checking
   expect_error(plotrank(res,bandprows="test"),"Error in plotrank.coh: non-numeric value for bandprows")

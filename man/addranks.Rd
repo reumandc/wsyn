@@ -2,19 +2,20 @@
 % Please edit documentation in R/addranks.R
 \name{addranks}
 \alias{addranks}
-\title{Adds rank information to a \code{coh} object}
+\title{Adds rank information to a \code{coh} or \code{wlmtest} object}
 \usage{
-addranks(cohobj)
+addranks(obj)
 }
 \arguments{
-\item{cohobj}{An object of class \code{coh}}
+\item{obj}{An object of class \code{coh} or \code{wlmtest}}
 }
 \value{
-\code{addranks} returns another \code{coh} object with ranks slotted now included.
-If  \code{cohobj$ranks} was not NA, the \code{cohobj} is returned as is.
+\code{addranks} returns another \code{coh} or \code{wlmtest} object with ranks 
+slot now included. If  \code{obj$ranks} was not NA, the object is returned as is.
 }
 \description{
-When a \code{coh} object is created, the \code{ranks} slot is NA. This function fills it in.
+When a \code{coh} or \code{wlmtets} object is created, the \code{ranks} slot is NA. 
+This function fills it in.
 }
 \note{
 Internal function, no error checking performed

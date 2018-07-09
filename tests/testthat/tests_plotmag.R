@@ -203,9 +203,9 @@ test_that("test for an actual coh object",{
   expect_error(plotmag(res,sigthresh=1.1),"Error in plotmag.coh: inappropriate value for sigthresh")
   
   #add ranks and bandp
-  res<-cohbandtest(res,c(2,4))
-  res<-cohbandtest(res,c(4,30))
-  res<-cohbandtest(res,c(8,12))
+  res<-bandtest(res,c(2,4))
+  res<-bandtest(res,c(4,30))
+  res<-bandtest(res,c(8,12))
 
   #more error checking
   expect_error(plotmag(res,bandprows="test"),"Error in plotmag.coh: non-numeric value for bandprows")

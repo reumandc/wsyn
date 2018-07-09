@@ -24,7 +24,7 @@
 #' \item{coher}{The complex magnitude of this quantity is the coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
 #' \item{signif}{A list with information from the significance testing. Elements are \code{coher} and \code{scoher}. See details.}
 #' \item{ranks}{A list with ranking information for \code{signif}. \code{NA} until \code{plotranks} is called, see documentation for \code{plotranks}.}
-#' \item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. Empty on an initial call to \code{coh}, filled in by the function \code{cohbandtest}. See details.}
+#' \item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. Empty on an initial call to \code{coh}, filled in by the function \code{bandtest}. See details.}
 #' 
 #' @details If the dimensions of \code{dat1} and \code{dat2} are \eqn{N} by \eqn{T} 
 #' (\eqn{N} is 1 for 
@@ -61,7 +61,7 @@
 #' \code{sigmethod}. Synchrony-preserving surrogates are used. A variety of 
 #' statements of significance (or lack thereof) can be made
 #' by comparing \code{signif$coher} with \code{signif$scoher} (see the \code{plot} method
-#' for the \code{coh} class and the function \code{cohbandsignif}). If \code{sigmethod} is 
+#' for the \code{coh} class and the function \code{bandtest}). If \code{sigmethod} is 
 #' "\code{fast}", the fast algorithm of Sheppard et al. (2017) is used. In that case
 #' \code{signif$coher} can be compared to \code{signif$scoher} to make significance 
 #' statements about the coherence in exactly the same way, but \code{signif$coher} will no
@@ -75,7 +75,7 @@
 #' 
 #' The slot \code{bandp} is empty on a initial call to \code{coh}. It is made to hold 
 #' aggregate significance results over any timescale band of choice. It is filled in by
-#' the function \code{cohbandsignif}. See the help files for that function.
+#' the function \code{bandtest}. See the help files for that function.
 #' 
 #' Regardless of what the variables represent, the normalized transform of dat1 is multiplied 
 #' by the conjugate of the normalized transform of dat2. Thus, positive a phase of the coherence 

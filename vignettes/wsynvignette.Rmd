@@ -385,7 +385,7 @@ locations. Coherences essentially measure the strength of association between th
 in a timescale-specific way that is also not confounded by lagged or phase-shifted 
 associations. Coherences and related quantities are analyzed in `wsyn` using the function
 `coh` and its corresponding S3 class, `coh`, and the S3 methods that go with the class.
-Methods comprise set and get methods, and `cohbandtest`, and `plotmag`, `plotrank`, and
+Methods comprise set and get methods, and `bandtest`, and `plotmag`, `plotrank`, and
 `plotphase`.
 
 One possible normalization is phase normalization, 
@@ -541,26 +541,26 @@ The significance indicated on the above plots is done on a timescale-by-timescal
 basis, and type-I errors (false positives) are not taken into account. Neither do the 
 individual timescales correspond to independent tests. A method of
 aggregating signficance across a timescale band was described by @Sheppard_16, and 
-is implemented in `cohbandtest`:
+is implemented in `bandtest`:
 
-```{r cohbandtest}
-res<-cohbandtest(res,c(8,12))
+```{r bandtest}
+res<-bandtest(res,c(8,12))
 ```
 
-A call to `cohbandtest` computes a
+A call to `bandtest` computes a
 $p$-value for the aggregate significance of coherence across the specified band 
 (8 to 12 year timescales, in this case), and also computes the average phase of 
 $\Pi_\sigma^{(12)}$ across the band. This information is added as a new row to 
 the `bandp` slot of the `coh` object (which was previously `NA` in this case).
 
-```{r cohbandtest_display_bandp}
+```{r bandtest_display_bandp}
 get_bandp(res)
 ```
 
 Doing another timescale band adds another row to `bandp`:
 
-```{r cohbandtest2}
-res<-cohbandtest(res,c(2,4))
+```{r bandtest2}
+res<-bandtest(res,c(2,4))
 get_bandp(res)
 ```
 
@@ -599,7 +599,7 @@ in `bandp` are also displayed on the plot, and these values
 aggregate across timescales appropriately and alleviate the multiple-testing problem.
 
 Average phases of $\Pi_\sigma^{(12)}$ across the timescale bands of interest were also 
-computed by `cohbandtest` and stored in the `bandp` slot. Phases of $\Pi_\sigma^{(12)}$
+computed by `bandtest` and stored in the `bandp` slot. Phases of $\Pi_\sigma^{(12)}$
 can be plotted against timescale and average phases in `bandp` displayed using the
 `plotphase` functions:
 

@@ -33,9 +33,9 @@ test_that("test for an actual coh object",{
            f0=0.5,scale.max.input=28)
 
   #add ranks and bandp
-  res<-cohbandtest(res,c(2,4))
-  res<-cohbandtest(res,c(4,30))
-  res<-cohbandtest(res,c(8,12))
+  res<-bandtest(res,c(2,4))
+  res<-bandtest(res,c(4,30))
+  res<-bandtest(res,c(8,12))
   
   #more error checking
   expect_error(plotphase(res,bandprows="test"),"Error in plotphase.coh: non-numeric value for bandprows")
