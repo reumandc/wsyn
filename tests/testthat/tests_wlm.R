@@ -33,7 +33,8 @@ test_that("test error checking",{
                "Error in wlm: resp cannot be in pred")
 })
 
-test_that("results in right format",{
+test_that("results in right format, and consistency",{
+  set.seed(101)
   times<-1:30
   dat<-list(v1=matrix(rnorm(300),10,30),v2=matrix(rnorm(300),10,30),v3=matrix(rnorm(300),10,30),
             v4=matrix(rnorm(300),10,30),v5=matrix(rnorm(300),10,30))
@@ -43,6 +44,7 @@ test_that("results in right format",{
   norm<-"powall"
   res<-wlm(dat,times,resp,pred,norm)
   
+  #format
   expect_equal(names(res),c("dat","times","norm","wts","timescales","coefs","modval","coher"))
   expect_equal(dat[c(2,1,3,4)],res$dat)
   expect_equal(times,res$times)
@@ -57,9 +59,15 @@ test_that("results in right format",{
   expect_equal(dim(res$modval),dim(res$wts[[1]]))
   expect_equal(length(res$coher),length(res$timescales))
   expect_equal(is.complex(res$coher),TRUE)
+  
   expect_equal(Im(res$coher),rep(0,length(res$timescales)))
   expect_equal(all(Re(res$coher)>=0),TRUE)
-  
+  expect_equal(all(Re(res$coher)<=1),TRUE)
+
+  #consistency
+  expect_equal(sqrt(apply(X=res$modval*Conj(res$modval),FUN=mean,MARGIN=3,na.rm=T)),
+               res$coher) 
+
   #do some tests with vector data
   dat<-list(v1=matrix(rnorm(30),1,30),v2=rnorm(30),v3=matrix(rnorm(30),1,30),
             v4=rnorm(30),v5=matrix(rnorm(30),1,30))
@@ -82,10 +90,54 @@ test_that("results in right format",{
   expect_equal(dim(res$modval),dim(res$wts[[1]]))
   expect_equal(length(res$coher),length(res$timescales))
   expect_equal(is.complex(res$coher),TRUE)
+  
   expect_equal(Im(res$coher),rep(0,length(res$timescales)))
   expect_equal(all(Re(res$coher)>=0),TRUE)
+  expect_equal(all(Re(res$coher)<=1),TRUE)
+
+  #consistency
+  expect_equal(sqrt(apply(X=res$modval*Conj(res$modval),FUN=mean,MARGIN=3,na.rm=T)),
+               res$coher)
 })
 
-#test_that("test actual values",{
-#  
-#})
+test_that("test for correct format and actual values, one-predictor case",{
+  set.seed(101)
+  times<-1:30
+  dat<-list(v1=matrix(rnorm(300),10,30),v2=matrix(rnorm(300),10,30))
+  dat<-lapply(FUN=function(x){cleandat(x,times,1)$cdat},X=dat)
+  resp<-1
+  pred<-2
+  norm<-"powall"
+  res<-wlm(dat,times,resp,pred,norm)
+
+  #check for format
+  expect_equal(names(res),c("dat","times","norm","wts","timescales","coefs","modval","coher"))
+  expect_equal(dat,res$dat)
+  expect_equal(times,res$times)
+  expect_equal(norm,res$norm)
+  expect_equal(class(res$wts),"list")
+  expect_equal(dim(res$wts[[1]]),c(10,30,length(res$timescales)))
+  expect_equal(class(res$coefs),"data.frame")  
+  expect_equal(dim(res$coefs),c(length(res$timescales),1))
+  expect_equal(is.complex(res$coefs[1,1]),TRUE)
+  expect_equal(names(res$coefs),c('v2'))
+  expect_equal(is.complex(res$modval),TRUE)
+  expect_equal(dim(res$modval),dim(res$wts[[1]]))
+  expect_equal(length(res$coher),length(res$timescales))
+  expect_equal(is.complex(res$coher),TRUE)
+  
+  expect_equal(Im(res$coher),rep(0,length(res$timescales)))
+  expect_equal(all(Re(res$coher)>=0),TRUE)
+  expect_equal(all(Re(res$coher)<=1),TRUE)
+  
+  #consistency
+  expect_equal(sqrt(apply(X=res$modval*Conj(res$modval),FUN=mean,MARGIN=3,na.rm=T)),
+               res$coher)
+  expect_equal(apply(X=res$wts[[1]]*Conj(res$wts[[2]]),FUN=mean,MARGIN=3,na.rm=T),res$coefs[[1]])
+  
+  #now check for correct values by comparing to coherence
+  cohres<-coh(dat[[1]],dat[[2]],times,norm) 
+  expect_equal(res$coher,cohres$coher*Conj(res$coefs[[1]])/Mod(res$coefs[[1]]))
+})
+
+#still need a more real example
