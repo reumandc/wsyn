@@ -7,7 +7,7 @@
 #' @export
 set_times.wt<-function(obj,newval)
 {
-  stop("Error in set_times: times scould not be altered for a wt object")
+  stop("Error in set_times: times should not be altered for a wt object")
 }
 
 #' @export

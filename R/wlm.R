@@ -149,6 +149,6 @@ wlm<-function(dat,times,resp,pred,norm,scale.min=2,scale.max.input=NULL,sigma=1.
   if (wasvect){dat<-lapply(FUN=as.vector,X=dat)}
   result<-list(dat=dat,times=times,norm=norm,wts=wts,timescales=timescales,
                coefs=coefs,modval=modval,coher=coher)
-  class(result)<-c("coh","list")
+  class(result)<-c("wlm","list")
   return(result)    
 }

@@ -25,9 +25,24 @@ DONE plotmag
 DONE plotrank
 DONE plotphase
 DONE avgphase
-vignette - make sure to cover all these new functions
-12) design phase for wavelet linear models
+DONE vignette - make sure to cover all these new functions
+12) DONE design phase for wavelet linear models
 13) to do for wavelet linear models:
+wlm and tests - done except need one more test for a realistic case 
+DONE wlm set and get methods 
+wlmtest generator function and accompanying wlmfit internal, and tests
+wlmtest methods, and tests thereof
+plotmag method for wlmtest and tests - docs to be combined with plotmag.coh
+plotrank method for wlmtest and tests - docs to be combined with plotrank.coh
+tests for addranks for wlmtest objects
+bandtest for wlmtest objects, and tests - docs combned with coh method
+predsync and tests
+power function for tts class and tests
+modsync and tests
+propexpl and tests - proportion of synchrony explained as a function of timescale and related quantities
+looscore and tests
+locassoc tester function and tests
+examining if phases of coefficients are consistent with predictor/response phases - do this later, together with functionality for plotting phases of various things (I have left a lot of phase plot functions out)
 
 12) everything you need for deer
 13) synmat for kelp and Jon's bird stuff

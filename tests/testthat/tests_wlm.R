@@ -45,6 +45,7 @@ test_that("results in right format, and consistency",{
   res<-wlm(dat,times,resp,pred,norm)
   
   #format
+  expect_equal(class(res),c("wlm","list"))
   expect_equal(names(res),c("dat","times","norm","wts","timescales","coefs","modval","coher"))
   expect_equal(dat[c(2,1,3,4)],res$dat)
   expect_equal(times,res$times)
@@ -74,6 +75,7 @@ test_that("results in right format, and consistency",{
   dat<-lapply(FUN=function(x){cleandat(x,times,1)$cdat},X=dat)
   res<-wlm(dat,times,resp,pred,norm)
   
+  expect_equal(class(res),c("wlm","list"))
   expect_equal(lapply(X=dat[c(2,1,3,4)],FUN=as.vector),res$dat)
   expect_equal(names(res),c("dat","times","norm","wts","timescales","coefs","modval","coher"))
   expect_equal(times,res$times)
@@ -111,6 +113,7 @@ test_that("test for correct format and actual values, one-predictor case",{
   res<-wlm(dat,times,resp,pred,norm)
 
   #check for format
+  expect_equal(class(res),c("wlm","list"))
   expect_equal(names(res),c("dat","times","norm","wts","timescales","coefs","modval","coher"))
   expect_equal(dat,res$dat)
   expect_equal(times,res$times)
@@ -140,4 +143,4 @@ test_that("test for correct format and actual values, one-predictor case",{
   expect_equal(res$coher,cohres$coher*Conj(res$coefs[[1]])/Mod(res$coefs[[1]]))
 })
 
-#still need a more real example
+#***DAN: still need a more real example
