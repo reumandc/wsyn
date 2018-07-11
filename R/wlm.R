@@ -18,6 +18,10 @@
 #' \item{dat}{The input data list, but reordered and subsetted so the response is first and only used predictors are included}
 #' \item{times}{The times associated with the data}
 #' \item{norm}{The input}
+#' \item{scale.min}{The input}
+#' \item{scale.max.input}{The input}
+#' \item{sigma}{The input}
+#' \item{f0}{The input}
 #' \item{wts}{List of transforms, normalized as specified in \code{norm}. Same length as the output \code{dat}, each entry a locations x time x timescales array of transforms.}
 #' \item{timescales}{The timescales associated with the wavelet transforms of the data}
 #' \item{coefs}{A list (data frame, actually) of complex vectors, each of length the same 
@@ -109,46 +113,18 @@ wlm<-function(dat,times,resp,pred,norm,scale.min=2,scale.max.input=NULL,sigma=1.
   timescales<-wts[[1]]$timescales
   wts<-lapply(X=wts,FUN=function(x){normforcoh(x$wavarray,norm)})
   
-  #**do the fitting, getting coefs 
-  #wts[[i]] is locs by times by timescales
-  N<-dim(dat[[1]])[1] #number of locations
-  T<-dim(dat[[1]])[2] #length of time series
-  V<-length(dat)-1 #number of predictor variables
-  coefs<-as.data.frame(matrix(NA*numeric(1),length(timescales),V))
+  #**do the fitting by call to the internal wlmfit, getting coefs, modval, coher
+  h<-wlmfit(wts,norm)
+  coefs<-h$coefs
   names(coefs)<-names(dat)[2:length(dat)]
-  X<-matrix(complex(real=NA,imaginary=NA),N*T,V)
-  for (tscounter in 1:length(timescales))
-  {
-    #make the design matrix
-    for (vcounter in 1:V)
-    {
-      X[,vcounter]<-as.vector(wts[[vcounter+1]][,,tscounter])
-    }
-    
-    #make the response variable
-    y<-as.vector(wts[[1]][,,tscounter])
-      
-    #get rid of non-finite entries and do the qr.solve call
-    inds<-which(is.finite(y))
-    tsres<-qr.solve(X[inds,],y[inds])
-    
-    #store the result in the desired format
-    coefs[tscounter,]<-tsres
-  }
-  
-  #**get coher, the coherence of the model and the response
-  #wts[[i]] is locs by times by timescales
-  modval<-0*wts[[1]] #holder for the model, right hand side of regression equation
-  for (vcounter in 1:V)
-  {
-    modval<-modval+wts[[vcounter+1]]*array(rep(coefs[,vcounter],each=N*T),dim=dim(wts[[1]]))
-  }
-  coher<-apply(X=wts[[1]]*Conj(normforcoh(modval,norm)),FUN=mean,MARGIN=3,na.rm=T)
-  
+
   #**prepare result  
   if (wasvect){dat<-lapply(FUN=as.vector,X=dat)}
-  result<-list(dat=dat,times=times,norm=norm,wts=wts,timescales=timescales,
-               coefs=coefs,modval=modval,coher=coher)
+  result<-list(dat=dat,times=times,norm=norm,
+               scale.min=scale.min,scale.max.input=scale.max.input,
+               sigma=sigma,f0=f0,
+               wts=wts,timescales=timescales,
+               coefs=coefs,modval=h$modval,coher=h$coher)
   class(result)<-c("wlm","list")
   return(result)    
 }

@@ -46,7 +46,9 @@ test_that("results in right format, and consistency",{
   
   #format
   expect_equal(class(res),c("wlm","list"))
-  expect_equal(names(res),c("dat","times","norm","wts","timescales","coefs","modval","coher"))
+  expect_equal(names(res),c("dat","times","norm","scale.min",
+                            "scale.max.input","sigma","f0","wts","timescales",
+                            "coefs","modval","coher"))
   expect_equal(dat[c(2,1,3,4)],res$dat)
   expect_equal(times,res$times)
   expect_equal(norm,res$norm)
@@ -77,7 +79,9 @@ test_that("results in right format, and consistency",{
   
   expect_equal(class(res),c("wlm","list"))
   expect_equal(lapply(X=dat[c(2,1,3,4)],FUN=as.vector),res$dat)
-  expect_equal(names(res),c("dat","times","norm","wts","timescales","coefs","modval","coher"))
+  expect_equal(names(res),c("dat","times","norm","scale.min",
+                            "scale.max.input","sigma","f0","wts","timescales",
+                            "coefs","modval","coher"))
   expect_equal(times,res$times)
   expect_equal(norm,res$norm)
   expect_equal(class(res$wts),"list")
@@ -114,7 +118,9 @@ test_that("test for correct format and actual values, one-predictor case",{
 
   #check for format
   expect_equal(class(res),c("wlm","list"))
-  expect_equal(names(res),c("dat","times","norm","wts","timescales","coefs","modval","coher"))
+  expect_equal(names(res),c("dat","times","norm","scale.min",
+                            "scale.max.input","sigma","f0","wts","timescales",
+                            "coefs","modval","coher"))
   expect_equal(dat,res$dat)
   expect_equal(times,res$times)
   expect_equal(norm,res$norm)
