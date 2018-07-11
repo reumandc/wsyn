@@ -32,7 +32,7 @@
 #' of \code{dati} is denoted \eqn{W_{i,n,\sigma}(t)}, then the coherence is the 
 #' average, over all 
 #' locations \eqn{n} and times \eqn{t} for which wavelet transforms are 
-#' avaiable, of the quantity 
+#' available, of the quantity 
 #' \eqn{w_{1,n,\sigma}(t)w_{2,n,\sigma}(t)^{*}}, where the \eqn{*} represents 
 #' complex conjugation and
 #' \eqn{w_{i,n,\sigma}(t)} is a normalization of the wavelet 
@@ -42,7 +42,7 @@
 #' \eqn{w_{i,n,\sigma}(t)=W_{i,n,\sigma}(t)/|W_{i,n,\sigma}(t)|},
 #' which gives the wavelet phase coherence, or the spatial wavelet phase coherence if \eqn{N>1}. 
 #' If \code{norm} is "\code{powall}" then the normalization is that descibed in the "Wavelet 
-#' mean field " section of the Methods of Sheppard et al. (2016), giving the version of the 
+#' mean field" section of the Methods of Sheppard et al. (2016), giving the version of the 
 #' coherence that was there called simply the wavelet coherence, or the spatial wavelet 
 #' coherence if \eqn{N>1}. If \code{norm} is "\code{powind}", 
 #' then \eqn{w_{i,n,\sigma}(t)} is obtained
@@ -60,8 +60,9 @@
 #' datasets surrogates are computed on (\code{dat1}, \code{dat2}, or both) is determined by 
 #' \code{sigmethod}. Synchrony-preserving surrogates are used. A variety of 
 #' statements of significance (or lack thereof) can be made
-#' by comparing \code{signif$coher} with \code{signif$scoher} (see the \code{plot} method
-#' for the \code{coh} class and the function \code{bandtest}). If \code{sigmethod} is 
+#' by comparing \code{signif$coher} with \code{signif$scoher} (see the \code{plotmag}, 
+#' \code{plotrank}, and \code{bandtest} methods
+#' for the \code{coh} class). If \code{sigmethod} is 
 #' "\code{fast}", the fast algorithm of Sheppard et al. (2017) is used. In that case
 #' \code{signif$coher} can be compared to \code{signif$scoher} to make significance 
 #' statements about the coherence in exactly the same way, but \code{signif$coher} will no
@@ -73,9 +74,10 @@
 #' so if \code{norm} is "\code{phase}" and \code{sigmethod} is "\code{fast}", the function
 #' throws an error.
 #' 
-#' The slot \code{bandp} is empty on a initial call to \code{coh}. It is made to hold 
-#' aggregate significance results over any timescale band of choice. It is filled in by
-#' the function \code{bandtest}. See the help files for that function.
+#' The slots \code{ranks} and \code{bandp} are empty on an initial call to \code{coh}. 
+#' They are made to compute and hold 
+#' aggregate significance results over any timescale band of choice. These are filled in
+#' when needed by other methods, see \code{plotranks} and \code{bandtest}. 
 #' 
 #' Regardless of what the variables represent, the normalized transform of dat1 is multiplied 
 #' by the conjugate of the normalized transform of dat2. Thus, positive a phase of the coherence 

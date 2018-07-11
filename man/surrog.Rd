@@ -12,7 +12,7 @@ surrog(dat, nsurrogs, surrtype, syncpres)
 
 \item{nsurrogs}{The number of surrogates to produce}
 
-\item{surrtype}{Either "fft" (for Fourier surrogates) or "aaft" (for amplitude adjusted Foutier surrogates). Fourier surrogates are appropriate for time series with normal marginals; otherwise consider aaft surrogates.}
+\item{surrtype}{Either "fft" (for Fourier surrogates) or "aaft" (for amplitude adjusted Fourier surrogates). Fourier surrogates are appropriate for time series with normal marginals; otherwise consider aaft surrogates.}
 
 \item{syncpres}{Logical. TRUE for "synchrony preserving" surrogates (same phase randomizations used for all time series). FALSE leads to independent phase randomizations for all time series.}
 }

@@ -8,6 +8,7 @@
 #' dropped to form the simpler, nested model. The first variable in \code{wlm$dat}, 
 #' which is the response, is not allowed here.
 #' @param sigmethod Method for significance testing. One of "\code{fft}", "\code{aaft}", "\code{fast}". See details.
+#' @param nrand The number of randomizations to do for significance
 #' 
 #' @return \code{wlmtest} returns an object of class \code{wlmtest}. Slots are:
 #' \item{wlm}{The input}
@@ -20,7 +21,32 @@
 #' timescale bands. Empty on an initial call to \code{coh}, filled in by the function 
 #' \code{bandtest}. See details.}
 #' 
-#' @details 
+#' @details The slot \code{signif} provides the core information on significance. 
+#' If \code{sigmethod} is not "\code{fast}", then \code{signif$coher} is the same as 
+#' \code{wlm$coher}, and \code{signif$scoher} is a matrix of dimensions \code{nrand} by 
+#' \code{length(signif$coher)} with rows equal to coherences between refitted models and the 
+#' response-variable transforms, for datasets where the variables specified in \code{drop} have
+#' been replaced by surrogates. Normalization as specified in \code{norm} is used. The type 
+#' of surrogate used (Fourier surrogates or amplitude adjusted Fourier surrogates, see 
+#' \code{surrog}) is determined by \code{sigmethod} ("\code{fft}" or "\code{aaft}"). 
+#' Synchrony-preserving surrogates are used. A variety of statements of significance (or lack 
+#' thereof) can be made by comparing \code{signif$coher} with \code{signif$scoher} (see the 
+#' \code{plotmag}, \code{plotrank}, and \code{bandtest} methods
+#' for the \code{wlmtest} class). If \code{sigmethod} is 
+#' "\code{fast}", a fast algorithm of Lawrence Sheppard is used which is a generalization 
+#' to wavelet linear models of the fast algorithm for coherence described in Sheppard et al (2017). 
+#' In that case
+#' \code{signif$coher} can be compared to \code{signif$scoher} to make significance 
+#' statements about the coherence in exactly the same way, but \code{signif$coher} will no
+#' longer precisely equal \code{wlm$coher}, and \code{wlm$coher} should not be compared 
+#' directly to \code{signif$scoher}. Statements about significance of the coherence 
+#' should be made using \code{signif$coher} and \code{signif$scoher}, whereas \code{wlm$coher}
+#' should be used whenever the actual value of the coherence is needed. 
+#' 
+#' The slots \code{ranks} and \code{bandp} are empty on an initial call to \code{coh}. 
+#' They are made to compute and hold 
+#' aggregate significance results over any timescale band of choice. These are filled in
+#' when needed by other methods, see \code{plotranks} and \code{bandtest}. 
 #' 
 #' @author Thomas Anderson, \email{anderstl@@gmail.com}, Jon Walter, \email{jaw3es@@virginia.edu}; Lawrence 
 #' Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}
@@ -32,11 +58,95 @@
 #' Journal, Nonlinear and Biomedical Physics, 5, 1. DOI: 10.1051/epjnbp/2017000
 #' Sheppard, LW et al. (2018) Synchrony is more than its top-down and climatic parts: interacting 
 #' Moran effects on phytoplankton in British seas, In review.
-
+#'
 #' @examples
 #' #Not written yet but need some
 #' 
 #' @export
 
-
+wlmtest<-function(wlm,drop,sigmethod,nrand=1000)
+{
+  #**error checking
+  if (wlm$norm!="powall")
+  { #we can assume norm is powall, powind or none, since it is in a wlm object
+    #this error check will be removed when the other options are implemented
+    stop("Error in wlmtest: this value of norm not implemented yet")
+  }
+  if (!(all(drop %in% 2:length(wlm$dat)) || 
+        all(drop %in% names(wlm$dat)[2:length(wlm$dat)])))
+  {
+    stop("Error in wlmtest: drop must contain names or indices of predictors used in fitting wlm")
+  }
+  if (length(unique(drop))!=length(drop))
+  {
+    stop("Error in wlmtest: drop must not have repeat entries")
+  }
+  if (!(sigmethod %in% c("fft","aaft","fast")))
+  {
+    stop("Error in wlmtest: bad value for sigmethod")
+  }
+  
+  #**convert drop from names to indices if necessary
+  origdrop<-drop
+  if (all(drop %in% names(wlm$dat)[2:length(wlm$dat)]))
+  {
+    drop<-which(names(wlm$dat)[2:length(wlm$dat)] %in% drop)+1
+  }
+  
+  #**fast algorithm
+  if (sigmethod=="fast")
+  {
+    stop("Error in wlmtest: fast algorithm not implemented yet")
+    
+    #***DAN: fill in
+    
+    #prepare result  
+    result<-list(wlm=wlm,drop=origdrop,signif=signif,ranks=NA,bandp=NA)
+    class(result)<-c("wlmtest","list")
+    return(result)    
+  }
+  
+  #**slow algorithm
+  
+  #*get joint surrogates for dropped variables
+  cddat<-wlm$dat[[drop[1]]]
+  if (length(drop)>1)
+  {
+    for (counter in 2:length(drop))
+    { #put the data together to get joint surrogates
+      cddat<-rbind(cddat,wlm$dat[[drop[counter]]])
+    } 
+  } 
+  scddat<-surrog(cddat,nrand,sigmethod,TRUE)
+  
+  #*do transforms
+  wscddat<-lapply(FUN=warray,X=scddat,times=wlm$times,
+                  scale.min=wlm$scale.min,scale.max.input=wlm$scale.max.input,
+                  sigma=wlm$sigma,f0=wlm$f0)
+  
+  #*refit for each surrogate, keeping coherences
+  coher<-wlm$coher
+  scoher<-matrix(NA*complex(real=length(coher)*nrand,
+                            imaginary=length(coher)*nrand),
+                 nrand,length(coher))
+  wts<-wlm$wts
+  for (scounter in 1:nrand)
+  { 
+    #replace the appropriate entries of wts by surrogate transforms
+    for (dcounter in 1:length(drop))
+    {
+      st<-(dcouter-1)*dim(dat[[1]])[1]+1
+      en<-dcounter*dim(dat[[1]])[1]
+      wts[[dcounter]]<-normforcoh(wscddat[[scounter]][st:en,,],wlm$norm)
+    }
+    #refit and just keep the coher result
+    scoher[scounter,]<-wlmfit(wts,wlm$norm)$coher 
+  }
+  signif<-list(coher=coher,scoher=scoher)
+  
+  #prepare result  
+  result<-list(wlm=wlm,drop=origdrop,signif=signif,ranks=NA,bandp=NA)
+  class(result)<-c("wlmtest","list")
+  return(result)    
+}
 

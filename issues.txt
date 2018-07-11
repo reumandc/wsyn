@@ -30,7 +30,7 @@ DONE vignette - make sure to cover all these new functions
 13) to do for wavelet linear models:
 wlm and tests - done except need one more test for a realistic case 
 DONE wlm set and get methods 
-wlmtest generator function and accompanying wlmfit internal, and tests
+wlmtest generator function and accompanying wlmfit internal, and tests - wrote the functions but have not tested yet
 wlmtest methods, and tests thereof
 plotmag method for wlmtest and tests - docs to be combined with plotmag.coh
 plotrank method for wlmtest and tests - docs to be combined with plotrank.coh
@@ -136,7 +136,7 @@ _____
 
 Next step in design:
 
-wlm class:
+DONE wlm class:
 slots:
 dat - a list of matrices, all the same dimensions, representing the data, the first is the response
 times - times of measurement
@@ -146,7 +146,7 @@ timescales -
 coefs - list of complex vectors, each of length the same as timescales. these are the model coefs
 coher - appropriately normalized version of coherence of the  model and the response transforms, as specified in norm argument to geneator function, but only powall works for now
 
-wlm generator function:
+DONE wlm generator function:
 Args:
 dat - a list of matrices representing the data (or in the case of 1 location, a list of vectors)
 times - times of measurement
@@ -162,7 +162,7 @@ What it does:
 -pass wts to a fast internal fitting function to get the other slot values
 -put it all together into a list and set the class attribute
 
-wlm_fit (an internal function, no error checking):
+DONE wlm_fit (an internal function, no error checking):
 Args: 
 wts - the list of normalized transforms, response variable first
 norm - possibly need the normalization used, either powall, none, or powind; everything but powall throws and error for now
