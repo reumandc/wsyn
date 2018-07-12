@@ -32,6 +32,7 @@ wlm and tests - done except need one more test for a realistic case, but I wrote
 DONE wlm set and get methods 
 wlmtest generator function and accompanying wlmfit internal, and tests - wrote the functions but have not tested yet, also have not yet implemented the fast algorithm
 DONE do you want to add slots for scale.min, scale.max.input, sigma, and f0 to wt, wmf, wpmf, and coh methods? You would also need set and get methods for these slots for each class. Or maybe stick them together into a list called wopts which makes a single slot, and then you would have to make a similar change to wlm.
+DAN: check the vignette for what effects the above change would have had, both on runs and on descriptions
 wlmtest methods, and tests thereof
 plotmag method for wlmtest and tests - docs to be combined with plotmag.coh
 plotrank method for wlmtest and tests - docs to be combined with plotrank.coh
