@@ -7,6 +7,7 @@
 \alias{plotmag.wmf}
 \alias{plotmag.wpmf}
 \alias{plotmag.coh}
+\alias{plotmag.wlmtest}
 \alias{plotmag.default}
 \title{For plotting the magnitude of values in \code{tts} and \code{coh} objects}
 \usage{
@@ -27,6 +28,9 @@ plotmag(object, ...)
 
 \method{plotmag}{coh}(object, sigthresh = c(0.95, 0.99), bandprows = "all",
   filename = NA)
+
+\method{plotmag}{wlmtest}(object, sigthresh = c(0.95, 0.99),
+  bandprows = "all", filename = NA)
 
 \method{plotmag}{default}(object, ...)
 }
