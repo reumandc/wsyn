@@ -131,7 +131,7 @@ class(wtres)
 names(wtres)
 ```
 
-Methods `get_times`, `get_timescales`, `get_values`, and `get_dat` extract the slots. 
+Methods `get_times`, `get_timescales`, `get_values`, `get_wtopt`, and `get_dat` extract the slots. 
 Set methods also exist, but these just throw an error since setting individual slots of
 a `wt` object will break the relationship between the slots.
 There is a `plotmag` method for the `tts` class that plots the magnitude of the transform

@@ -25,6 +25,7 @@ wt(t.series, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05,
 \code{wt} returns an object of class \code{wt}.  Slots are: 
 \item{values}{A matrix of complex numbers, of dimensions \code{length(t.series)} by the number of timescales. Entries not considered reliable (longer timescales, near the edges of the time span) are set to NA.}
 \item{times}{The time steps specified (e.g. years)}
+\item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 \item{timescales}{The timescales (1/frequency) computed for the wavelet transform}
 \item{dat}{the data vector from which the transform was computed}
 }

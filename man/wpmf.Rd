@@ -31,6 +31,7 @@ wpmf(dat, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05,
 \item{timescales}{The timescales associated with the \code{wpmf}}
 \item{signif}{A list with information from the significance testing. Format depends on \code{sigmethod} (see details).}
 \item{dat}{The data matrix (locations by time) from which the \code{wpmf} was computed}
+\item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 }
 \description{
 Computes the wavelet phasor mean field from a matrix of spatiotemporal data. Also the

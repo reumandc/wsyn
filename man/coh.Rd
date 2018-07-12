@@ -34,6 +34,7 @@ coh(dat1, dat2, times, norm, sigmethod = "none", nrand = 1000,
 \item{times}{The times associated with the data}
 \item{sigmethod}{The method for significance testing, as inputted.} 
 \item{norm}{The normalization of the wavelet transforms that will be used in computing the coherence. Different values result in different versions of the coherence. One of "none", "phase", "powall", "powind". See details.}
+\item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 \item{timescales}{The timescales associated with the coherence}
 \item{coher}{The complex magnitude of this quantity is the coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
 \item{signif}{A list with information from the significance testing. Elements are \code{coher} and \code{scoher}. See details.}

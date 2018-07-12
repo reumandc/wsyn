@@ -73,7 +73,9 @@ bandtest.coh<-function(object,band)
   
   #get the p-value
   x<-mean(object$ranks$coher[timescales>=band[1] & timescales<=band[2]]) #mean rank across timescales of interest, data
-  sx<-apply(FUN=mean,X=object$ranks$scoher[,timescales>=band[1] & timescales<=band[2],drop=F],MARGIN=1) #mean ranks, surrogates
+  sx<-apply(FUN=mean,
+            X=object$ranks$scoher[,timescales>=band[1] & timescales<=band[2],drop=FALSE],
+            MARGIN=1) #mean ranks, surrogates
   pval<-(sum(sx>=x)+1)/(length(sx)+1)
   
   #get the average phase
@@ -89,6 +91,56 @@ bandtest.coh<-function(object,band)
   }else
   {
     object$bandp[dim(object$bandp)[1]+1,]<-c(band,pval,mnphs)
+    return(object)
+  }
+}
+
+#' @rdname bandtest
+#' @export
+bandtest.wlmtest<-function(object,band)
+{
+  #error checking
+  if (!is.numeric(band))
+  {
+    stop("Error in bandtest.wlmtest: band must be numeric")
+  }
+  if (!is.vector(band))
+  {
+    stop("Error in bandtest.wlmtest: band must be a length-two numeric vector")
+  }
+  if (length(band)!=2)
+  {
+    stop("Error in bandtest.wlmtest: band must be a length-two numeric vector")
+  }
+  band<-sort(band)
+  timescales<-get_timescales(object$wlmobj)
+  if (band[1]>max(timescales) || band[2]<min(timescales))
+  {
+    stop("Error in bandtest.wlmtest: band must include some of the timescales")
+  }
+  
+  #add ranks if necessary
+  if (any(is.na(object$ranks)))
+  {
+    object<-addranks(object)
+  }
+  
+  #get the p-value
+  x<-mean(object$ranks$coher[timescales>=band[1] & timescales<=band[2]]) #mean rank across timescales of interest, data
+  sx<-apply(FUN=mean,
+            X=object$ranks$scoher[,timescales>=band[1] & timescales<=band[2],drop=FALSE],
+            MARGIN=1) #mean ranks, surrogates
+  pval<-(sum(sx>=x)+1)/(length(sx)+1)
+  
+  #form the result and return it
+  if (any(is.na(object$bandp)))
+  {
+    bandp<-data.frame(ts_low_bd=band[1],ts_hi_bd=band[2],p_val=pval)    
+    object$bandp<-bandp
+    return(object)
+  }else
+  {
+    object$bandp[dim(object$bandp)[1]+1,]<-c(band,pval)
     return(object)
   }
 }

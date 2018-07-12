@@ -120,9 +120,13 @@ wlmtest<-function(wlmobj,drop,sigmethod,nrand=1000)
   scddat<-surrog(cddat,nrand,sigmethod,TRUE)
   
   #*do transforms
-  wscddat<-lapply(FUN=warray,X=scddat,times=wlmobj$times,
-                  scale.min=wlmobj$scale.min,scale.max.input=wlmobj$scale.max.input,
-                  sigma=wlmobj$sigma,f0=wlmobj$f0)
+  wscddat<-lapply(FUN=function(x)
+                        {
+                          warray(x,times=wlmobj$times,
+                                 scale.min=wlmobj$wtopt$scale.min,
+                                 scale.max.input=wlmobj$wtopt$scale.max.input,
+                                 sigma=wlmobj$wtopt$sigma,f0=wlmobj$wtopt$f0)$wavarray
+                        },X=scddat)
   
   #*refit for each surrogate, keeping coherences
   coher<-wlmobj$coher
@@ -135,9 +139,9 @@ wlmtest<-function(wlmobj,drop,sigmethod,nrand=1000)
     #replace the appropriate entries of wts by surrogate transforms
     for (dcounter in 1:length(drop))
     {
-      st<-(dcouter-1)*dim(dat[[1]])[1]+1
-      en<-dcounter*dim(dat[[1]])[1]
-      wts[[dcounter]]<-normforcoh(wscddat[[scounter]][st:en,,],wlmobj$norm)
+      st<-(dcounter-1)*dim(wlmobj$dat[[1]])[1]+1
+      en<-dcounter*dim(wlmobj$dat[[1]])[1]
+      wts[[drop[dcounter]]]<-normforcoh(wscddat[[scounter]][st:en,,],wlmobj$norm)
     }
     #refit and just keep the coher result
     scoher[scounter,]<-wlmfit(wts,wlmobj$norm)$coher 

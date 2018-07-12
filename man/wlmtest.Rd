@@ -4,13 +4,13 @@
 \alias{wlmtest}
 \title{Statistical comparison of wavelet linear models}
 \usage{
-wlmtest(wlm, drop, sigmethod, nrand = 1000)
+wlmtest(wlmobj, drop, sigmethod, nrand = 1000)
 }
 \arguments{
-\item{wlm}{A \code{wlm} object}
+\item{wlmobj}{A \code{wlm} object}
 
-\item{drop}{Either names or indices of variables in \code{wlm$dat} that are being 
-dropped to form the simpler, nested model. The first variable in \code{wlm$dat}, 
+\item{drop}{Either names or indices of variables in \code{wlmobj$dat} that are being 
+dropped to form the simpler, nested model. The first variable in \code{wlmobj$dat}, 
 which is the response, is not allowed here.}
 
 \item{sigmethod}{Method for significance testing. One of "\code{fft}", "\code{aaft}", "\code{fast}". See details.}
@@ -19,7 +19,7 @@ which is the response, is not allowed here.}
 }
 \value{
 \code{wlmtest} returns an object of class \code{wlmtest}. Slots are:
-\item{wlm}{The input}
+\item{wlmobj}{The input}
 \item{drop}{The input}
 \item{signif}{A list with information from the significance testing. Elements are 
 \code{coher} and \code{scoher}. See details.}
@@ -36,7 +36,7 @@ the \code{wlmtest} class.
 \details{
 The slot \code{signif} provides the core information on significance. 
 If \code{sigmethod} is not "\code{fast}", then \code{signif$coher} is the same as 
-\code{wlm$coher}, and \code{signif$scoher} is a matrix of dimensions \code{nrand} by 
+\code{wlmobj$coher}, and \code{signif$scoher} is a matrix of dimensions \code{nrand} by 
 \code{length(signif$coher)} with rows equal to coherences between refitted models and the 
 response-variable transforms, for datasets where the variables specified in \code{drop} have
 been replaced by surrogates. Normalization as specified in \code{norm} is used. The type 
@@ -51,9 +51,9 @@ to wavelet linear models of the fast algorithm for coherence described in Sheppa
 In that case
 \code{signif$coher} can be compared to \code{signif$scoher} to make significance 
 statements about the coherence in exactly the same way, but \code{signif$coher} will no
-longer precisely equal \code{wlm$coher}, and \code{wlm$coher} should not be compared 
+longer precisely equal \code{wlmobj$coher}, and \code{wlmobj$coher} should not be compared 
 directly to \code{signif$scoher}. Statements about significance of the coherence 
-should be made using \code{signif$coher} and \code{signif$scoher}, whereas \code{wlm$coher}
+should be made using \code{signif$coher} and \code{signif$scoher}, whereas \code{wlmobj$coher}
 should be used whenever the actual value of the coherence is needed. 
 
 The slots \code{ranks} and \code{bandp} are empty on an initial call to \code{coh}. 

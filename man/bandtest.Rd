@@ -4,6 +4,7 @@
 \alias{bandtest}
 \alias{bandtest.default}
 \alias{bandtest.coh}
+\alias{bandtest.wlmtest}
 \title{Aggregate significance across a timescale band}
 \usage{
 bandtest(object, ...)
@@ -11,6 +12,8 @@ bandtest(object, ...)
 \method{bandtest}{default}(object, ...)
 
 \method{bandtest}{coh}(object, band)
+
+\method{bandtest}{wlmtest}(object, band)
 }
 \arguments{
 \item{band}{A length-two numeric vector indicating a timescale band}
