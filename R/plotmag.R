@@ -275,7 +275,104 @@ plotmag.coh<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA)
   drg<-diff(rg)
   rg[2]<-rg[2]+dim(bandp)[1]*prc*drg
   plot(log(1/timescales),Mod(coher),type="l",lty="solid",xaxt="n",col="red",
-       ylim=rg,xlab="Timescales",ylab="|Coherence|")
+       ylim=rg,xlab="Timescales",ylab="Coherence")
+  xlocs<-c(min(timescales),pretty(timescales,n=8))
+  graphics::axis(side=1,at=log(1/xlocs),labels=xlocs) 
+  lines(log(1/timescales),Mod(signif$coher),type="l",lty="dashed",col="red")
+  for (counter in 1:dim(qs)[1])
+  {
+    lines(log(1/timescales),qs[counter,])
+  }
+  if (bandprows!="all")
+  {
+    bandp<-bandp[bandprows,]
+  }
+  for (counter in 1:dim(bandp)[1])
+  {
+    b1<-unname(bandp[counter,1])
+    b2<-unname(bandp[counter,2])
+    p<-unname(bandp[counter,3])
+    htl<-rg[2]-(counter-1/4-.1)*prc*drg
+    wwd<-.07*prc*drg
+    lines(log(1/c(b1,b2)),c(htl,htl))
+    lines(log(1/c(b1,b1)),c(htl-wwd,htl+wwd))
+    lines(log(1/c(b2,b2)),c(htl-wwd,htl+wwd))
+    htt<-rg[2]-(counter-1.2/2-.1)*prc*drg
+    text(mean(log(1/c(b1,b2))),htt,paste0("p=",round(p,4)),cex=0.66)
+  }
+  
+  if (!is.na(filename))
+  {
+    grDevices::dev.off()
+  }
+  return(NULL)
+}
+
+#' @rdname plotmag
+#' @export
+plotmag.wlmtest<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA)
+{
+  #extract the needed slots
+  timescales<-get_timescales(get_wlmobj(object))
+  coher<-get_coher(get_wlmobj(object))
+  signif<-get_signif(object)
+  bandp<-get_bandp(object)
+  
+  #error catch
+  if (any(sigthresh>=1 | sigthresh<=0))
+  {
+    stop("Error in plotmag.wlmtest: inappropriate value for sigthresh")
+  }
+  if (bandprows!="all" && !any(is.na(bandp)))
+  {
+    if (!is.numeric(bandprows))
+    {
+      stop("Error in plotmag.wlmtest: non-numeric value for bandprows")
+    }
+    if (!all(bandprows %in% 1:dim(bandp)[1]))
+    {
+      stop("Error in plotmag.wlmtest: bandprows must contain row numbers for bandp")
+    }
+  }
+  
+  if (!is.na(filename))
+  {
+    grDevices::pdf(paste0(filename,".pdf"))
+  }
+  
+  #get quantiles for surrogate coherences
+  qs<-apply(X=Mod(signif$scoher),FUN=stats::quantile,MARGIN=2,prob=sigthresh)
+  if (length(sigthresh)==1){qs<-matrix(qs,1,length(qs))}
+  
+  #if bandp is absent, just plot the lines, no p-values
+  if (any(is.na(bandp)))
+  { 
+    rg<-range(Mod(coher),Mod(signif$coher),qs,na.rm=T) 
+    plot(log(1/timescales),Mod(coher),type="l",lty="solid",xaxt="n",col="red",
+         ylim=rg,xlab="Timescales",ylab="Coherence")
+    xlocs<-c(min(timescales),pretty(timescales,n=8))
+    graphics::axis(side=1,at=log(1/xlocs),labels=xlocs) 
+    lines(log(1/timescales),Mod(signif$coher),type="l",lty="dashed",col="red")
+    for (counter in 1:dim(qs)[1])
+    {
+      lines(log(1/timescales),qs[counter,])
+    }
+    
+    if (!is.na(filename))
+    {
+      grDevices::dev.off()
+    }
+    return(NULL) 
+  } 
+  
+  #from here on is if signif and bandp are both present
+  
+  rg<-range(Mod(coher),Mod(signif$coher),qs,na.rm=T)
+  prc<-0.15
+  drg<-diff(rg)
+  rg[2]<-rg[2]+dim(bandp)[1]*prc*drg
+  plot(log(1/timescales),Mod(coher),type="l",lty="solid",xaxt="n",col="red",
+       ylim=rg,xlab="Timescales",ylab="Coherence")
   xlocs<-c(min(timescales),pretty(timescales,n=8))
   graphics::axis(side=1,at=log(1/xlocs),labels=xlocs) 
   lines(log(1/timescales),Mod(signif$coher),type="l",lty="dashed",col="red")
