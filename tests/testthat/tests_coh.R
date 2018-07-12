@@ -159,7 +159,7 @@ test_that("compare to a previous coherence example",{
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="c7f8a20f157b4ce8d882cd80dc102af7")   
+  expect_known_hash(res,hash="450faf518892489ffeea82c080957eb3")   
 })
 
 test_that("test for correct format of output, fast algorithm",{
@@ -372,7 +372,7 @@ test_that("compare to a previous coherence example, fast algorithm",{
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="42aed40ac387313abc06227f9032984c")   
+  expect_known_hash(res,hash="0ef1798f505be063611e59fcaeacdca6")   
   
   #now look at just the first time series to make sure things work
   #in that case
@@ -390,7 +390,7 @@ test_that("compare to a previous coherence example, fast algorithm",{
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="572086b835578caf96b68292d6b15c6a")  
+  expect_known_hash(res,hash="167f08dce962e5d072da033589f30131")  
 })
 
 test_that("compare to a previous coherence example, fast algorithm, norm equals none",{
@@ -437,7 +437,7 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="d174fec0baa7cff11e2f5f4f84caed0f")   
+  expect_known_hash(res,hash="c36cd8d1d749c9ebdafba1a48b508137")   
   
   #now look at just the first time series to make sure things work
   #in that case
@@ -455,7 +455,7 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="08e64e69a01928b6630e5dd9035a1280")  
+  expect_known_hash(res,hash="ba572f2b01b76fe2abcecf11311f7a62")  
 })
 
 test_that("compare to a previous coherence example, fast algorithm, norm equals powind",{
@@ -503,7 +503,7 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res1).
-  expect_known_hash(res1,hash="5bb92582eaa7da6367d81cd6cbc034e2")   
+  expect_known_hash(res1,hash="db8c3327f023802c4e272af3c895b44e")   
   
   #now look at just the first time series to make sure things work
   #in that case
@@ -521,7 +521,7 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res2).
-  expect_known_hash(res2,hash="2875ca19d652f7e12bef7c527f8e5600")  
+  expect_known_hash(res2,hash="127cfcb173a8cfa1ac9563522ca972b7")  
   
   #Now do a version like res1 but multiply the first time series (only) by 20.
   #Should give *exactly* the same result.
@@ -549,10 +549,11 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   expect_equal(res3[[5]],res1[[5]])   
   expect_equal(res3[[6]],res1[[6]])   
   expect_equal(res3[[7]],res1[[7]])   
-  expect_equal(res3[[8]]$coher,res1[[8]]$coher)   
-  expect_equal(res3[[8]]$scoher,res1[[8]]$scoher)   
-  expect_equal(res3[[9]],res1[[9]])   
+  expect_equal(res3[[8]],res1[[8]])   
+  expect_equal(res3[[9]]$coher,res1[[9]]$coher)   
+  expect_equal(res3[[9]]$scoher,res1[[9]]$scoher)   
   expect_equal(res3[[10]],res1[[10]])   
+  expect_equal(res3[[11]],res1[[11]])   
 })
 
 

@@ -19,6 +19,7 @@
 #' \item{timescales}{The timescales associated with the \code{wpmf}}
 #' \item{signif}{A list with information from the significance testing. Format depends on \code{sigmethod} (see details).}
 #' \item{dat}{The data matrix (locations by time) from which the \code{wpmf} was computed}
+#' \item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 #' 
 #' @details For \code{sigmethod} equal to \code{quick}, the empirical wpmf is compared to a distribution of 
 #' magnitudes of sums of random phaors, using the same number of phasors as there are time series. The \code{signif}
@@ -58,6 +59,10 @@ wpmf<-function(dat,times,scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1, si
       stop("Error in wpmf: inappropriate value for nrand")
     }
   }
+  
+  #for return
+  wtopt<-list(scale.min=scale.min,scale.max.input=scale.max.input,
+              sigma=sigma,f0=f0)
   
   #do all the transforms
   wavarray<-warray(dat, times, scale.min, scale.max.input, sigma, f0)
@@ -132,7 +137,7 @@ wpmf<-function(dat,times,scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1, si
   }
   
   #prepare result  
-  result<-list(values=wpmfres,times=times,timescales=timescales,dat=dat,signif=signif)
+  result<-list(values=wpmfres,times=times,timescales=timescales,signif=signif,dat=dat,wtopt=wtopt)
   class(result)<-c("wpmf","tts","list")
   return(result)
 }

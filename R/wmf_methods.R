@@ -28,12 +28,24 @@ set_dat.wmf<-function(obj,newval)
   stop("Error in set_dat: dat should not be altered for a wmf object")
 }
 
+#' @export
+set_wtopt.wmf<-function(obj,newval)
+{
+  stop("Error in set_wtopt: wtopt should not be altered for a wmf object")
+}
+
 #value getting - methods not needed except for dat, others inherited from tts
 
 #' @export
 get_dat.wmf<-function(obj)
 {
   return(obj$dat)
+}
+
+#' @export
+get_wtopt.wmf<-function(obj)
+{
+  return(obj$wtopt)
 }
 
 #This is based on an existing generic so not sure if this will work like this.

@@ -20,6 +20,7 @@
 #' \item{times}{The times associated with the data}
 #' \item{sigmethod}{The method for significance testing, as inputted.} 
 #' \item{norm}{The normalization of the wavelet transforms that will be used in computing the coherence. Different values result in different versions of the coherence. One of "none", "phase", "powall", "powind". See details.}
+#' \item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 #' \item{timescales}{The timescales associated with the coherence}
 #' \item{coher}{The complex magnitude of this quantity is the coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
 #' \item{signif}{A list with information from the significance testing. Elements are \code{coher} and \code{scoher}. See details.}
@@ -157,6 +158,10 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   #**compute coherence
   coher<-apply(X=W1*Conj(W2),FUN=mean,MARGIN=3,na.rm=T)
   
+  #**for return
+  wtopt<-list(scale.min=scale.min,scale.max.input=scale.max.input,
+              sigma=sigma,f0=f0)
+  
   #**now do the different cases for how significance is computed
   
   #*no significance requested by user - just return
@@ -165,7 +170,7 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
     #prepare result  
     if (wasvect1){dat1<-as.vector(dat1)}
     if (wasvect2){dat2<-as.vector(dat2)}
-    result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,norm=norm,
+    result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,norm=norm,wtopt=wtopt,
                  timescales=timescales,coher=coher,signif=NA,ranks=NA,bandp=NA)
     class(result)<-c("coh","list")
     return(result)    
@@ -330,7 +335,7 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
     #prepare result  
     if (wasvect1){dat1<-as.vector(dat1)}
     if (wasvect2){dat2<-as.vector(dat2)}
-    result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,norm=norm,
+    result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,norm=norm,wtopt=wtopt,
                  timescales=timescales,coher=coher,signif=signif,ranks=NA,bandp=NA)
     class(result)<-c("coh","list")
     return(result)    
@@ -383,7 +388,8 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   if (wasvect1){dat1<-as.vector(dat1)}
   if (wasvect2){dat2<-as.vector(dat2)}
   result<-list(dat1=dat1,dat2=dat2,times=times,sigmethod=sigmethod,
-               norm=norm,timescales=timescales,coher=coher,signif=signif,ranks=NA,bandp=NA)
+               norm=norm,wtopt=wtopt,timescales=timescales,coher=coher,
+               signif=signif,ranks=NA,bandp=NA)
   class(result)<-c("coh","list")
   return(result)    
 }

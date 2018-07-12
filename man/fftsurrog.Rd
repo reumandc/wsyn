@@ -2,7 +2,7 @@
 % Please edit documentation in R/fftsurrog.R
 \name{fftsurrog}
 \alias{fftsurrog}
-\title{Creates surrogate time series using Fourier surrogates}
+\title{Surrogate time series using Fourier surrogates}
 \usage{
 fftsurrog(dat, nsurrogs, syncpres)
 }
@@ -17,6 +17,9 @@ fftsurrog(dat, nsurrogs, syncpres)
 \code{fftsurrog} returns a list of nsurrogs surrogate datasets
 }
 \description{
+Creates surrogate time series using Fourier surrogates
+}
+\note{
 For internal use, no error checking
 }
 \examples{

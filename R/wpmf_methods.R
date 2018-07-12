@@ -58,6 +58,12 @@ set_signif.wpmf<-function(obj,newval)
   stop("Error in set_signif: signif should not be altered for a wpmf object")
 }
 
+#' @export
+set_wtopt.wpmf<-function(obj,newval)
+{
+  stop("Error in set_wtopt: wtopt should not be altered for a wpmf object")
+}
+
 #value getting - methods not needed except for dat, others inherited from tts
 
 #' @export
@@ -94,6 +100,12 @@ get_signif.default<-function(obj)
 get_signif.wpmf<-function(obj)
 {
   return(obj$signif)
+}
+
+#' @export
+get_wtopt.wpmf<-function(obj)
+{
+  return(obj$wtopt)
 }
 
 

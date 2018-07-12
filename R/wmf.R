@@ -17,6 +17,7 @@
 #' \item{times}{The time steps specified (e.g., years)}
 #' \item{timescales}{The timescales (1/frequency) computed for the wavelet transforms}
 #' \item{dat}{The data matrix (locations by time) from which the wmf was computed}
+#' \item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 #' 
 #' @note The wavelet mean field was developed by Lawrence Sheppard and Daniel Reuman. R code by Jonathan Walter.
 #' 
@@ -39,6 +40,10 @@ wmf<-function(dat, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f0 = 1)
   errcheck_stdat(times,dat,"wmf")
   errcheck_wavparam(scale.min,scale.max.input,sigma,f0,times,"wmf")
   
+  #for return
+  wtopt<-list(scale.min=scale.min,scale.max.input=scale.max.input,
+              sigma=sigma,f0=f0)
+  
   #do all the transforms
   wavarray<-warray(dat, times, scale.min, scale.max.input, sigma, f0)
   timescales<-wavarray$timescales
@@ -55,7 +60,7 @@ wmf<-function(dat, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f0 = 1)
   
   #prepare the result
   errcheck_tts(times,timescales,wmf,"wmf")
-  result<-list(values=wmf,times=times,timescales=timescales,dat=dat)
+  result<-list(values=wmf,times=times,timescales=timescales,dat=dat,wtopt=wtopt)
   class(result)<-c("wmf","tts","list")
   return(result)
 }

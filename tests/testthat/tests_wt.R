@@ -50,7 +50,7 @@ test_that("test for qualitatively correct output, test 1",{
   #lines(c(1,200),c(8,8))
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="1661d4fb42b6f127552b7bb27793435f")   
+  expect_known_hash(res,hash="cbef91d7a9af05df85b570f0e0762c4c")   
 })
 
 test_that("test for qualitatively correct output, test 2",{
@@ -73,5 +73,5 @@ test_that("test for qualitatively correct output, test 2",{
   #lines(c(1,200),c(10,10))
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="01ab2b4b7150e0fc88d5fc8bdaf6f659")   
+  expect_known_hash(res,hash="370a09c4f5edf95389fea48b0df15291")   
 })

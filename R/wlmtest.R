@@ -3,15 +3,15 @@
 #' Compares a wavelet linear model with a nested model. Also the generator function for 
 #' the \code{wlmtest} class.
 #' 
-#' @param wlm A \code{wlm} object
-#' @param drop Either names or indices of variables in \code{wlm$dat} that are being 
-#' dropped to form the simpler, nested model. The first variable in \code{wlm$dat}, 
+#' @param wlmobj A \code{wlm} object
+#' @param drop Either names or indices of variables in \code{wlmobj$dat} that are being 
+#' dropped to form the simpler, nested model. The first variable in \code{wlmobj$dat}, 
 #' which is the response, is not allowed here.
 #' @param sigmethod Method for significance testing. One of "\code{fft}", "\code{aaft}", "\code{fast}". See details.
 #' @param nrand The number of randomizations to do for significance
 #' 
 #' @return \code{wlmtest} returns an object of class \code{wlmtest}. Slots are:
-#' \item{wlm}{The input}
+#' \item{wlmobj}{The input}
 #' \item{drop}{The input}
 #' \item{signif}{A list with information from the significance testing. Elements are 
 #' \code{coher} and \code{scoher}. See details.}
@@ -23,7 +23,7 @@
 #' 
 #' @details The slot \code{signif} provides the core information on significance. 
 #' If \code{sigmethod} is not "\code{fast}", then \code{signif$coher} is the same as 
-#' \code{wlm$coher}, and \code{signif$scoher} is a matrix of dimensions \code{nrand} by 
+#' \code{wlmobj$coher}, and \code{signif$scoher} is a matrix of dimensions \code{nrand} by 
 #' \code{length(signif$coher)} with rows equal to coherences between refitted models and the 
 #' response-variable transforms, for datasets where the variables specified in \code{drop} have
 #' been replaced by surrogates. Normalization as specified in \code{norm} is used. The type 
@@ -38,9 +38,9 @@
 #' In that case
 #' \code{signif$coher} can be compared to \code{signif$scoher} to make significance 
 #' statements about the coherence in exactly the same way, but \code{signif$coher} will no
-#' longer precisely equal \code{wlm$coher}, and \code{wlm$coher} should not be compared 
+#' longer precisely equal \code{wlmobj$coher}, and \code{wlmobj$coher} should not be compared 
 #' directly to \code{signif$scoher}. Statements about significance of the coherence 
-#' should be made using \code{signif$coher} and \code{signif$scoher}, whereas \code{wlm$coher}
+#' should be made using \code{signif$coher} and \code{signif$scoher}, whereas \code{wlmobj$coher}
 #' should be used whenever the actual value of the coherence is needed. 
 #' 
 #' The slots \code{ranks} and \code{bandp} are empty on an initial call to \code{coh}. 
@@ -64,18 +64,18 @@
 #' 
 #' @export
 
-wlmtest<-function(wlm,drop,sigmethod,nrand=1000)
+wlmtest<-function(wlmobj,drop,sigmethod,nrand=1000)
 {
   #**error checking
-  if (wlm$norm!="powall")
+  if (wlmobj$norm!="powall")
   { #we can assume norm is powall, powind or none, since it is in a wlm object
     #this error check will be removed when the other options are implemented
     stop("Error in wlmtest: this value of norm not implemented yet")
   }
-  if (!(all(drop %in% 2:length(wlm$dat)) || 
-        all(drop %in% names(wlm$dat)[2:length(wlm$dat)])))
+  if (!(all(drop %in% 2:length(wlmobj$dat)) || 
+        all(drop %in% names(wlmobj$dat)[2:length(wlmobj$dat)])))
   {
-    stop("Error in wlmtest: drop must contain names or indices of predictors used in fitting wlm")
+    stop("Error in wlmtest: drop must contain names or indices of predictors used in fitting wlmobj")
   }
   if (length(unique(drop))!=length(drop))
   {
@@ -88,9 +88,9 @@ wlmtest<-function(wlm,drop,sigmethod,nrand=1000)
   
   #**convert drop from names to indices if necessary
   origdrop<-drop
-  if (all(drop %in% names(wlm$dat)[2:length(wlm$dat)]))
+  if (all(drop %in% names(wlmobj$dat)[2:length(wlmobj$dat)]))
   {
-    drop<-which(names(wlm$dat)[2:length(wlm$dat)] %in% drop)+1
+    drop<-which(names(wlmobj$dat)[2:length(wlmobj$dat)] %in% drop)+1
   }
   
   #**fast algorithm
@@ -101,7 +101,7 @@ wlmtest<-function(wlm,drop,sigmethod,nrand=1000)
     #***DAN: fill in
     
     #prepare result  
-    result<-list(wlm=wlm,drop=origdrop,signif=signif,ranks=NA,bandp=NA)
+    result<-list(wlmobj=wlmobj,drop=origdrop,signif=signif,ranks=NA,bandp=NA)
     class(result)<-c("wlmtest","list")
     return(result)    
   }
@@ -109,27 +109,27 @@ wlmtest<-function(wlm,drop,sigmethod,nrand=1000)
   #**slow algorithm
   
   #*get joint surrogates for dropped variables
-  cddat<-wlm$dat[[drop[1]]]
+  cddat<-wlmobj$dat[[drop[1]]]
   if (length(drop)>1)
   {
     for (counter in 2:length(drop))
     { #put the data together to get joint surrogates
-      cddat<-rbind(cddat,wlm$dat[[drop[counter]]])
+      cddat<-rbind(cddat,wlmobj$dat[[drop[counter]]])
     } 
   } 
   scddat<-surrog(cddat,nrand,sigmethod,TRUE)
   
   #*do transforms
-  wscddat<-lapply(FUN=warray,X=scddat,times=wlm$times,
-                  scale.min=wlm$scale.min,scale.max.input=wlm$scale.max.input,
-                  sigma=wlm$sigma,f0=wlm$f0)
+  wscddat<-lapply(FUN=warray,X=scddat,times=wlmobj$times,
+                  scale.min=wlmobj$scale.min,scale.max.input=wlmobj$scale.max.input,
+                  sigma=wlmobj$sigma,f0=wlmobj$f0)
   
   #*refit for each surrogate, keeping coherences
-  coher<-wlm$coher
+  coher<-wlmobj$coher
   scoher<-matrix(NA*complex(real=length(coher)*nrand,
                             imaginary=length(coher)*nrand),
                  nrand,length(coher))
-  wts<-wlm$wts
+  wts<-wlmobj$wts
   for (scounter in 1:nrand)
   { 
     #replace the appropriate entries of wts by surrogate transforms
@@ -137,15 +137,15 @@ wlmtest<-function(wlm,drop,sigmethod,nrand=1000)
     {
       st<-(dcouter-1)*dim(dat[[1]])[1]+1
       en<-dcounter*dim(dat[[1]])[1]
-      wts[[dcounter]]<-normforcoh(wscddat[[scounter]][st:en,,],wlm$norm)
+      wts[[dcounter]]<-normforcoh(wscddat[[scounter]][st:en,,],wlmobj$norm)
     }
     #refit and just keep the coher result
-    scoher[scounter,]<-wlmfit(wts,wlm$norm)$coher 
+    scoher[scounter,]<-wlmfit(wts,wlmobj$norm)$coher 
   }
   signif<-list(coher=coher,scoher=scoher)
   
   #prepare result  
-  result<-list(wlm=wlm,drop=origdrop,signif=signif,ranks=NA,bandp=NA)
+  result<-list(wlmobj=wlmobj,drop=origdrop,signif=signif,ranks=NA,bandp=NA)
   class(result)<-c("wlmtest","list")
   return(result)    
 }

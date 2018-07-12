@@ -83,6 +83,12 @@ set_norm.coh<-function(obj,newval)
 }
 
 #' @export
+set_wtopt.coh<-function(obj,newval)
+{
+  stop("Error in set_wtopt: wtopt should not be altered for a coh object")
+}
+
+#' @export
 set_timescales.coh<-function(obj,newval)
 {
   stop("Error in set_timescales: timescales should not be altered for a coh object")
@@ -226,6 +232,12 @@ get_norm.default<-function(obj)
 get_norm.coh<-function(obj)
 {
   return(obj$norm)
+}
+
+#' @export
+get_wtopt.coh<-function(obj)
+{
+  return(obj$wtopt)
 }
 
 #' @export

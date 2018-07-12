@@ -68,7 +68,7 @@ test_that("test for qualitatively correct output, quick signif method",{
   #        frame.plot=FALSE)
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="695f10ec2709a77d4deebcc02b8198c5")   
+  expect_known_hash(res,hash="6fc0f363be0cb0e3b6a5703b7c27550c")   
 })
 
 test_that("test for qualitatively correct output, fft signif method",{
@@ -107,7 +107,7 @@ test_that("test for qualitatively correct output, fft signif method",{
   #        frame.plot=FALSE)
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="2c9feb6c236523da63c6c5e081d5ac96")
+  expect_known_hash(res,hash="ea9da16eaa0fcaf883c5d06aea4925ee")
 })
 
 test_that("test for qualitatively correct output, aaft signif method",{
@@ -138,14 +138,14 @@ test_that("test for qualitatively correct output, aaft signif method",{
   
   #Make a plot to check visually. Expected to look like panel panel k of supp fig 1 in the
   #reference cited above
-  #image(get_times(res),log2(get_timescales(res)),Mod(get_values(res)))
-  #lines(c(1,100),log2(c(10,10)))
-  #lines(c(1,100),log2(c(5,5)))
-  #par(new=T)
-  #contour(get_times(res),log2(get_timescales(res)),res$signif$gt,
-  #        levels=.95,axes=FALSE,drawlabels=FALSE,
-  #        frame.plot=FALSE)
+  image(get_times(res),log2(get_timescales(res)),Mod(get_values(res)))
+  lines(c(1,100),log2(c(10,10)))
+  lines(c(1,100),log2(c(5,5)))
+  par(new=T)
+  contour(get_times(res),log2(get_timescales(res)),res$signif$gt,
+          levels=.95,axes=FALSE,drawlabels=FALSE,
+          frame.plot=FALSE)
   #It looked good so I commented it out, now just check future runs are always the same.
   #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="fe19111cf88b38286531c7aaf1f4bf4b")
+  expect_known_hash(res,hash="94000ca7268a15e3ddfa9dac1dfd2ec0")
 })

@@ -46,8 +46,7 @@ test_that("results in right format, and consistency",{
   
   #format
   expect_equal(class(res),c("wlm","list"))
-  expect_equal(names(res),c("dat","times","norm","scale.min",
-                            "scale.max.input","sigma","f0","wts","timescales",
+  expect_equal(names(res),c("dat","times","norm","wtopt","wts","timescales",
                             "coefs","modval","coher"))
   expect_equal(dat[c(2,1,3,4)],res$dat)
   expect_equal(times,res$times)
@@ -79,8 +78,7 @@ test_that("results in right format, and consistency",{
   
   expect_equal(class(res),c("wlm","list"))
   expect_equal(lapply(X=dat[c(2,1,3,4)],FUN=as.vector),res$dat)
-  expect_equal(names(res),c("dat","times","norm","scale.min",
-                            "scale.max.input","sigma","f0","wts","timescales",
+  expect_equal(names(res),c("dat","times","norm","wtopt","wts","timescales",
                             "coefs","modval","coher"))
   expect_equal(times,res$times)
   expect_equal(norm,res$norm)
@@ -118,8 +116,7 @@ test_that("test for correct format and actual values, one-predictor case",{
 
   #check for format
   expect_equal(class(res),c("wlm","list"))
-  expect_equal(names(res),c("dat","times","norm","scale.min",
-                            "scale.max.input","sigma","f0","wts","timescales",
+  expect_equal(names(res),c("dat","times","norm","wtopt","wts","timescales",
                             "coefs","modval","coher"))
   expect_equal(dat,res$dat)
   expect_equal(times,res$times)
@@ -149,4 +146,5 @@ test_that("test for correct format and actual values, one-predictor case",{
   expect_equal(res$coher,cohres$coher*Conj(res$coefs[[1]])/Mod(res$coefs[[1]]))
 })
 
-#***DAN: still need a more real example
+#***DAN: still need another example. Do it by using the matrix multiplication way of defining the
+#coefs, spelled out in the plankton sup mat, and comparing to the qr.solve way implemented

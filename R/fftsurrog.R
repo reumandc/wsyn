@@ -1,6 +1,6 @@
-#' Creates surrogate time series using Fourier surrogates
+#' Surrogate time series using Fourier surrogates
 #' 
-#' For internal use, no error checking
+#' Creates surrogate time series using Fourier surrogates
 #' 
 #' @param dat A locations x time matrix of observations 
 #' @param nsurrogs The number of surrogates to produce
@@ -15,7 +15,9 @@
 #' Sheppard, LW, et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 #' Schreiber, T and Schmitz, A (2000) Surrogate time series. Physica D 142, 346-382.
 #' Prichard, D and Theiler, J (1994) Generating surrogate data for time series with several simultaneously measured variables. Physical Review Letters 73, 951-954.
-#'     
+#'
+#' @note For internal use, no error checking
+#'      
 #' @examples
 #' #Not yet written, but need some
 #' 

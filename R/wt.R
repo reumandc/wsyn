@@ -15,6 +15,7 @@
 #' @return \code{wt} returns an object of class \code{wt}.  Slots are: 
 #' \item{values}{A matrix of complex numbers, of dimensions \code{length(t.series)} by the number of timescales. Entries not considered reliable (longer timescales, near the edges of the time span) are set to NA.}
 #' \item{times}{The time steps specified (e.g. years)}
+#' \item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 #' \item{timescales}{The timescales (1/frequency) computed for the wavelet transform}
 #' \item{dat}{the data vector from which the transform was computed}
 #' 
@@ -33,6 +34,7 @@
 
 wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1)
 {
+  #error checking
   errcheck_tsdat(times,t.series,"wt")
   errcheck_wavparam(scale.min,scale.max.input,sigma,f0,times,"wt")
     
@@ -47,6 +49,10 @@ wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f
   {
     t.series<-as.vector(t.series)
   }
+  
+  #for return
+  wtopt<-list(scale.min=scale.min,scale.max.input=scale.max.input,
+              sigma=sigma,f0=f0)
   
   #determine how many frequencies are in the range and make receptacle for results 
   scale.min <- f0*scale.min
@@ -93,14 +99,14 @@ wt <- function(t.series, times, scale.min=2, scale.max.input=NULL, sigma=1.05, f
     result<-result[,1:m.last]
     timescales<-s2[1:m.last]/f0
     errcheck_tts(times,timescales,result,"wt")
-    result<-list(values=result, times=times, timescales=timescales, dat=t.series)
+    result<-list(values=result, times=times, wtopt=wtopt, timescales=timescales, dat=t.series)
     class(result)<-c("wt","tts","list")
     return(result)
   }
   else{
     timescales<-s2/f0
     errcheck_tts(times,timescales,result,"wt")
-    result<-list(values=result, times = times, timescales=timescales, dat=t.series)
+    result<-list(values=result, times = times, wtopt=wtopt, timescales=timescales, dat=t.series)
     class(result)<-c("wt","tts","list")
     return(result)
   }

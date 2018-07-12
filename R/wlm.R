@@ -18,10 +18,7 @@
 #' \item{dat}{The input data list, but reordered and subsetted so the response is first and only used predictors are included}
 #' \item{times}{The times associated with the data}
 #' \item{norm}{The input}
-#' \item{scale.min}{The input}
-#' \item{scale.max.input}{The input}
-#' \item{sigma}{The input}
-#' \item{f0}{The input}
+#' \item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 #' \item{wts}{List of transforms, normalized as specified in \code{norm}. Same length as the output \code{dat}, each entry a locations x time x timescales array of transforms.}
 #' \item{timescales}{The timescales associated with the wavelet transforms of the data}
 #' \item{coefs}{A list (data frame, actually) of complex vectors, each of length the same 
@@ -120,9 +117,9 @@ wlm<-function(dat,times,resp,pred,norm,scale.min=2,scale.max.input=NULL,sigma=1.
 
   #**prepare result  
   if (wasvect){dat<-lapply(FUN=as.vector,X=dat)}
-  result<-list(dat=dat,times=times,norm=norm,
-               scale.min=scale.min,scale.max.input=scale.max.input,
-               sigma=sigma,f0=f0,
+  wtopt<-list(scale.min=scale.min,scale.max.input=scale.max.input,
+             sigma=sigma,f0=f0)
+  result<-list(dat=dat,times=times,norm=norm,wtopt=wtopt,
                wts=wts,timescales=timescales,
                coefs=coefs,modval=h$modval,coher=h$coher)
   class(result)<-c("wlm","list")
