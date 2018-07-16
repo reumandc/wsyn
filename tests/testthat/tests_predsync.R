@@ -16,7 +16,7 @@ test_that("do an example",{
   artsig_x<-matrix(NA,11,length(times)) #the driver
   for (counter in 1:11)
   {
-    artsig_x[counter,]=ts1+ts2+rnorm(length(times),mean=0,sd=.5)
+    artsig_x[counter,]<-ts1+ts2+rnorm(length(times),mean=0,sd=.5)
   }
   times<-0:100
   artsig_y<-matrix(NA,11,length(times)) #the driven
