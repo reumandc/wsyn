@@ -122,21 +122,24 @@ syncexpl.wlm<-function(object)
     res[,pnames[pc]]<-apply(FUN=mean,MARGIN=2,X=(Mod(h[[pc]]))^2,na.rm=T)
   }
   
-  #now do each set of interactions 
-  totints<-numeric(dim(res)[1])
-  for (c1 in 1:(length(pnames)-1))
+  if (length(pnames)>1)
   {
-    for (c2 in (c1+1):length(pnames))
+    #now do each set of interactions 
+    totints<-numeric(dim(res)[1])
+    for (c1 in 1:(length(pnames)-1))
     {
-      h2<-2*Re(apply(FUN=mean,MARGIN=2,
-              X=h[[c1]]*Conj(h[[c2]]),na.rm=T))
-      res[,paste0(pnames[c1],"_",pnames[c2])]<-h2
-      totints<-totints+h2
+      for (c2 in (c1+1):length(pnames))
+      {
+        h2<-2*Re(apply(FUN=mean,MARGIN=2,
+                       X=h[[c1]]*Conj(h[[c2]]),na.rm=T))
+        res[,paste0(pnames[c1],"_",pnames[c2])]<-h2
+        totints<-totints+h2
+      }
     }
+    
+    #total interactions
+    res[,"interactions"]<-totints
   }
-  
-  #total interactions
-  res[,"interactions"]<-totints
   
   return(res)
 }
