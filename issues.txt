@@ -35,14 +35,15 @@ DONE wlmtest generator function and accompanying wlmfit internal, and tests
 DONE do you want to add slots for scale.min, scale.max.input, sigma, and f0 to wt, wmf, wpmf, and coh methods? You would also need set and get methods for these slots for each class. Or maybe stick them together into a list called wopts which makes a single slot, and then you would have to make a similar change to wlm.
 DONE DAN: check the vignette for what effects the above change would have had, both on runs and on descriptions
 DONE wlmtest methods, and tests thereof
-plotmag method for wlmtest and tests - docs to be combined with plotmag.coh
-plotrank method for wlmtest and tests - docs to be combined with plotrank.coh
+DONE plotmag method for wlmtest and tests - docs to be combined with plotmag.coh
+DONE plotrank method for wlmtest and tests - docs to be combined with plotrank.coh
 DONE tests for addranks for wlmtest objects
 DONE bandtest for wlmtest objects, and tests - docs combned with coh method
-predsync and tests
-power function for tts class and tests
+DONE predsync and tests - wrote the function and some tests, but need to go through some results with Lawrence, see the bottom of tests_predsync.R, and then formalize a few more tests
+DONE power function for tts class and tests
 modsync and tests
-propexpl and tests - proportion of synchrony explained as a function of timescale and related quantities
+DONE propexpl and tests - proportion of synchrony explained as a function of timescale and related quantities - ended up calling it syncexpl
+vignette - see about using the plankton data, the version we said we would release if the plankton paper is published. Include in package and base the wlm part of the vignette on these data.
 looscore and tests
 locassoc tester function and tests
 examining if phases of coefficients are consistent with predictor/response phases - do this later, together with functionality for plotting phases of various things (I have left a lot of phase plot functions out)
@@ -173,7 +174,7 @@ Resturns: A list with these elements:
 coefs - list of complex vectors, each of length the same as timescales. these are the model coefs
 coher - coherence of the model and response transforms, normalization appropriate for the norm argument (function of timescale, real valued)
 
-wlmtest class:
+DONE wlmtest class:
 slots:
 wlm - a wlm object, the model being tested
 drop - either names or indices of variables in wlm$dat that are being dropped. Some error checking is needed to make sure these are legit, e.g., not the response variable
@@ -181,7 +182,7 @@ signif - list with coher (appropriately normalized coherence) and scoher (approp
 ranks - similar to the ranks slot for the coh class. As in that case, not filled in on the first call to wlmtest. I rewrote addranks so it will work on either a coh or a wlmtest object. 
 bandp - similar to coh class. cohbandtest (now bandtest) is already a method for the coh class, so I will just need to add a method for the wlmtest class. To avoid repeating myself I may want to take guts of the routine and put it into a worker function called by both methods. 
 
-wlmtest generator function:
+DONE wlmtest generator function:
 Args:
 wlm -  a wlm object
 drop - indictaes which variables are dropped, see arg with same name for wlmtest class
@@ -191,7 +192,7 @@ A wlmtest object
 Notes:
 The only combinations of wlm$norm and sigmethod that will work at first will be powall with anything
 
-plotmag and plotrank methods for wlmtest objects should be pretty straightforward, as well as you will need something like addranks and cohbandtest - see thoughts above in ranks and bandp slots of the wlmtest object, some of this is already done (addranks), and some of it has been queued up (bandtest)
+DONE plotmag and plotrank methods for wlmtest objects should be pretty straightforward, as well as you will need something like addranks and cohbandtest - see thoughts above in ranks and bandp slots of the wlmtest object, some of this is already done (addranks), and some of it has been queued up (bandtest)
 
 You may want to have a plotcoef method for the wlm class, but this should be thought about together with plotting the phase and maybe magnitude of the response times the conjugate of the predictor, as we did in the plankton paper to help validate the models there - do this later
 
@@ -202,8 +203,8 @@ Think about whether this design will work with the following outstanding issues:
 
 *model-predicted synchrony plot
 
->>>make a function predsync that takes a wlm objetc and returns a tts object which is what we give on line 413 of the supp mat of the plankton paper, but without the magnitudes (and recall the Pi there is already a nonnegative real number for each timescale, before taking magnitudes). Then that can be plotted easily with the plotmag method of the tts class, or its plot v timescale of the mean over time of the squared magnitude. 
-I could write a method for a tts object that plots, vs timescale, the mean, over time, of the square magnitude. That would be an easy function. Should I call it power? Remind yourself what power is officially defined as, but regardless this would be easy. Yes, I checked with Lawrence, this is power.
+DONE >>>make a function predsync that takes a wlm objetc and returns a tts object which is what we give on line 413 of the supp mat of the plankton paper, but without the magnitudes (and recall the Pi there is already a nonnegative real number for each timescale, before taking magnitudes). Then that can be plotted easily with the plotmag method of the tts class, or its plot v timescale of the mean over time of the squared magnitude. 
+DONE I could write a method for a tts object that plots, vs timescale, the mean, over time, of the square magnitude. That would be an easy function. Should I call it power? Remind yourself what power is officially defined as, but regardless this would be easy. Yes, I checked with Lawrence, this is power.
 Then I could easily plot model-predicted synchrony
 
 *do you want to be able to plot model synchrony or mean squared model synchrony? (remember this is distinct from model-predicted synchrony.) We used this for thinking of interaction effects.
@@ -226,7 +227,7 @@ Then I could easily plot model-predicted synchrony
 *cross terms as a proportion of synchrony, as a function of timescale (and this can be averaged over a band). See eq. 48 of supp mat of plankton paper
 *fractions of synchrony explained by individual predictors, and by interaction effects, as a function of timescale. Also can average these over bands.
 
->>>Make one function that takes a wlm object and gives a matrix with named rows:
+DONE >>>Make one function that takes a wlm object and gives a matrix with named rows:
 timescales
 propexplained
 crossterms
@@ -239,6 +240,7 @@ int1w3
 ...
 intnwn-1
 Then these can easily be plotted versus timescale or averaged over any band.
+Though maybe the above should be columns of a data frame instead
 
 *do anything else with interaction effects, e.g., test their significance?
 

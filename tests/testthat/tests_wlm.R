@@ -146,9 +146,11 @@ test_that("test for correct format and actual values, one-predictor case",{
   expect_equal(res$coher,cohres$coher*Conj(res$coefs[[1]])/Mod(res$coefs[[1]]))
 })
 
-#***DAN: still need another example. Do it by using the matrix multiplication way of defining the
-#coefs, spelled out in the plankton sup mat, and comparing to the qr.solve way implemented
 test_that("now do a two-predictor case",{
+  #Test by comparing coefs to the matrix multiplication way of defining the
+  #coefs, spelled out in the plankton sup mat, and comparing to the qr.solve 
+  #way implemented in wlm
+
   set.seed(101)
   times<-1:30
   dat<-list(v1=matrix(rnorm(300),10,30),v2=matrix(rnorm(300),10,30),

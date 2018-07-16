@@ -1,23 +1,30 @@
-#' For plotting the magnitude of values in \code{tts} and \code{coh} objects 
+#' For plotting the magnitude of values in \code{tts}, \code{coh} and \code{wlmtest} objects 
 #' 
 #' For plotting the magnitude of values in \code{tts} objects (and derived classes) 
-#' against time and timescale, and \code{coh} objects against timescale
+#' against time and timescale, and \code{coh} and \code{wlmtest} objects against timescale
 #'
-#' @param object An object of class \code{tts} or some class that inherits from \code{tts} or of class \code{coh}
+#' @param object An object of class \code{tts} or some class that inherits from \code{tts} or of class \code{coh} or \code{wlmtest}
 #' @param zlims z axis limits. If specified, must encompass the range of \code{Mod(get_values(object))}. Default NULL uses this range.
 #' @param neat Logical. Should timescales with no values be trimmed?
 #' @param colorfill Color spectrum to use, set through colorRampPalette. Default value NULL produces jet colors from Matlab.
-#' @param sigthresh Significance threshold(s). Numeric vector with values between 0 and 1. Typically 0.95, 0.99, 0.999, etc. For \code{wpmf} objects, contours are plotted at these values; for \code{coh} objects the threshholds are plotted on coherence plots.
+#' @param sigthresh Significance threshold(s). Numeric vector with values between 0 and 1. 
+#' Typically 0.95, 0.99, 0.999, etc. For \code{wpmf} objects, contours are plotted at these 
+#' values; for \code{coh} and \code{wlmtest} objects the threshholds are plotted on coherence 
+#' plots.
 #' @param colorbar Logical. Should a colorbar legend be plotted?
 #' @param title Title for the top of the plot.
 #' @param filename Filename (without extension), for saving as pdf. Default value NA saves no file and uses the default graphics device.
 #' @param bandprows The rows of \code{object$bandp} for which to display results in \code{coh} plots
-#' @param ... Additional graphics parameters passed to \code{image} (\code{graphics} package) if \code{colorbar==FALSE}, or to \code{image.plot} (\code{fields} package) if \code{colorbar==TRUE}
+#' @param ... Additional graphics parameters passed to \code{image} (\code{graphics} package) 
+#' if \code{colorbar==FALSE}, or to \code{image.plot} (\code{fields} package) if 
+#' \code{colorbar==TRUE} (for \code{coh} objects) 
 #' 
-#' @details For \code{coh} objects, the modulus of object$coher is plotted using a solid red line, and 
+#' @details For \code{coh} (respectively, \code{wlmtest}) objects, the modulus of 
+#' object$coher (respectively, object$wlmobj$coher) is plotted using a solid red line, and 
 #' the modulus of object$signif$coher is plotted using a dashed red line. The two coherences agree except
 #' for \code{sigmethod="fast"}, for which they are close. The dashed line is what should be
-#' compared to the distribution of surrogate coherences (black lines, if \code{signif} is 
+#' compared to the distribution of surrogate coherences (black lines, which only appear for 
+#' \code{coh} objects if \code{signif} is 
 #' not \code{NA}). Horizontal axis ticks are labeled as timescales, but are spaced on the 
 #' axis as log(1/timescale), i.e., log frequencies.
 #' 

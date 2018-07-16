@@ -3,27 +3,34 @@
 \name{plotrank}
 \alias{plotrank}
 \alias{plotrank.coh}
+\alias{plotrank.wlmtest}
 \alias{plotrank.default}
-\title{Plots \code{ranks} slot for \code{coh} objects}
+\title{Plots \code{ranks} slot for \code{coh} and \code{wlmtest} objects}
 \usage{
 plotrank(object, ...)
 
 \method{plotrank}{coh}(object, sigthresh = 0.95, bandprows = "all",
   filename = NA)
 
+\method{plotrank}{wlmtest}(object, sigthresh = 0.95, bandprows = "all",
+  filename = NA)
+
 \method{plotrank}{default}(object, ...)
 }
 \arguments{
-\item{object}{A \code{coh} object. Must have a non-\code{NA} \code{signif} slot.}
+\item{object}{A \code{coh} or \code{wlmtest} object. Must have a non-\code{NA} \code{signif} slot.}
 
-\item{sigthresh}{Significance threshold(s). Numeric vector with values between 0 and 1. Typically 0.95, 0.99, 0.999, etc. The threshhold(s) are plotted on the rank plot as dashed horizontal line(s).}
+\item{sigthresh}{Significance threshold(s). Numeric vector with values between 0 and 1. Typically 
+0.95, 0.99, 0.999, etc. The threshhold(s) are plotted on the rank plot as dashed horizontal line(s).}
 
 \item{bandprows}{The rows of \code{object$bandp} for which to display p-value results in the plot}
 
-\item{filename}{Filename (without extension), for saving as pdf. Default value NA saves no file and uses the default graphics device.}
+\item{filename}{Filename (without extension), for saving as pdf. Default value NA saves no file and 
+uses the default graphics device.}
 }
 \description{
-Plots the \code{ranks} slot for \code{coh} objects to help identify statistical significance of coherence
+Plots the \code{ranks} slot for \code{coh} and \code{wlmtest} objects to help identify statistical 
+significance of coherence
 }
 \details{
 The plot shows the modulus of \code{object$ranks$coher} versus \code{log(1/object$timescales)}.

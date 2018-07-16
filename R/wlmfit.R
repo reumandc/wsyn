@@ -35,13 +35,13 @@ wlmfit<-function(wts,norm)
   
   #setup - wts[[i]] is locs by times by timescales
   N<-dim(wts[[1]])[1] #number of locations
-  T<-dim(wts[[1]])[2] #length of time series
+  Ti<-dim(wts[[1]])[2] #length of time series
   V<-length(wts)-1 #number of predictor variables
   lents<-dim(wts[[1]])[3] #number of timescales
   
   #do the fitting 
   coefs<-as.data.frame(matrix(NA*numeric(1),lents,V))
-  X<-matrix(complex(real=NA,imaginary=NA),N*T,V)
+  X<-matrix(complex(real=NA,imaginary=NA),N*Ti,V)
   for (tscounter in 1:lents)
   {
     #make the design matrix
@@ -65,9 +65,9 @@ wlmfit<-function(wts,norm)
   modval<-0*wts[[1]] #holder for the model, right hand side of regression equation
   for (vcounter in 1:V)
   {
-    modval<-modval+wts[[vcounter+1]]*array(rep(coefs[,vcounter],each=N*T),dim=dim(wts[[1]]))
+    modval<-modval+wts[[vcounter+1]]*array(rep(coefs[,vcounter],each=N*Ti),dim=dim(wts[[1]]))
   }
-  coher<-apply(X=wts[[1]]*Conj(normforcoh(modval,norm)),FUN=mean,MARGIN=3,na.rm=T)
+  coher<-apply(X=wts[[1]]*Conj(normforcoh(modval,norm)),FUN=mean,MARGIN=3,na.rm=TRUE)
   
   return(list(coefs=coefs,modval=modval,coher=coher))
 }
