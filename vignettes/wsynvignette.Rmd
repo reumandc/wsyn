@@ -778,7 +778,7 @@ we may want to infer the causes of synchrony and its timescale-specific patterns
 in the populations. The wavelet mean fields of `pops`, `d1` and `d2` show some
 synchrony at timescales of about $3$ and $12$ for all three variables.  
 
-```{r wmfs_wlmexample}
+```{r wmfs_wlmexample, results=FALSE}
 dat<-list(pops=pops,d1=d1,d2=d2,dirrel=dirrel)
 dat<-lapply(FUN=function(x){cleandat(x,times,1)$cdat},X=dat)
 wmfpop<-wmf(dat$pops,times)
@@ -857,6 +857,7 @@ for each timescale band?
 For short timescales, almost all the synchrony that can be explained is explained
 by Moran effects of `d2`:
 ```{r shortts_syncexpl}
+se<-syncexpl(wlm_all)
 se_short<-se[se$timescales>=bshort[1] & se$timescales<=bshort[2],]
 round(100*colMeans(se_short[,c(3:12)])/mean(se_short$sync),4)
 ```
@@ -864,7 +865,6 @@ round(100*colMeans(se_short[,c(3:12)])/mean(se_short$sync),4)
 For long timescales, Moran effects of both drivers are present, as are interactions
 between these Moran effects:
 ```{r longts_syncexpl}
-se<-syncexpl(wlm_all)
 se_long<-se[se$timescales>=blong[1] & se$timescales<=blong[2],]
 round(100*colMeans(se_long[,c(3:12)])/mean(se_long$sync),4)
 ```
@@ -880,7 +880,7 @@ stage to demonstrate the tools described so far on real data. We carry out a
 much-simplified version of some of the analyses of @Sheppard_18. 
 
 <!--DAN: embed the B-C transformed cal fin, PCI, and temp data in the package and 
-document them, then do some analyses here.>
+document them, then do some analyses here of those data using all our tools so far.-->
 
 
 # References
