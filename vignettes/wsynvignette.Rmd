@@ -698,5 +698,189 @@ magnitudes that the empirical wavelet phasor mean field magnitude is greater tha
 surrogates are used instead. 
 
 # Wavelet linear models and their uses for understanding synchrony
+\noindent Linear models on wavelet transforms were introduced by @Sheppard_18,
+where they were used for understanding the causes of synchrony. We demonstrate
+the implementation in `wsyn` of the tools developed by @Sheppard_18, without giving
+a complete description of the concepts or mathematics behind those tools.
+Such a description is in @Sheppard_18.
+
+## Model construction tools
+
+```{r seed_setter_5, echo=F}
+set.seed(3221) #221 #3221
+```
+
+First create a diver variable composed of an oscillation of period $12$ years and
+an oscillation of period $3$ years, and normally
+distributed white noise of mean $0$ and standard deviation $1.5$.
+```{r driver_1}
+lts<-12
+sts<-3
+mats<-3
+times<-seq(from=-mats,to=100)
+ts1<-sin(2*pi*times/lts)
+ts2<-sin(2*pi*times/sts)
+numlocs<-10
+d1<-matrix(NA,numlocs,length(times)) #the first driver
+for (counter in 1:numlocs)
+{
+  d1[counter,]<-ts1+ts2+rnorm(length(times),mean=0,sd=1.5)
+}
+```
+
+Next create a second driver, again composed of an oscillation of period $12$ years and
+an oscillation of period $3$ years, and normally
+distributed white noise of mean $0$ and standard deviation $1.5$.
+```{r driver_2}
+ts1<-sin(2*pi*times/lts)
+ts2<-sin(2*pi*times/sts)
+d2<-matrix(NA,numlocs,length(times)) #the second driver
+for (counter in 1:numlocs)
+{
+  d2[counter,]<-ts1+ts2+rnorm(length(times),mean=0,sd=1.5)
+}
+```
+
+Next create an irrelevant environmental variable. With real data, of course,
+one will not necessarily know in advance whether an environmental
+variable is irrelevant to a population system, but, for the purpose of 
+demonstrating the methods, we are playing the dual role of data creator and 
+analyst.
+```{r dirrel}
+dirrel<-matrix(NA,numlocs,length(times)) #the irrelevant env var
+for (counter in 1:numlocs)
+{
+  dirrel[counter,]<-rnorm(length(times),mean=0,sd=1.5)
+}
+```
+
+The population in each location is a combination of the two drivers,
+plus local variability. Driver 1 is averaged over 3 time steps
+in its influence on the populations, so
+only the period-12 variability in driver 1 influences the populations. 
+```{r popdat}
+pops<-matrix(NA,numlocs,length(times)) #the populations
+for (counter in (mats+1):length(times))
+{
+  aff1<-apply(FUN=mean,X=d1[,(counter-mats):(counter-1)],MARGIN=1)
+  aff2<-d2[,counter-1]
+  pops[,counter]<-aff1+aff2+rnorm(numlocs,mean=0,sd=3)
+}
+pops<-pops[,times>=0]
+d1<-d1[,times>=0]
+d2<-d2[,times>=0]
+dirrel<-dirrel[,times>=0]
+times<-times[times>=0]
+```
+
+If only the data were available and we were unaware of how they were generated,
+we may want to infer the causes of synchrony and its timescale-specific patterns 
+in the populations. The wavelet mean fields of `pops`, `d1` and `d2` show some
+synchrony at timescales of about $3$ and $12$ for all three variables.  
+
+```{r wmfs_wlmexample}
+dat<-list(pops=pops,d1=d1,d2=d2,dirrel=dirrel)
+dat<-lapply(FUN=function(x){cleandat(x,times,1)$cdat},X=dat)
+wmfpop<-wmf(dat$pops,times)
+plotmag(wmfpop)
+wmfd1<-wmf(dat$d1,times)
+plotmag(wmfd1)
+wmfd2<-wmf(dat$d2,times)
+plotmag(wmfd2)
+```
+
+Thus we cannot know for sure 
+from the wavelet mean fields whether population synchrony at
+each timescale is due to synchrony in `d1`, `d2`, or both drivers at that timescale.
+However, we can fit wavelet linear models.
+
+Start by fitting a model with all three predictors. Only the `"powall"` 
+option for `norm` is implemented so far.
+```{r fit_mod_allpred}
+wlm_all<-wlm(dat,times,resp=1,pred=2:4,norm="powall",scale.max.input=28)
+```
+
+We will carry out analyses for this model at long timescales 
+($11$ to $13$ years) and short timescales 
+($2$ to $4$ years) simultaneously. First test whether we can drop each variable.
+```{r sometests}
+wlm_all_dropi<-wlmtest(wlm_all,drop="dirrel",sigmethod="fft",nrand=100)
+wlm_all_drop1<-wlmtest(wlm_all,drop="d1",sigmethod="fft",nrand=100)
+wlm_all_drop2<-wlmtest(wlm_all,drop="d2",sigmethod="fft",nrand=100)
+```
+
+Examine results for dropping `dirrel`, long and short timescales. We find
+that `dirrel` does not need to be retained in either long- or short-timescale
+models, as expected given how data were constructed:
+```{r dropdirrel_1, results=FALSE}
+blong<-c(11,13)
+bshort<-c(2,4)
+wlm_all_dropi<-bandtest(wlm_all_dropi,band=blong)
+wlm_all_dropi<-bandtest(wlm_all_dropi,band=bshort)
+plotmag(wlm_all_dropi)
+plotrank(wlm_all_dropi)
+```
+
+Examine results for dropping `d1`, long and short timescales. We find that
+`d1` should be retained in a long-timescale model but need not be retained
+in a short-timescale model, again as expected:
+```{r dropd1_1, results=FALSE}
+wlm_all_drop1<-bandtest(wlm_all_drop1,band=blong)
+wlm_all_drop1<-bandtest(wlm_all_drop1,band=bshort)
+plotmag(wlm_all_drop1)
+plotrank(wlm_all_drop1)
+```
+
+Examine results for dropping `d2`, long and short timescales. We find that
+`d2` should be retained in both a short-timescale model and
+in a long-timescale model, again as expected:
+```{r dropd2_1, results=FALSE}
+wlm_all_drop2<-bandtest(wlm_all_drop2,band=blong)
+wlm_all_drop2<-bandtest(wlm_all_drop2,band=bshort)
+plotmag(wlm_all_drop2)
+plotrank(wlm_all_drop2)
+```
+
+Note that only $100$ randomizations were used in this example. This is for speed - 
+in a real analysis, at least $1000$ randomizations should typically be performed,
+and preferably at least $10000$.
+<!--***DAN: once the fast algorithm is available, use it, and change this text-->
+
+## Amounts of synchrony explained
+\noindent Now we have constructed models for short timescales ($2-4$ years)
+and long timescales ($11-13$ years) for the example, finding, as expected,
+that `d1` is a driver at long timescales only and `d2` is a driver at short 
+and long timescales.
+How much of the synchrony in the response variable is explained by these drivers
+for each timescale band?
+
+For short timescales, almost all the synchrony that can be explained is explained
+by Moran effects of `d2`:
+```{r shortts_syncexpl}
+se_short<-se[se$timescales>=bshort[1] & se$timescales<=bshort[2],]
+round(100*colMeans(se_short[,c(3:12)])/mean(se_short$sync),4)
+```
+
+For long timescales, Moran effects of both drivers are present, as are interactions
+between these Moran effects:
+```{r longts_syncexpl}
+se<-syncexpl(wlm_all)
+se_long<-se[se$timescales>=blong[1] & se$timescales<=blong[2],]
+round(100*colMeans(se_long[,c(3:12)])/mean(se_long$sync),4)
+```
+
+Note that "cross terms" are small in both these analyses compared to synchrony 
+explained. Results can only be interpreted when this is the case. 
+See @Sheppard_18 for detailed information on cross terms and 
+interacting Moran effects.
+
+# An analysis of real data
+\noindent All examples so far have used artificial data. It makes sense at this
+stage to demonstrate the tools described so far on real data. We carry out a 
+much-simplified version of some of the analyses of @Sheppard_18. 
+
+<!--DAN: embed the B-C transformed cal fin, PCI, and temp data in the package and 
+document them, then do some analyses here.>
+
 
 # References

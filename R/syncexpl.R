@@ -78,15 +78,18 @@ syncexpl.wlm<-function(object)
   {
     res[,pnames[counter]]<-NA*numeric(1)
   }
-  res[,"interactions"]<-NA*numeric(1)
-  for (c1 in 1:(length(pnames)-1))
+  if (length(pnames)>1)
   {
-    for (c2 in (c1+1):length(pnames))
+    res[,"interactions"]<-NA*numeric(1)
+    for (c1 in 1:(length(pnames)-1))
     {
-      res[,paste0(pnames[c1],"_",pnames[c2])]<-NA*numeric(1)
+      for (c2 in (c1+1):length(pnames))
+      {
+        res[,paste0(pnames[c1],"_",pnames[c2])]<-NA*numeric(1)
+      }
     }
   }
-    
+  
   #compute the actual synchrony of the response
   rmf<-apply(FUN=mean,X=wts[[1]],MARGIN=c(2,3)) #response variable mean field
   res$sync<-apply(FUN=mean,X=(Mod(rmf))^2,MARGIN=2,na.rm=TRUE) #power
