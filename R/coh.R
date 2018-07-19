@@ -13,7 +13,7 @@
 #' @param scale.min The smallest scale of fluctuation that will be examined. At least 2.
 #' @param scale.max.input The largest scale of fluctuation guaranteed to be examined
 #' @param sigma The ratio of each time scale examined relative to the next timescale. Should be greater than 1.
-#' @param f0 The ratio of the period of fluctuation to the width of the envelop
+#' @param f0 The ratio of the period of fluctuation to the width of the envelope
 #' 
 #' @return \code{coh} returns an object of class \code{coh}. Slots are:
 #' \item{dat1, dat2}{The input data}
