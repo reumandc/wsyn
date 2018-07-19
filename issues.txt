@@ -47,9 +47,9 @@ vignette - see about using the plankton data, the version we said we would relea
 looscore and tests
 locassoc tester function and tests
 examining if phases of coefficients are consistent with predictor/response phases - do this later, together with functionality for plotting phases of various things (I have left a lot of phase plot functions out)
-
-12) everything you need for deer
+12) DONE everything you need for deer
 13) synmat for kelp and Jon's bird stuff
+***the functions to work from in reumannplatz are synmat, SynNetModules, cluster_eigen, and modularity. These are in reumannplatz. Ignore the older functions wsynmat and ModularityDecomp, which were superseded by the above but never removed from reumannplatz.
 14) write the phase plotter functions, and unit tests, for tts, wt, wpmd, wmf. 
 15) print and summary methods for all the classes
 
@@ -57,6 +57,7 @@ examining if phases of coefficients are consistent with predictor/response phase
 for formatting the documentation at top:
 1) use \code{} for TRUE and FALSE. Do not use T and F.
 2) I foudn and deleted a comment in the header of wmpf to the effect that "the wavelet phasor mean field was developed by Sheppard and Reuman, R code written by Anderson and Walter." It was not developed by Shppard and Reuman, and now the R code is by all of us, so I changed it. Watch out for other notes like that, I think I remember seeing some more.
+3) homogenize the emails that are indicated for each author, and make them be current/permanent emails. Even better, store the emails centrally and have all docs import them somehow.
 
 general
 1) DECIDED NOT TO BOTHER It will be possible to be a bit more consistent with use of get and set methods instead of $
@@ -79,7 +80,7 @@ or ask Lawrence to do it.
 wt.r:
 #TODO: make this a compiled function using cmpfun in the compiler package
 #(which is part of base R)
-#TODO: make the truncation occur before the computation rather than after
+#TODO: make the truncation occur before the computation rather than after?
 #TODO: Not clear from the docs what the resulting behavior is for the default
 #value NULL of scale.max.input. Likewise for other related funcs (wmf, wpmf, etc)
 
@@ -133,8 +134,6 @@ Args: data matrices
 Outputs: coherence between model and response variable, and/or squared norm of d, the residuals. Actually, these things do not count as outputs because Lawrence does not normalize in the same way, he uses these items (which are not the same as what he would get if he normalized) to get ranks (which are the same as what he would get). So actually the rank information is what is outputted, specifically modelpow and surrmodelpow, where: modelpow is power of response minus norm of d^2. Lawrence reckons he could fairly trivially post-hoc implement the right normalization. Lawrence says I can assume his algorithm will take daata and specs on which vars are dropped and spit out coher (powall norm) for model/data for real and surrogates.
 3) Is powall normalization baked into the pie? 
 See above - make it so you can put in powall, powind, or none, and make it throw a not yet implemented error for powind - Lawrence thinks he can do this later. Currently it does none, it can do powall with a rescaling, and powind will take work. For the slow algorithm, there may be some thought required for both none and definitely for powind, so maybe just implement powall right now and throw and error for the others.
-
-
 
 _____
 
@@ -245,4 +244,73 @@ Though maybe the above should be columns of a data frame instead
 *do anything else with interaction effects, e.g., test their significance?
 
 >>>Spoke with Lawrence and we think this could be handled pretty easy with the high-level functions already planned above, and no additional function is needed.
+
+____
+
+Design for clustering functionality:
+
+***Lei's function cluster_eigen in reumannplatz:
+*Args: an adjacency matrix
+*Provides that I can use: membership list (without weights of membership) for each node at each split stage. It can also be made to plot a dendrogram, but this part seems half-baked/faulty (he admits it in the docs).
+*I should create a function that provides the membership list for each node at each split stage, but does not do the dendrogram. Should probably be a fast internal function.
+*Qs for later: will I want the modularity at each step? remind yourself what does that mean anyway? I just learned the cluster_eigen does not compute modularity anyway, it only calls out to the modularity function for it, and it only does that for the purpose of plotting! So I think it is OK to not involve modularity at all in what is returned by this function.
+*If I use the dendrogram plotting stuff, it should be in some plotting method of some class that stores the output of all this stuff that I am working on - should be done after the fact.
+*so I can start with Lei's function, move it into wsyn and edit
+
+***so the new function spec should be:
+*Args: an adjacency matrix, same error checking as currently
+*Output: a list of the membership vectors for each split, the last element being the final one
+*no side effects
+*internal and as fast as possible. actually, decided I might as well export it.
+
+***modularity function in reumannplatz:
+*ANSWERED Qs: Do we need the membership argument if decomp if F? It provides a 0 in an example I tried with membership NA and decomp F, which may suggest a bug? The call to modularity in cluster_eigen *does* provide the membership argument (and uses the default of F for the decomp arg), but one wonders why it is needed - should it not be possible to compute modularity without having done the clustering? After reading the help files for igraph::modularity, which Lei's function is supposed to replace, I have some answers to this q. This is not modularity of a network, but modularity of a division of a graph into subgraphs. The stat itself is described in a formula in the help file to igraph::modularity. 
+*ANSWERED Qs: do we really need the decomp stuff, or is a simplified function better for our purposes? I discovered that modularity is called by SynNetModules with decomp=T, and the results are returned and also used in the plotting routine, apparently for strength of membership stuff. So I think the full functionality is needed.
+*Nice unit testing fact: the values of modularity and igraph::modularity are supposed to agree when graph weights are positive.
+*Args: probably should stay exactly the same
+*Outputs: probably should stay exactly the same
+*So this one just need to be cleaned up and unit tested, pretty much.
+*not sure whether to make it internal or external, but leaning toward internal
+
+***so the new function spec should be:
+*Args: probably should stay exactly the same
+*Outputs: probably should stay exactly the same (though possibly rename them)
+*leaning toward making it internal. Actually, I decided I might as well export it.
+
+***Lei and Jon's synmat:
+*Args: diverse, and which are used depends on the input "method"
+*Output: the synchrony matrix
+*I think the inputs and outputs of this are bascally right but it needs to be adapted to wsyn and cleaned up. 
+*One way to clean up the input has to do with the fact that many input args are only used for some methods choices. So we could have an input "methodspecs" with is a named list including all the specs. There would be a complex error checking function for these things. The first entry would be "method", which would be a string of one of the allowed valued (listed in docs) indicating the method. The rest of the list would have allowed values which would depend on that string (there are different specs for pearson v ReXwt). Then again, maybe it is better the way it is, because with the sensible defaults that are selected, the user can avoid thinking about irrelevant options.
+*probably you want to move the weighted and alpha arguments from SynNetModules so they are here, too
+
+***Jon and Lei's SnNetModules:
+*Currently it does too much - all the plotting is included. Should seperate the plotting and the calculations by using an S3 class.
+*My thought about a "methodspecs" argument decribed above probably don't apply to synmat, but may well apply to SynNetModules, since additional arguments are needed here, and all this stuff should anyway be saved in an S3 object created. Alternatively, you could have all the arguments separate for the function call but put them all in a methodspecs slot in the object created.
+*rename the function - it will be the generator function for a class
+*What should be in the S3 class?
+The inputs: data, times, coords (maybe other metadata), methodspecs
+The adjacency matrix that defines the network
+The list of memberships at each split
+Probably the complete results of a call to the modularity function at each split
+mns - mean time series for modules, starts out NA only added with a call to addmeans, a method for the class. mns will have to have the means for each level of splitting. Or perhaps it only has the ones that have been requested so far?
+wmfs - wmf objects for modules. Starts out NA, only added with a call to addwmfs, a method for the class. wmfs will have to be a list (for different levels of split) of lists (for different modules within a split) of wmf objects. Only the ones requested so far are filled in.
+wpmfs - similar to wmfs, but for phasor mean fields
+*this design basiaclly seems to make sense, but it is very complex. my hope is, to the user it would not seem complex because most of the complexity is handled internally.
+*methods and functions that go along with the class:
+the generator (exported function) 
+addmns, addwmfs, addwpmfs (exported methods)
+plot (exported method, takes an argument for the split wanted, with default the final split; also takes arguments for what is to be displayed (mns, wmfs, wpmfs, etc), and cross references those with what is available in the object (has been add with addmns, addwmfs, etc) and plots what is both requested and avaialble with a warning when something requested was not available, or maybe it just fills it in and returns the new object? or maybe it just throws and error if it has not been added?) Also maybe plots the dendrogram? Or is that a separate function? Or the same function but a seperate plot?
+
+***to do with regard to the clustering stuff:
+fill in cluseigen
+tests
+adapt the modularity code in wsyn
+tests
+fill in synmat
+tests
+go from there onto SynNetModules (which needs to be renamed) and the associated class and methods
+
+
+
 
