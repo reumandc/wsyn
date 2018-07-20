@@ -286,7 +286,7 @@ Design for clustering functionality:
 
 ***Jon and Lei's SnNetModules:
 *Currently it does too much - all the plotting is included. Should seperate the plotting and the calculations by using an S3 class.
-*My thought about a "methodspecs" argument decribed above probably don't apply to synmat, but may well apply to SynNetModules, since additional arguments are needed here, and all this stuff should anyway be saved in an S3 object created. Alternatively, you could have all the arguments separate for the function call but put them all in a methodspecs slot in the object created.
+*My thought about a "methodspecs" argument decribed above probably don't apply to synmat, but may well apply to SynNetModules, since additional arguments are needed here, and all this stuff should anyway be saved in an S3 object created. Alternatively, you could have all the arguments separate for the function call but put them all in a methodspecs slot in the object created. That seems best.
 *rename the function - it will be the generator function for a class
 *What should be in the S3 class?
 The inputs: data, times, coords (maybe other metadata), methodspecs
@@ -301,15 +301,24 @@ wpmfs - similar to wmfs, but for phasor mean fields
 the generator (exported function) 
 addmns, addwmfs, addwpmfs (exported methods)
 plot (exported method, takes an argument for the split wanted, with default the final split; also takes arguments for what is to be displayed (mns, wmfs, wpmfs, etc), and cross references those with what is available in the object (has been add with addmns, addwmfs, etc) and plots what is both requested and avaialble with a warning when something requested was not available, or maybe it just fills it in and returns the new object? or maybe it just throws and error if it has not been added?) Also maybe plots the dendrogram? Or is that a separate function? Or the same function but a seperate plot?
+*After more thought I decided such a plot function would be a huge pain to write. For one thing, we cannot control how many modules there will be, and plotting large numbers of modules on one complex multipanel divice is a pain. It's a pain anyway. My thinking has been so far to leave complex preduction-quality plotting to end users. So Let's do it instead as follows:
+*addmns, addwmfs, addwpmfs are all internals. We have methods for the clust class: plotmap, plotdend, plotmns, plotwmfs, plotwpmfs, all of which take a clust object and a level of split argument, and make the associated plots, on *multiple* panels when needed (e.g., plotwmfs will use separate panels or pdfs for each cluster).
 
 ***to do with regard to the clustering stuff:
-fill in cluseigen
-tests
+spec the methods associated with clust
+DONE fill in cluseigen
+DONE tests
 adapt the modularity code in wsyn
 tests
 fill in synmat
 tests
-go from there onto SynNetModules (which needs to be renamed) and the associated class and methods
+write clust
+tests
+set and get methods for clust
+tests
+other methods for clust - addmns, addwmfs, addwpmfs as internal functions, plotmap, plotdend, plotwmfs, plotwpmfs as methods for the clust class - see above description
+tests
+
 
 
 
