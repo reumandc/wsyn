@@ -30,8 +30,9 @@
 #' \email{lei_journal@@yahoo.com}; Daniel Reuman, \email{reuman@@ku.edu}
 #'
 #' @references 
-#' Fletcher Jr., R.J., et al. (2013) Network modularity reve Reveals critical 
-#' scales for connectivity in ecology and evolution. Nature Communications. doi: 10.1038//ncomms3572.
+#' Fletcher Jr., R.J., et al. (2013) Network modularity reveals critical scales 
+#' for connectivity in ecology and evolution. Nature Communications. 
+#' doi: 10.1038//ncomms3572.
 #' Gomez S., Jensen P. & Arenas A. (2009). Analysis of community structure in networks 
 #' of correlated data. Phys Rev E, 80, 016114.
 #' Newman M.E. (2006). Finding community structure in networks using the eigenvectors 
@@ -47,19 +48,47 @@
 #' 
 #' @export
 
-#***DAN: what happens if the membership vector is weird, i.e., not just the first n integers
-#where n is the number of modules? Does it cause a bug? In that case, how do the entries of
-#modQ correspond to modules?
-
 modularity<-function(adj,membership,decomp=F)
 {
-  #***DAN: got this far, no further. The below is Lei/Jon's old code, which is 
-  #generally good but probably won't work in the modified context of wsyn and needs
-  #to be adapted
-  
-  if(!is.matrix(adj)){stop("The input must be a matrix")}
-  if(!isSymmetric(unname(adj))){stop("The input matrix must be symmetric")}
-  
+  #error checking
+  if (!is.numeric(adj))
+  {
+    stop("Error in modularity: adj must be a numeric matrix")
+  }
+  if (!is.matrix(adj))
+  {
+    stop("Error in modularity: adj must be a numeric matrix")
+  }
+  if (dim(adj)[1]!=dim(adj)[2])
+  {
+    stop("Error in modularity: adj must be a square matrix")
+  }
+  if (dim(adj)[1]<2)
+  {
+    stop("Error in modularity: adj must have dimensions at least 2")
+  }
+  if(!isSymmetric(unname(adj)))
+  {
+    stop("Error in modularity: adj must be symmetric")
+  }
+  if(any(diag(adj)!=0))
+  {
+    stop("Error in modularity: diagonal of adj must contain only zeros")
+  }
+  if (!is.numeric(membership))
+  {
+    stop("Error in modularity: membership must be a numeric vector")
+  }
+  if (length(membership)!=dim(adj)[1])
+  {
+    stop("Error in modularity: membership must have length equal to the dimension of adj")
+  }
+  if (any(diff(sort(unique(membership)))!=1))
+  {
+    stop("Error in modularity: entries of membership must be the first n whole numbers")
+  }
+
+  #the algorithm
   n<-nrow(adj)
   A0<-adj
   k<-colSums(A0)
@@ -86,7 +115,11 @@ modularity<-function(adj,membership,decomp=F)
   if(m.neg==0){x2<-0 }else{ x2<-k.neg%o%k.neg/2/m.neg}
   Q<-(A0-x1+x2)*delta
   
-  if(decomp==F){return(sum(Q)/2/(m.pos+m.neg))}else{
+  if(decomp==F)
+  {
+    return(sum(Q)/2/(m.pos+m.neg))
+  }else
+  {
     Q.decomp.mod<-rep(NA, n.m)
     for(i in 1:n.m){
       tmp<-which(membership==i)
@@ -97,6 +130,5 @@ modularity<-function(adj,membership,decomp=F)
     return(list(totQ=sum(Q)/2/(m.pos+m.neg), modQ=Q.decomp.mod, 
                 nodeQ=Q.decomp.node, nodeQ.rescale=Q.decomp.node.rescale))
   }
-  
 }
 
