@@ -308,8 +308,8 @@ plot (exported method, takes an argument for the split wanted, with default the 
 spec the methods associated with clust
 DONE fill in cluseigen
 DONE tests
-adapt the modularity code in wsyn
-tests
+DONE adapt the modularity code in wsyn
+DONE tests 
 fill in synmat
 tests
 write clust

@@ -23,10 +23,10 @@
 #' on significance.
 #' @param sigthresh Significance threshold needed, if \code{weighted} is false, for a network
 #' link to be realized. Typically 0.95, 0.99, or 0.999, etc. Only used if \code{weighted} is
-#' \code{FALSE}
+#' \code{FALSE}.
 #' 
 #' @return \code{synmat} returns a synchrony matrix, of type depending on the \code{method}
-#' argument. See details.
+#' argument. See details. Diagonal entries are left as \code{NA}.
 #' 
 #' @details The following values are valid for \code{method}: \code{"pearson"}, 
 #' \code{"pearson.sig.std"}, \code{"pearson.sig.fft"}, \code{"spearman"}, \code{"spearman.sig.std"}, 
@@ -45,7 +45,8 @@
 #' cross-wavelet transform (method containing \code{"ReXWT"}) depends mainly on treatment of 
 #' out-of-phase relationships. The ReXWT is more akin to a correlation coefficient in that 
 #' strong in-phase relationships approach 1 and strong antiphase relationships approach -1. 
-#' Wavelet coherence allows any phase relationship and ranges 0 to 1.
+#' Wavelet coherence allows any phase relationship and ranges 0 to 1. Power normalization
+#' is applied when computing coherence and real part of the cross wavelet transform.
 #' 
 #' @author Jonathan Walter, \email{jaw3es@@virginia.edu}; Daniel Reuman, \email{reuman@@ku.edu}
 #'
@@ -56,11 +57,231 @@
 #' #Need some
 #'   
 #' @export
-
+#' @importFrom stats cor cor.test
+ 
 synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
-                 scale.min=2,scale.max.input=NULL,sigma=1.05,f0=1,weighted=TRUE,sigthresh=0.95)               )
+                 scale.min=2,scale.max.input=NULL,sigma=1.05,f0=1,
+                 weighted=TRUE,sigthresh=0.95)               )
 {
+  #error checking
+  errcheck_stdat(times,dat,"synmat")
+  if ((!weighted) && (!grepl("sig", method)))
+  { #if they use a non-significance methods and weighted is false, throw an error
+    stop("Error in synmat: unweighted networks available only if method involves a significance test")  
+  }
+
+  #basic setup
+  nlocs<-nrow(dat)
+  ntimes<-ncol(dat)
   
+  #the Pearson-based options
+  if (method=="pearson")
+  {
+    mat<-cor(t(dat), method="pearson")
+    diag(mat)<-NA
+    return(mat)
+  }
+  if (method=="pearson.sig.std")
+  {
+    mat<-matrix(NA,nlocs,nlocs) #compute the matrix
+    for (i in 2:nlocs)
+    {
+      for (j in 1:(i-1))
+      {
+        mat[i,j]<-cor.test(dat[i,],dat[j,],method="pearson")$p.value
+        mat[j,i]<-mat[i,j]
+      }
+    }
+    if (weighted)
+    {
+      mat<-1-mat
+    }else
+    {
+      mat<-makeunweighted(mat,sigthresh)
+    }
+    return(mat)
+  }
+  if (method=="pearson.sig.fft")
+  {
+    stop("Error in synmat: pearson.sig.fft option not implemented")
+  }
+  if (method=="pearson.sig.aaft")
+  {
+    stop("Error in synmat: pearson.sig.aaft option not implemented")
+  }
   
-  return(mat) 
+  #Spearman-based methods
+  if (method=="spearman")
+  {
+    mat<-cor(t(dat), method="spearman")
+    diag(mat)<-NA
+    return(mat)
+  }
+  if (method=="spearman.sig.std")
+  {
+    mat<-matrix(0,nlocs,nlocs) #compute the matrix
+    for (i in 2:nlocs)
+    {
+      for (j in 1:(i-1))
+      {
+        mat[i,j]<-cor.test(dat[i,],dat[j,],method="spearman")$p.value
+        mat[j,i]<-mat[i,j]
+      }
+    }
+    if (weighted)
+    {
+      mat<-1-mat
+    }else
+    {
+      mat<-makeunweighted(mat,sigthresh)
+    }
+    return(mat)
+  }  
+  if (method=="spearman.sig.fft")
+  {
+    stop("Error in synmat: spearman.sig.fft option not implemented")
+  }
+  if (method=="spearman.sig.aaft")
+  {
+    stop("Error in synmat: spearman.sig.aaft option not implemented")
+  }
+  
+  #Kendall-based methods
+  if (method=="kendall")
+  {
+    mat<-cor(t(dat),method="kendall")
+    diag(mat)<-NA
+    return(mat)
+  }
+  if (method=="kendall.sig.std")
+  {
+    mat<-matrix(0,nlocs,nlocs) #compute the matrix
+    for (i in 2:nlocs)
+    {
+      for (j in 1:(i-1))
+      {
+        mat[i,j]<-cor.test(dat[i,],dat[j,],method="kendall")$p.value
+        mat[j,i]<-mat[i,j]
+      }
+    }
+    if (weighted)
+    {
+      mat<-1-mat
+    }else
+    {
+      mat<-makeunweighted(mat,sigthresh)
+    }
+    return(mat)
+  }
+  if (method=="kendall.sig.fft")
+  {
+    stop("Error in synmat: kendall.sig.fft option not implemented")
+  }
+  if (method=="kendall.sig.aaft")
+  {
+    stop("Error in synmat: kendall.sig.aaft option not implemented")
+  }
+  
+  #ReXWT-based methods
+  if (method=="ReXWT")
+  {
+    #prepare wavelet transforms
+    wts<-warray(dat,times,scale.min,scale.max.input,sigma,f0)
+    timescales<-wts$timescales
+    wts<-wts$wavarray
+    
+    #for normalization
+    denoms<-matrix(NA,nlocs,length(timescales))
+    for (i in 1:nlocs)
+    {
+      denoms[i,]<-sqrt(colMeans(Mod(wts[i,,]*Conj(wts[i,,])),na.rm=T))
+    }
+    
+    #get the synchrony matrix
+    mat<-matrix(NA,nlocs,nlocs)
+    for (i in 2:nlocs)
+    {
+      for (j in 1:(i-1))
+      {
+        ReXWTres<-colMeans(Re(wts[i,,]*Conj(wts[j,,])), na.rm=TRUE)/(denoms[i,]*denoms[j,])
+        mat[i,j]<-mean(ReXWTres[timescales >= tsrange[1] & timescales <= tsrange[2]])
+        mat[j,i]<-mat[i,j]
+      }
+    }
+    return(mat)
+  }
+  if (method=="ReXWT.sig.fft")
+  {
+    stop("Error in synmat: ReXWT.sig.fft option not implemented")
+    #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+    #HOWEVER, this should probably be done with a fast algorithm yet to be formalized
+  }
+  if (method=="ReXWT.sig.aaft")
+  {
+    stop("Error in synmat: ReXWT.sig.aaft option not implemented")
+    #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+  }
+  
+  #coh-based methods - we could call coh, but for speed we do it this way
+  if (method=="coh")
+  {
+    #prepare wavelet transforms
+    wts<-warray(dat,times,scale.min,scale.max.input,sigma,f0)
+    timescales<-wts$timescales
+    wts<-wts$wavarray
+    
+    #for normalization
+    denoms<-matrix(NA,nlocs,length(timescales))
+    for (i in 1:nlocs)
+    {
+      denoms[i,]<-sqrt(colMeans(Mod(wts[i,,]*Conj(wts[i,,])),na.rm=T))
+    }
+    
+    #get the synchrony matrix
+    mat<-matrix(NA,nlocs,nlocs)
+    for (i in 2:nlocs)
+    {
+      for (j in 1:(i-1))
+      {
+        cohres<-Mod(colMeans(wts[i,,]*Conj(wts[j,,]),na.rm=TRUE))/(denoms[i,]*denoms[j,])
+        mat[i,j]<-mean(cohres[timescales >= tsrange[1] & timescales <= tsrange[2]])
+        mat[j,i]<-mat[i,j]
+      }
+    }
+    return(mat)
+  }
+  if (method=="coh.sig.fft")
+  {
+    stop("Error in synmat: coh.sig.fft option not implemented")
+    #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+  }
+  if (method=="coh.sig.aaft")
+  {
+    stop("Error in synmat: coh.sig.aaft option not implemented")
+    #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+  }
+  
+  #phase coherence methods
+  if (method=="phasecoh")
+  {
+    stop("Error in synmat: phasecoh option not implemented")
+    #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+  }
+  if (method=="phasecoh.sig.fft")
+  {
+    stop("Error in synmat: phasecoh.sig.fft option not implemented")
+    #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+  }
+  if (method=="phasecoh.sig.aaft")
+  {
+    stop("Error in synmat: phasecoh.sig.aaft option not implemented")
+    #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+  }
+  
+  #average phase
+  if (method=="phase")
+  {
+    stop("Error in synmat: phase option not implemented")
+    #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+  }
 }
