@@ -26,11 +26,10 @@
 #' @references Sheppard, L.w., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 #' 
 #' @examples
-#' #***DAN has not reviewed this example yet, and it wont work until I get cleandat working
-#' #time<-1:30 #generate time steps
-#' #dat<-matrix(rpois(20*length(time),20),nrow=20,ncol=length(time)) #generate fake count data for 20 locations
-#' #dat<-cleandat(dat,normalize=F,detrend=T)$cleandat #detrend each site's time series, saving the cleaned data
-#' #wmf<-wmf(dat,times=time)
+#' times<-1:30 #generate time steps
+#' dat<-matrix(rpois(20*length(time),20),nrow=20,ncol=length(time)) #generate fake count data for 20 locations
+#' dat<-cleandat(dat=dat,times=times,clev=2)$cdat #detrend and demean
+#' wmf<-wmf(dat,times)
 #' 
 #' @export
 
