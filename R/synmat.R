@@ -36,17 +36,20 @@
 #' \code{"phasecoh"}, \code{"phasecoh.sig.fft"}, \code{"phasecoh.sig.aaft"}, and \code{"phase"}.
 #' These identifiers correspond to the Pearson, Spearman, and Kendall correlations, the real
 #' part of the cross-wavelet transform, the wavelet coherence, the wavelet phase coherence, 
-#' and the average phase difference of wavelet transforms over the timescale band. Significance 
-#' testing is performed using standard approaches (for correlation coefficients, although these
-#' are inappropriate for autocorrelated data), or surrogates generated using the Fourier 
-#' (\code{"fft"}) or amplitude adjusted Fourier surrogates (\code{"aaft"}) methods. For 
+#' and the average phase difference of wavelet transforms over the timescale band. 
+#' 
+#' Significance testing is performed using standard approaches (for correlation coefficients, 
+#' although these are inappropriate for autocorrelated data), or surrogates generated using the 
+#' Fourier (\code{"fft"}) or amplitude adjusted Fourier surrogates (\code{"aaft"}) methods. For 
 #' \code{"coh.sig.fft"}, the fast testing algorithm of Sheppard et al. (2017) is implemented. 
 #' The choice of wavelet coherence (method containing \code{"coh"}) or the real part of the 
 #' cross-wavelet transform (method containing \code{"ReXWT"}) depends mainly on treatment of 
 #' out-of-phase relationships. The ReXWT is more akin to a correlation coefficient in that 
 #' strong in-phase relationships approach 1 and strong antiphase relationships approach -1. 
 #' Wavelet coherence allows any phase relationship and ranges 0 to 1. Power normalization
-#' is applied when computing coherence and real part of the cross wavelet transform.
+#' is applied when computing coherence and real part of the cross wavelet transform. 
+#' Significance tests are one-tailed. Synchrony matrices for significance-based methods when
+#' \code{weighted} is \code{TRUE} contain 1 minus the p-values. 
 #' 
 #' @author Jonathan Walter, \email{jaw3es@@virginia.edu}; Daniel Reuman, \email{reuman@@ku.edu}
 #'
@@ -61,7 +64,7 @@
  
 synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
                  scale.min=2,scale.max.input=NULL,sigma=1.05,f0=1,
-                 weighted=TRUE,sigthresh=0.95)               )
+                 weighted=TRUE,sigthresh=0.95)               
 {
   #error checking
   errcheck_stdat(times,dat,"synmat")
@@ -74,21 +77,25 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
   nlocs<-nrow(dat)
   ntimes<-ncol(dat)
   
-  #the Pearson-based options
-  if (method=="pearson")
+  #options corresponding to one of the correlations without considering significance
+  if (method %in% c("pearson","spearman","kendall"))
   {
-    mat<-cor(t(dat), method="pearson")
+    mat<-cor(t(dat), method=method)
     diag(mat)<-NA
     return(mat)
   }
-  if (method=="pearson.sig.std")
+
+  #options corresponding to one of the correlations, using standard significance
+  if (method %in% c("pearson.sig.std","kendall.sig.std","spearman.sig.std"))
   {
+    cormeth<-strsplit(method,".",fixed=TRUE)[[1]][1]
     mat<-matrix(NA,nlocs,nlocs) #compute the matrix
     for (i in 2:nlocs)
     {
       for (j in 1:(i-1))
       {
-        mat[i,j]<-cor.test(dat[i,],dat[j,],method="pearson")$p.value
+        mat[i,j]<-cor.test(dat[i,],dat[j,],method=cormeth,
+                           alternative="greater")$p.value
         mat[j,i]<-mat[i,j]
       }
     }
@@ -100,34 +107,33 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
       mat<-makeunweighted(mat,sigthresh)
     }
     return(mat)
-  }
-  if (method=="pearson.sig.fft")
-  {
-    stop("Error in synmat: pearson.sig.fft option not implemented")
-  }
-  if (method=="pearson.sig.aaft")
-  {
-    stop("Error in synmat: pearson.sig.aaft option not implemented")
   }
   
-  #Spearman-based methods
-  if (method=="spearman")
+  #options corresponding to one of the correlations, using surrogate-based significance
+  if (method %in% c("pearson.sig.fft","pearson.sig.aaft",
+                    "kendall.sig.fft","kendall.sig.aaft",
+                    "spearman.sig.fft","spearman.sig.aaft"))
   {
-    mat<-cor(t(dat), method="spearman")
-    diag(mat)<-NA
-    return(mat)
-  }
-  if (method=="spearman.sig.std")
-  {
-    mat<-matrix(0,nlocs,nlocs) #compute the matrix
-    for (i in 2:nlocs)
+    #get strings specifying correlation and surrogate methods
+    h<-strsplit(method,".",fixed=TRUE)[[1]]
+    cormeth<-h[1]
+    surrtype<-h[3]
+    
+    #get correlation matrices for the real data and for surrogates
+    sdat<-surrog(dat,nsurrogs,surrtype,FALSE)
+    cormat<-cor(t(dat), method=cormeth)
+    scormat<-lapply(X=sdat,FUN=function(x){cor(t(x),method=cormeth)})
+    
+    #get the resulting matrix of p-values
+    mat<-matrix(0,nrow(cormat),ncol(cormat))
+    for (counter in 1:nsurrogs)
     {
-      for (j in 1:(i-1))
-      {
-        mat[i,j]<-cor.test(dat[i,],dat[j,],method="spearman")$p.value
-        mat[j,i]<-mat[i,j]
-      }
+      mat<-mat+(cormat<=scormat[[counter]])
     }
+    diag(mat)<-NA
+    mat<-(mat+1)/(nsurrogs+1)
+    
+    #convert to the synchrony matrix
     if (weighted)
     {
       mat<-1-mat
@@ -136,50 +142,6 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
       mat<-makeunweighted(mat,sigthresh)
     }
     return(mat)
-  }  
-  if (method=="spearman.sig.fft")
-  {
-    stop("Error in synmat: spearman.sig.fft option not implemented")
-  }
-  if (method=="spearman.sig.aaft")
-  {
-    stop("Error in synmat: spearman.sig.aaft option not implemented")
-  }
-  
-  #Kendall-based methods
-  if (method=="kendall")
-  {
-    mat<-cor(t(dat),method="kendall")
-    diag(mat)<-NA
-    return(mat)
-  }
-  if (method=="kendall.sig.std")
-  {
-    mat<-matrix(0,nlocs,nlocs) #compute the matrix
-    for (i in 2:nlocs)
-    {
-      for (j in 1:(i-1))
-      {
-        mat[i,j]<-cor.test(dat[i,],dat[j,],method="kendall")$p.value
-        mat[j,i]<-mat[i,j]
-      }
-    }
-    if (weighted)
-    {
-      mat<-1-mat
-    }else
-    {
-      mat<-makeunweighted(mat,sigthresh)
-    }
-    return(mat)
-  }
-  if (method=="kendall.sig.fft")
-  {
-    stop("Error in synmat: kendall.sig.fft option not implemented")
-  }
-  if (method=="kendall.sig.aaft")
-  {
-    stop("Error in synmat: kendall.sig.aaft option not implemented")
   }
   
   #ReXWT-based methods
@@ -214,12 +176,16 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
   {
     stop("Error in synmat: ReXWT.sig.fft option not implemented")
     #***DAN: reumannplatz::synmat implemented this, so check there when you do this
-    #HOWEVER, this should probably be done with a fast algorithm yet to be formalized
+    #HOWEVER, this should probably be done with a fast algorithm yet to be formalized. 
+    #Lawrence says it should be possible to write such an algorithm. See notes in issues
+    #on using the fast algorithm in the coh.sig.fft context
+    #***DAN: make sure to do a one-tailed test here
   }
   if (method=="ReXWT.sig.aaft")
   {
     stop("Error in synmat: ReXWT.sig.aaft option not implemented")
     #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+    #***DAN: make sure to do a one-tailed test here
   }
   
   #coh-based methods - we could call coh, but for speed we do it this way
@@ -254,28 +220,51 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
   {
     stop("Error in synmat: coh.sig.fft option not implemented")
     #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+    #HOWEVER, see the notes on this subject in issues.txt
+    #***DAN: make sure to do a one-tailed test here
   }
   if (method=="coh.sig.aaft")
   {
     stop("Error in synmat: coh.sig.aaft option not implemented")
     #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+    #***DAN: make sure to do a one-tailed test here
   }
   
-  #phase coherence methods
+  #phase coherence methods - we could call coh, but for speed we do it this way
   if (method=="phasecoh")
   {
-    stop("Error in synmat: phasecoh option not implemented")
-    #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+    #prepare wavelet transforms
+    wts<-warray(dat,times,scale.min,scale.max.input,sigma,f0)
+    timescales<-wts$timescales
+    wts<-wts$wavarray
+    
+    #phase normalize
+    wts<-wts/Mod(wts)
+    
+    #get the synchrony matrix
+    mat<-matrix(NA,nlocs,nlocs)
+    for (i in 2:nlocs)
+    {
+      for (j in 1:(i-1))
+      {
+        cohres<-Mod(colMeans(wts[i,,]*Conj(wts[j,,]),na.rm=TRUE))
+        mat[i,j]<-mean(cohres[timescales >= tsrange[1] & timescales <= tsrange[2]])
+        mat[j,i]<-mat[i,j]
+      }
+    }
+    return(mat)
   }
   if (method=="phasecoh.sig.fft")
   {
     stop("Error in synmat: phasecoh.sig.fft option not implemented")
     #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+    #***DAN: make sure to do a one-tailed test here
   }
   if (method=="phasecoh.sig.aaft")
   {
     stop("Error in synmat: phasecoh.sig.aaft option not implemented")
     #***DAN: reumannplatz::synmat implemented this, so check there when you do this
+    #***DAN: make sure to do a one-tailed test here
   }
   
   #average phase

@@ -32,6 +32,7 @@ DONE wlm and tests
 DONE wlm set and get methods 
 DONE wlmtest generator function and accompanying wlmfit internal, and tests 
 ***have not yet implemented the fast algorithm
+***also, the only normalization that is properly implemeneted, throughout wlms, is powall
 DONE do you want to add slots for scale.min, scale.max.input, sigma, and f0 to wt, wmf, wpmf, and coh methods? You would also need set and get methods for these slots for each class. Or maybe stick them together into a list called wopts which makes a single slot, and then you would have to make a similar change to wlm.
 DONE DAN: check the vignette for what effects the above change would have had, both on runs and on descriptions
 DONE wlmtest methods, and tests thereof
@@ -41,17 +42,36 @@ DONE tests for addranks for wlmtest objects
 DONE bandtest for wlmtest objects, and tests - docs combned with coh method
 DONE predsync and tests - wrote the function and some tests, but need to go through some results with Lawrence, see the bottom of tests_predsync.R, and then formalize a few more tests
 DONE power function for tts class and tests
-modsync and tests
+***modsync and tests
 DONE propexpl and tests - proportion of synchrony explained as a function of timescale and related quantities - ended up calling it syncexpl
-vignette - see about using the plankton data, the version we said we would release if the plankton paper is published. Include in package and base the wlm part of the vignette on these data.
-looscore and tests
-locassoc tester function and tests
-examining if phases of coefficients are consistent with predictor/response phases - do this later, together with functionality for plotting phases of various things (I have left a lot of phase plot functions out)
+***vignette - see about using the plankton data, the version we said we would release if the plankton paper is published. Include in package and base the wlm part of the vignette on these data.
+***looscore and tests
+***locassoc tester function and tests
+***examining if phases of coefficients are consistent with predictor/response phases - do this later, together with functionality for plotting phases of various things (I have left a lot of phase plot functions out)
 12) DONE everything you need for deer
-13) synmat for kelp and Jon's bird stuff
-***the functions to work from in reumannplatz are synmat, SynNetModules, cluster_eigen, and modularity. These are in reumannplatz. Ignore the older functions wsynmat and ModularityDecomp, which were superseded by the above but never removed from reumannplatz.
-14) write the phase plotter functions, and unit tests, for tts, wt, wpmd, wmf. 
-15) print and summary methods for all the classes
+***13) synmat for kelp and Jon's bird stuff
+The functions to work from in reumannplatz are synmat, SynNetModules, cluster_eigen, and modularity. These are in reumannplatz. Ignore the older functions wsynmat and ModularityDecomp, which were superseded by the above but never removed from reumannplatz.
+To do with regard to the clustering stuff:
+***spec the methods associated with clust
+DONE fill in cluseigen
+DONE tests
+DONE adapt the modularity code in wsyn
+DONE tests 
+fill in synmat
+tests
+write clust
+tests
+set and get methods for clust
+tests
+other methods for clust - addmns, addwmfs, addwpmfs as internal functions, plotmap, plotdend, plotwmfs, plotwpmfs as methods for the clust class - see above description
+tests
+***To get a speedup, and for other reasons, it may be worth improving the fast coherence algorithm as it exists in synmat as follows:
+-write a version of the algorithm (currently in coh) that takes the necessary random numbers as inputs. persumably coh would then call that code after generating the random numbers
+-then synmat would generate one set of random numbers for all pairwise coherence significance calculations it needs to do, and pass the same set to all pairwise calculations of coherence significance
+-having the version of the fast coherence algorithm that accepts random numbers as inputs will also be useful for other reasons, e.g., comparing to matlab code results
+***Lawrence says it should be possible to test the significance of the real part of the cross wavelet transform using an adapted version of his fast algorithm
+***14) write the phase plotter functions, and unit tests, for tts, wt, wpmd, wmf. 
+***15) print and summary methods for all the classes
 
 
 for formatting the documentation at top:
@@ -304,20 +324,7 @@ plot (exported method, takes an argument for the split wanted, with default the 
 *After more thought I decided such a plot function would be a huge pain to write. For one thing, we cannot control how many modules there will be, and plotting large numbers of modules on one complex multipanel divice is a pain. It's a pain anyway. My thinking has been so far to leave complex preduction-quality plotting to end users. So Let's do it instead as follows:
 *addmns, addwmfs, addwpmfs are all internals. We have methods for the clust class: plotmap, plotdend, plotmns, plotwmfs, plotwpmfs, all of which take a clust object and a level of split argument, and make the associated plots, on *multiple* panels when needed (e.g., plotwmfs will use separate panels or pdfs for each cluster).
 
-***to do with regard to the clustering stuff:
-spec the methods associated with clust
-DONE fill in cluseigen
-DONE tests
-DONE adapt the modularity code in wsyn
-DONE tests 
-fill in synmat
-tests
-write clust
-tests
-set and get methods for clust
-tests
-other methods for clust - addmns, addwmfs, addwpmfs as internal functions, plotmap, plotdend, plotwmfs, plotwpmfs as methods for the clust class - see above description
-tests
+
 
 
 
