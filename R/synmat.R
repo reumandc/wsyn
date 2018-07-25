@@ -144,34 +144,42 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
     return(mat)
   }
   
-  #ReXWT-based methods
+  #ReXWT
   if (method=="ReXWT")
   {
-    #prepare wavelet transforms
-    wts<-warray(dat,times,scale.min,scale.max.input,sigma,f0)
-    timescales<-wts$timescales
-    wts<-wts$wavarray
-    
-    #for normalization
-    denoms<-matrix(NA,nlocs,length(timescales))
-    for (i in 1:nlocs)
-    {
-      denoms[i,]<-sqrt(colMeans(Mod(wts[i,,]*Conj(wts[i,,])),na.rm=T))
-    }
-    
-    #get the synchrony matrix
-    mat<-matrix(NA,nlocs,nlocs)
-    for (i in 2:nlocs)
-    {
-      for (j in 1:(i-1))
-      {
-        ReXWTres<-colMeans(Re(wts[i,,]*Conj(wts[j,,])), na.rm=TRUE)/(denoms[i,]*denoms[j,])
-        mat[i,j]<-mean(ReXWTres[timescales >= tsrange[1] & timescales <= tsrange[2]])
-        mat[j,i]<-mat[i,j]
-      }
-    }
+    wavarray<-wavmatwork(dat,times,scale.min,scale.max.input,sigma,f0,"powind")
+    timescales<-wavarray$timescales
+    wavarray<-wavarray$wavarray
+    mat<-apply(FUN=mean,
+               X=Re(wavarray[,,timescales >= tsrange[1] & timescales <= tsrange[2],drop=FALSE]),
+               MARGIN=c(1,2))
     return(mat)
   }
+  
+  #coh
+  if (method=="coh")
+  {
+    wavarray<-wavmatwork(dat,times,scale.min,scale.max.input,sigma,f0,"powind")
+    timescales<-wavarray$timescales
+    wavarray<-wavarray$wavarray
+    mat<-apply(FUN=mean,
+               X=Mod(wavarray[,,timescales >= tsrange[1] & timescales <= tsrange[2],drop=FALSE]),
+               MARGIN=c(1,2))
+    return(mat)
+  }  
+  
+  #phasecoh
+  if (method=="phasecoh")
+  {
+    wavarray<-wavmatwork(dat,times,scale.min,scale.max.input,sigma,f0,"phase")
+    timescales<-wavarray$timescales
+    wavarray<-wavarray$wavarray
+    mat<-apply(FUN=mean,
+               X=Mod(wavarray[,,timescales >= tsrange[1] & timescales <= tsrange[2],drop=FALSE]),
+               MARGIN=c(1,2))
+    return(mat)
+  }
+  
   if (method=="ReXWT.sig.fft")
   {
     stop("Error in synmat: ReXWT.sig.fft option not implemented")
@@ -188,34 +196,7 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
     #***DAN: make sure to do a one-tailed test here
   }
   
-  #coh-based methods - we could call coh, but for speed we do it this way
-  if (method=="coh")
-  {
-    #prepare wavelet transforms
-    wts<-warray(dat,times,scale.min,scale.max.input,sigma,f0)
-    timescales<-wts$timescales
-    wts<-wts$wavarray
-    
-    #for normalization
-    denoms<-matrix(NA,nlocs,length(timescales))
-    for (i in 1:nlocs)
-    {
-      denoms[i,]<-sqrt(colMeans(Mod(wts[i,,]*Conj(wts[i,,])),na.rm=T))
-    }
-    
-    #get the synchrony matrix
-    mat<-matrix(NA,nlocs,nlocs)
-    for (i in 2:nlocs)
-    {
-      for (j in 1:(i-1))
-      {
-        cohres<-Mod(colMeans(wts[i,,]*Conj(wts[j,,]),na.rm=TRUE))/(denoms[i,]*denoms[j,])
-        mat[i,j]<-mean(cohres[timescales >= tsrange[1] & timescales <= tsrange[2]])
-        mat[j,i]<-mat[i,j]
-      }
-    }
-    return(mat)
-  }
+
   if (method=="coh.sig.fft")
   {
     stop("Error in synmat: coh.sig.fft option not implemented")
@@ -230,30 +211,6 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
     #***DAN: make sure to do a one-tailed test here
   }
   
-  #phase coherence methods - we could call coh, but for speed we do it this way
-  if (method=="phasecoh")
-  {
-    #prepare wavelet transforms
-    wts<-warray(dat,times,scale.min,scale.max.input,sigma,f0)
-    timescales<-wts$timescales
-    wts<-wts$wavarray
-    
-    #phase normalize
-    wts<-wts/Mod(wts)
-    
-    #get the synchrony matrix
-    mat<-matrix(NA,nlocs,nlocs)
-    for (i in 2:nlocs)
-    {
-      for (j in 1:(i-1))
-      {
-        cohres<-Mod(colMeans(wts[i,,]*Conj(wts[j,,]),na.rm=TRUE))
-        mat[i,j]<-mean(cohres[timescales >= tsrange[1] & timescales <= tsrange[2]])
-        mat[j,i]<-mat[i,j]
-      }
-    }
-    return(mat)
-  }
   if (method=="phasecoh.sig.fft")
   {
     stop("Error in synmat: phasecoh.sig.fft option not implemented")
