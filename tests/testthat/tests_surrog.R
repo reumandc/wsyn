@@ -44,11 +44,11 @@ test_that("test Fourier surrogates, synchrony preserving surrogs",{
   expect_equal(Mod(fft(res[[3]][2,])),Mod(fft(dat[2,])))
   
   #***some different time series
-  x1<-sin(2*pi*times/10)+rnorm(length(time),0,.1)
+  x1<-sin(2*pi*times/10)+rnorm(length(times),0,.1)
   x1<-x1-mean(x1)
-  x2<-sin(2*pi*times/20)+rnorm(length(time),0,.1)
+  x2<-sin(2*pi*times/20)+rnorm(length(times),0,.1)
   x2<-x2-mean(x2)
-  x3<-sin(2*pi*times/20)+rnorm(length(time),0,.1)
+  x3<-sin(2*pi*times/20)+rnorm(length(times),0,.1)
   x3<-x3-mean(x3)
   dat<-rbind(x1,x2,x3)
   res<-surrog(dat,nsurrogs,surrtype,syncpres)
