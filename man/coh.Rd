@@ -26,7 +26,7 @@ coh(dat1, dat2, times, norm, sigmethod = "none", nrand = 1000,
 
 \item{sigma}{The ratio of each time scale examined relative to the next timescale. Should be greater than 1.}
 
-\item{f0}{The ratio of the period of fluctuation to the width of the envelop}
+\item{f0}{The ratio of the period of fluctuation to the width of the envelope}
 }
 \value{
 \code{coh} returns an object of class \code{coh}. Slots are:

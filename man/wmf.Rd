@@ -38,11 +38,10 @@ creator function for the \code{wmf} class. The \code{wmf} class inherits from th
 The wavelet mean field was developed by Lawrence Sheppard and Daniel Reuman. R code by Jonathan Walter.
 }
 \examples{
-#***DAN has not reviewed this example yet, and it wont work until I get cleandat working
-#time<-1:30 #generate time steps
-#dat<-matrix(rpois(20*length(time),20),nrow=20,ncol=length(time)) #generate fake count data for 20 locations
-#dat<-cleandat(dat,normalize=F,detrend=T)$cleandat #detrend each site's time series, saving the cleaned data
-#wmf<-wmf(dat,times=time)
+times<-1:30 #generate time steps
+dat<-matrix(rpois(20*length(time),20),nrow=20,ncol=length(time)) #generate fake count data for 20 locations
+dat<-cleandat(dat=dat,times=times,clev=2)$cdat #detrend and demean
+wmf<-wmf(dat,times)
 
 }
 \references{

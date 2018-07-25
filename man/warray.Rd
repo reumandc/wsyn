@@ -34,11 +34,10 @@ Important for interpreting the phase: the phases grow through time, i.e., they
 turn anti-clockwise. This function is internal, no error checking.
 }
 \examples{
-#***DAN has not checked this example, and it won't work until I get cleandat working anyway
-#time<-1:30 #generate time steps
-#dat<-matrix(rpois(20*length(time),20),nrow=20,ncol=length(time)) #generate fake count data for 20 locations
-#dat<-CleanData(dat,normalize=F,detrend=T)$cleandat #detrend each site's time series, saving the cleaned data
-#dat.array<-warray(dat,times=time)
+times<-1:30 #generate time steps
+dat<-matrix(rpois(20*length(time),20),nrow=20,ncol=length(time)) #generate fake count data for 20 locations
+dat<-cleandat(dat,times,clev=2)$cdat #detrend and demean
+res<-warray(dat,times)
 }
 \author{
 Lauren Hallett, \email{hallett@uoregon.edu}; Lawrence Sheppard, \email{lwsheppard@ku.edu};
