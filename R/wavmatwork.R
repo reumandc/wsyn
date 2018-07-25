@@ -15,13 +15,13 @@
 #' wavelet-based methods.
 #' @param norm The normalization of wavelet transforms to be used. One of "none", "phase", 
 #' "powind".
+#' @param treatment Either "Mod" or "Re"
 #' 
 #' @return \code{wavmatwork} returns a list consisting of:
 #' \item{timescales}{The timescales of analysis} 
-#' \item{wavarray}{An array, locations by locations by timescales, containing
-#' complex values so that taking the modulus gives the coherence between 
-#' locations, and taking the real part gives the real part of the cross 
-#' wavelet transform.}
+#' \item{wavarray}{An array, locations by locations by timescales, containing either the 
+#' coherences (for \code{treatment="Mod"}) or the real parts of the cross-wavelet transforms
+#' (for \code{treatment="Re"}) between locations.}
 #' 
 #' @note Internal function, no error checking done.
 #' 
@@ -30,7 +30,7 @@
 #' @examples 
 #' #Need some
 
-wavmatwork<-function(dat,times,scale.min,scale.max.input,sigma,f0,norm)
+wavmatwork<-function(dat,times,scale.min,scale.max.input,sigma,f0,norm,treatment)
 {
   #basic setup
   nlocs<-dim(dat)[1]
@@ -50,6 +50,16 @@ wavmatwork<-function(dat,times,scale.min,scale.max.input,sigma,f0,norm)
       wavarray[i,j,]<-colMeans(wts[i,,]*Conj(wts[j,,]), na.rm=TRUE)
       wavarray[j,i,]<-wavarray[i,j,]
     }
+  }
+  
+  #modulus or real part
+  if (treatment=="Mod")
+  {
+    wavarray<-Mod(wavarray)
+  }
+  if (treatment=="Re")
+  {
+    wavarray<-Re(wavarray)
   }
   
   return(list(timescales=timescales,wavarray=wavarray))  

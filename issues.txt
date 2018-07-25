@@ -57,8 +57,9 @@ DONE fill in cluseigen
 DONE tests
 DONE adapt the modularity code in wsyn
 DONE tests 
-fill in synmat
-tests
+tests for wavmatwork
+fill in synmat - only the fast algorithms remaining
+tests - only the fast algorithms remaining
 write clust
 tests
 set and get methods for clust

@@ -6,6 +6,7 @@ test_that("test of error catching",{
   dat<-cleandat(dat,times,2)$cdat
   expect_error(synmat(dat,times,"coh",weighted=FALSE),
                "Error in synmat: unweighted networks available only if method involves a significance test")
+  expect_error(synmat(dat,times,"test"),"Error in synmat: bad value of method")
 })
 
 test_that("test pearson methods",{
@@ -105,9 +106,44 @@ test_that("test coh-based methods",{
   expect_equal(res[3,2],mean(Mod(cohres$coher)))
   
   #coh.sig.fft
-  #***DAN: fill in when the method is written
-
+  set.seed(101)
+  sig<-matrix(.95,5,5)
+  diag(sig)<-1
+  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat<-rbind(dat1,dat2)
+  times<-1:30
+  dat<-cleandat(dat,times,clev=2)$cdat
+  method<-"coh.sig.fft"
+  res<-synmat(dat,times,method,tsrange=c(3,15),nsurrogs=100)
+  expect_equal(dim(res),c(10,10))
+  expect_equal(diag(res),rep(NA*numeric(1),10))
+  diag(res)<-1
+  expect_true(all(res[1:5,1:5]>.95))
+  expect_true(all(res[6:10,6:10]>.95))
+  expect_true(all(res[1:5,6:10]<.95))
+  expect_true(all(res[6:10,1:5]<.95))
+  
   #coh.sig.aaft
+  set.seed(201)
+  sig<-matrix(.95,5,5)
+  diag(sig)<-1
+  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat<-rbind(dat1,dat2)
+  times<-1:30
+  dat<-cleandat(dat,times,clev=2)$cdat
+  method<-"coh.sig.aaft"
+  res<-synmat(dat,times,method,tsrange=c(3,15),nsurrogs=100)
+  expect_equal(dim(res),c(10,10))
+  expect_equal(diag(res),rep(NA*numeric(1),10))
+  diag(res)<-1
+  expect_true(all(res[1:5,1:5]>.95))
+  expect_true(all(res[6:10,6:10]>.95))
+  expect_true(all(res[1:5,6:10]<.95))
+  expect_true(all(res[6:10,1:5]<.95))
+  
+  #coh.sig.fast
   #***DAN: fill in when the method is written
 })
   
@@ -126,9 +162,44 @@ test_that("test ReXWT-based methods",{
   expect_equal(res[3,2],mean(Re(cohres$coher)))
   
   #ReXWT.sig.fft
-  #***DAN: fill in when the method is written
+  set.seed(101)
+  sig<-matrix(.95,5,5)
+  diag(sig)<-1
+  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat<-rbind(dat1,dat2)
+  times<-1:30
+  dat<-cleandat(dat,times,clev=2)$cdat
+  method<-"ReXWT.sig.fft"
+  res<-synmat(dat,times,method,tsrange=c(3,15),nsurrogs=100)
+  expect_equal(dim(res),c(10,10))
+  expect_equal(diag(res),rep(NA*numeric(1),10))
+  diag(res)<-1
+  expect_true(all(res[1:5,1:5]>.95))
+  expect_true(all(res[6:10,6:10]>.95))
+  expect_true(all(res[1:5,6:10]<.95))
+  expect_true(all(res[6:10,1:5]<.95))  
   
   #ReXWT.sig.aaft
+  set.seed(101)
+  sig<-matrix(.95,5,5)
+  diag(sig)<-1
+  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat<-rbind(dat1,dat2)
+  times<-1:30
+  dat<-cleandat(dat,times,clev=2)$cdat
+  method<-"ReXWT.sig.aaft"
+  res<-synmat(dat,times,method,tsrange=c(3,15),nsurrogs=100)
+  expect_equal(dim(res),c(10,10))
+  expect_equal(diag(res),rep(NA*numeric(1),10))
+  diag(res)<-1
+  expect_true(all(res[1:5,1:5]>.95))
+  expect_true(all(res[6:10,6:10]>.95))
+  expect_true(all(res[1:5,6:10]<.95))
+  expect_true(all(res[6:10,1:5]<.95))
+  
+  #ReXWT.sig.fast
   #***DAN: fill in when the method is written
 })
 
@@ -147,11 +218,40 @@ test_that("phase coherence and average phase methods",{
   expect_equal(res[3,2],mean(Mod(cohres$coher)))
 
   #phasecoh.sig.fft
-  #***DAN: fill in when the method is written
+  set.seed(301)
+  sig<-matrix(.95,5,5)
+  diag(sig)<-1
+  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat<-rbind(dat1,dat2)
+  times<-1:30
+  dat<-cleandat(dat,times,clev=2)$cdat
+  method<-"phasecoh.sig.fft"
+  res<-synmat(dat,times,method,tsrange=c(3,15),nsurrogs=100)
+  expect_equal(dim(res),c(10,10))
+  expect_equal(diag(res),rep(NA*numeric(1),10))
+  diag(res)<-1
+  expect_true(all(res[1:5,1:5]>.95))
+  expect_true(all(res[6:10,6:10]>.95))
+  expect_true(all(res[1:5,6:10]<.95))
+  expect_true(all(res[6:10,1:5]<.95))
   
   #phasecoh.sig.aaft
-  #***DAN: fill in when the method is written
-  
-  #average phase
-  #***DAN: fill in when the method is written
+  set.seed(301)
+  sig<-matrix(.95,5,5)
+  diag(sig)<-1
+  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat<-rbind(dat1,dat2)
+  times<-1:30
+  dat<-cleandat(dat,times,clev=2)$cdat
+  method<-"phasecoh.sig.aaft"
+  res<-synmat(dat,times,method,tsrange=c(3,15),nsurrogs=100)
+  expect_equal(dim(res),c(10,10))
+  expect_equal(diag(res),rep(NA*numeric(1),10))
+  diag(res)<-1
+  expect_true(all(res[1:5,1:5]>.95))
+  expect_true(all(res[6:10,6:10]>.95))
+  expect_true(all(res[1:5,6:10]<.95))
+  expect_true(all(res[6:10,1:5]<.95))
 })
