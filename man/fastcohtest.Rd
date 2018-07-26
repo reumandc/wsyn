@@ -26,11 +26,12 @@ fastcohtest(dat1, dat2, scale.min, scale.max.input, sigma, f0, nrand, randnums,
 There must be nrand*floor((dim(dat1)[2]-1)/2) of these.}
 
 \item{norm}{The normalization of wavelet transforms to use. Controls the version of the 
-coherence that is performed. One of "none", "phase", "powall", "powind". See details in
+coherence that is performed. One of "none", "powall", "powind". See details in
 the documentation of \code{coh}.}
 }
 \value{
 \code{fastcohtest} returns a list with these elements:
+\item{timescales}{The timescales used}
 \item{coher}{The magnitude of this is the fast-algorithm version of the coherence between
 the two datasets, for comparison with \code{scoher}}
 \item{scoher}{A matrix with \code{nrand} rows, the magnitude of each one is the 
