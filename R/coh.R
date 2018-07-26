@@ -180,7 +180,8 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   if (sigmethod=="fast")
   {
     randnums<-runif(nrand*floor((ncol(dat1)-1)/2))
-    signif<-fastcohtest(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnums,norm)
+    fcres<-fastcohtest(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnums,norm)
+    signif<-list(coher=fcres$coher,scoher=fcres$scoher)
     
     #prepare result  
     if (wasvect1){dat1<-as.vector(dat1)}

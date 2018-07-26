@@ -144,7 +144,23 @@ test_that("test coh-based methods",{
   expect_true(all(res[6:10,1:5]<.95))
   
   #coh.sig.fast
-  #***DAN: fill in when the method is written
+  set.seed(301) 
+  sig<-matrix(.95,5,5)
+  diag(sig)<-1
+  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat<-rbind(dat1,dat2)
+  times<-1:30
+  dat<-cleandat(dat,times,clev=2)$cdat
+  method<-"coh.sig.fast"
+  res<-synmat(dat,times,method,tsrange=c(3,15),nsurrogs=100)
+  expect_equal(dim(res),c(10,10))
+  expect_equal(diag(res),rep(NA*numeric(1),10))
+  diag(res)<-1
+  expect_true(all(res[1:5,1:5]>.95))
+  expect_true(all(res[6:10,6:10]>.95))
+  expect_true(all(res[1:5,6:10]<.95))
+  expect_true(all(res[6:10,1:5]<.95))
 })
   
 test_that("test ReXWT-based methods",{
@@ -200,7 +216,23 @@ test_that("test ReXWT-based methods",{
   expect_true(all(res[6:10,1:5]<.95))
   
   #ReXWT.sig.fast
-  #***DAN: fill in when the method is written
+  set.seed(101)
+  sig<-matrix(.95,5,5)
+  diag(sig)<-1
+  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat<-rbind(dat1,dat2)
+  times<-1:30
+  dat<-cleandat(dat,times,clev=2)$cdat
+  method<-"ReXWT.sig.fast"
+  res<-synmat(dat,times,method,tsrange=c(3,15),nsurrogs=100)
+  expect_equal(dim(res),c(10,10))
+  expect_equal(diag(res),rep(NA*numeric(1),10))
+  diag(res)<-1
+  expect_true(all(res[1:5,1:5]>.95))
+  expect_true(all(res[6:10,6:10]>.95))
+  expect_true(all(res[1:5,6:10]<.95))
+  expect_true(all(res[6:10,1:5]<.95))
 })
 
 test_that("phase coherence and average phase methods",{

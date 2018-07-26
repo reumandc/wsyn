@@ -12,10 +12,11 @@
 #' @param randnums A bunch of independent random numbers uniformly distributed on (0,1).
 #' There must be nrand*floor((dim(dat1)[2]-1)/2) of these. 
 #' @param norm The normalization of wavelet transforms to use. Controls the version of the 
-#' coherence that is performed. One of "none", "phase", "powall", "powind". See details in
+#' coherence that is performed. One of "none", "powall", "powind". See details in
 #' the documentation of \code{coh}.
 #' 
 #' @return \code{fastcohtest} returns a list with these elements:
+#' \item{timescales}{The timescales used}
 #' \item{coher}{The magnitude of this is the fast-algorithm version of the coherence between
 #' the two datasets, for comparison with \code{scoher}}
 #' \item{scoher}{A matrix with \code{nrand} rows, the magnitude of each one is the 
@@ -36,6 +37,13 @@
 
 fastcohtest<-function(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnums,norm)
 {
+  #deal with vector datasets
+  if (!is.matrix(dat1))
+  {
+    dat1<-matrix(dat1,1,length(dat1))
+    dat2<-matrix(dat2,1,length(dat2))
+  }
+  
   #setup - parallels wt.R
   n<-nrow(dat1)
   tt<-ncol(dat1)
@@ -155,7 +163,7 @@ fastcohtest<-function(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnum
       if (norm=="none"){surrcoh.norm<-surrcoh}
     }
     
-    signif<-list(coher=altcoh.norm,scoher=surrcoh.norm)
+    res<-list(timescales=s2/f0,coher=altcoh.norm,scoher=surrcoh.norm)
   }
   
   if (norm=="powind" && n>1)
@@ -202,8 +210,8 @@ fastcohtest<-function(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnum
       surrcoh.norm[rep,]<-rowMeans(filt.crosspec.surr)
     }
     
-    signif<-list(coher=altcoh.norm,scoher=surrcoh.norm)  
+    res<-list(timescales=s2/f0,coher=altcoh.norm,scoher=surrcoh.norm)  
   }
   
-  return(signif)    
+  return(res)    
 }

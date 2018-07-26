@@ -57,14 +57,14 @@ DONE fill in cluseigen
 DONE tests
 DONE adapt the modularity code in wsyn
 DONE tests 
-tests for wavmatwork
-fill in synmat - only the fast algorithms remaining
-tests - only the fast algorithms remaining
+DONE tests for wavmatwork
+DONE fill in synmat - only the fast algorithms remaining
+DONE tests - only the fast algorithms remaining
 write clust
 tests
 set and get methods for clust
 tests
-other methods for clust - addmns, addwmfs, addwpmfs as internal functions, plotmap, plotdend, plotwmfs, plotwpmfs as methods for the clust class - see above description
+other methods for clust - addmns, addwmfs, addwpmfs as internal functions, plotmap, plotdend, plotwmfs, plotwpmfs as methods for the clust class - see below description
 tests
 ***To get a speedup, and for other reasons, it may be worth improving the fast coherence algorithm as it exists in synmat as follows:
 -write a version of the algorithm (currently in coh) that takes the necessary random numbers as inputs. persumably coh would then call that code after generating the random numbers

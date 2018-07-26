@@ -246,9 +246,49 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
   #fast methods
   if (method %in% c("ReXWT.sig.fast","coh.sig.fast"))
   {
-    stop("Error in synmat: fast methods not implemented yet")
-    #***DAN: reumannplatz::synmat implemented some of this, so check there when you do this
-    #See notes in issues on using the fast algorithm 
-    #***DAN: make sure to do a one-tailed test here
+    if (method=="ReXWT.sig.fast")
+    {
+      f<-function(x){Re(x)}
+    }
+    if (method=="coh.sig.fast")
+    {
+      f<-function(x){Mod(x)}
+    }
+    
+    mat<-matrix(NA,nlocs,nlocs) 
+    randnums<-runif(nsurrogs*floor((dim(dat)[2]-1)/2))
+    for (i in 2:nlocs)
+    {
+      for (j in 1:(i-1))
+      {
+        h<-fastcohtest(dat[i,],dat[j,],
+                    scale.min,scale.max.input,sigma,f0,
+                    nsurrogs,randnums,"powind")
+        x<-f(h$coher[h$timescales >= tsrange[1] & h$timescales <= tsrange[2]])
+        sx<-f(h$scoher[,h$timescales >= tsrange[1] & h$timescales <= tsrange[2],drop=F])
+        
+        #next comes all the ranking stuff
+        rx<-matrix(x,nsurrogs,length(x),byrow = TRUE)
+        rks<-apply(FUN=sum,X=(rx>sx),MARGIN=2)/nsurrogs
+        srks<-(apply(X=sx,FUN=rank,MARGIN=2)-1)/(nsurrogs-1)
+          
+        #now get mean ranks 
+        mnrks<-mean(rks)
+        mnsrks<-apply(FUN=mean,MARGIN=1,X=srks)
+        
+        #now prepare to get the p value
+        mat[i,j]<-sum(mnsrks>=mnrks)
+        mat[j,i]<-mat[i,j]
+      }
+    }
+    mat<-(mat+1)/(nsurrogs+1) #this gets the actual p-values
+    if (weighted)
+    {
+      mat<-1-mat
+    }else
+    {
+      mat<-makeunweighted(mat,sigthresh)
+    }
+    return(mat)
   }
 }
