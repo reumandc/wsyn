@@ -55,7 +55,8 @@
 #' The slot \code{signif} is \code{NA} if \code{sigmethod} is "\code{none}". Otherwise, and
 #' if \code{sigmethod} is not "\code{fast}", then \code{signif$coher} is the same as 
 #' \code{coher}, and \code{signif$scoher} is a matrix of dimensions \code{nrand} by 
-#' \code{length(coher)} with rows equal to coherences of surrogate datasets, computed using
+#' \code{length(coher)} with rows with magnitudes equal to coherences of surrogate 
+#' datasets, computed using
 #' the normalization specified by \code{norm}. The type of surrogate used (Fourier surrogates 
 #' or amplitude adjusted Fourier surrogates, see \code{surrog}), as well as which of the 
 #' datasets surrogates are computed on (\code{dat1}, \code{dat2}, or both) is determined by 
@@ -179,158 +180,8 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   #*fast algorithm case
   if (sigmethod=="fast")
   {
-    #setup
-    n<-nrow(dat1)
-    tt<-ncol(dat1)
-    if(is.null(scale.max.input)){scale.max.input<-tt} 
-    s2<-timescales*f0 #s2 is a wavelet width. We actually computed s2 in 
-                      #wt.R and then got timescales by dividing by f0, so 
-                      #undo that here
-    m.max<-length(s2)
-    
-    #Generate random phases for surrogates with correct symmetry properties ##
-    rrr<-2*pi*(matrix(runif(nrand*floor((tt-1)/2)),nrow=nrand,ncol=floor((tt-1)/2))-0.5)
-    if(tt%%2==0)
-    { # timeseries has even length
-      ts1surrang<-cbind(pi*(sample.int(2,nrand,replace=T)-1),rrr,
-                        pi*(sample.int(2,nrand,replace=T)-1),-rrr[,ncol(rrr):1])
-    }
-    if(tt%%2!=0)
-    { # timeseries has odd length
-      ts1surrang<-cbind(pi*(sample.int(2,nrand,replace=T)-1),rrr,-rrr[,ncol(rrr):1])
-    }
-    
-    if ((norm %in% c("powall","none")) || (norm=="powind" && n==1))
-    {
-      if(n==1)
-      { # One location wavelet coherence - in this case, powind is the same as powall
-        fft1<-stats::fft(dat1) #fft signals 1 and 2
-        fft2<-stats::fft(dat2) 
-        xfft<-fft1*Conj(fft2) #get cross-spectrum and spectra
-        xfft1<-fft1*Conj(fft1)
-        xfft2<-fft2*Conj(fft2) 
-        freqs<-seq(from=0, to=1-(1/tt), by=1/tt)
-        filt.crosspec<-matrix(NA, nrow=m.max, ncol=tt) #initialize
-        filt.pow1<-matrix(NA, nrow=m.max, ncol=tt)
-        filt.pow2<-matrix(NA, nrow=m.max, ncol=tt)
-        for(stage in 1:m.max)
-        {
-          s<-s2[stage]
-          #find coherence by filtering cross-spectrum
-          xx<-sqrt(2*pi*s)*(exp(-s^2*(2*pi*(freqs-(1-(f0/s))))^2/2) - exp(-s^2*(2*pi*freqs)^2/2)*exp(-0.5*(2*pi*f0)^2))
-          m2xx<-xx*Conj(xx)/tt
-          filt.crosspec[stage,]<-m2xx*xfft
-          filt.pow1[stage,]<-m2xx*xfft1
-          filt.pow2[stage,]<-m2xx*xfft2
-        }
-        altpow1<-rowMeans(filt.pow1)
-        altpow2<-rowMeans(filt.pow2)
-        altcoh<-rowMeans(filt.crosspec)
-        if (norm %in% c("powall","powind")){altcoh.norm<-altcoh/sqrt(altpow1*altpow2)}
-        if (norm=="none"){altcoh.norm<-altcoh}
-        
-        surrcoh<-matrix(NA, nrow=nrand, ncol=m.max)
-        for(rep in 1:nrand)
-        {
-          ts1surrangmat<-matrix(ts1surrang[rep,], nrow=m.max, ncol=tt, byrow=T) #make surrogates
-          filt.crosspec.surr<-filt.crosspec*exp(complex(imaginary=ts1surrangmat))
-          surrcoh[rep,]<-rowMeans(filt.crosspec.surr)
-        }
-        if (norm %in% c("powall","powind")){surrcoh.norm<-surrcoh/matrix(rep(sqrt(altpow1*altpow2),each=nrow(surrcoh)),nrow(surrcoh),ncol(surrcoh))}
-        if (norm=="none"){surrcoh.norm<-surrcoh}
-      }
-      
-      ## Spatial coherence (multiple locations) - done separately from n=1 for speed reasons
-      if(n>1)
-      {
-        fft1<-t(apply(FUN=stats::fft,MARGIN=1,X=dat1)) #fft signals 1 and 2
-        fft2<-t(apply(FUN=stats::fft,MARGIN=1,X=dat2))
-        xfft<-fft1*Conj(fft2) #get cross-spectra and spectra
-        xfft1<-fft1*Conj(fft1)
-        xfft2<-fft2*Conj(fft2)
-        sxfft<-apply(xfft, 2, mean) #average cross-spectra across locations
-        sxfft1<-apply(xfft1, 2, mean)
-        sxfft2<-apply(xfft2, 2, mean)
-        freqs<-seq(from=0, to=1-(1/tt), by=1/tt)
-        filt.crosspec<-matrix(NA, nrow=m.max, ncol=tt) #initialize
-        filt.pow1<-matrix(NA, nrow=m.max, ncol=tt)
-        filt.pow2<-matrix(NA, nrow=m.max, ncol=tt)
-        for(stage in 1:m.max)
-        {
-          s<-s2[stage]
-          #find coherence by filtering cross-spectrum
-          xx<-sqrt(2*pi*s)*(exp(-s^2*(2*pi*(freqs-(1-(f0/s))))^2/2) - exp(-s^2*(2*pi*freqs)^2/2)*exp(-0.5*(2*pi*f0)^2))
-          m2xx<-xx*Conj(xx)/tt
-          filt.crosspec[stage,]<-m2xx*sxfft
-          filt.pow1[stage,]<-m2xx*sxfft1
-          filt.pow2[stage,]<-m2xx*sxfft2
-        }
-        altpow1<-rowMeans(filt.pow1)
-        altpow2<-rowMeans(filt.pow2)
-        altcoh<-rowMeans(filt.crosspec)
-        if (norm=="powall"){altcoh.norm<-altcoh/sqrt(altpow1*altpow2)}
-        if (norm=="none"){altcoh.norm<-altcoh}
-        
-        surrcoh<-matrix(NA, nrow=nrand, ncol=m.max)
-        for(rep in 1:nrand)
-        {
-          ts1surrangmat<-matrix(ts1surrang[rep,], nrow=m.max, ncol=tt, byrow=T) #make surrogates
-          filt.crosspec.surr<-filt.crosspec*exp(complex(imaginary=ts1surrangmat))
-          surrcoh[rep,]<-rowMeans(filt.crosspec.surr)
-        }
-        if (norm=="powall"){surrcoh.norm<-surrcoh/matrix(rep(sqrt(altpow1*altpow2),each=nrow(surrcoh)),nrow(surrcoh),ncol(surrcoh))}
-        if (norm=="none"){surrcoh.norm<-surrcoh}
-      }
-      
-      signif<-list(coher=altcoh.norm,scoher=surrcoh.norm)
-    }
-    
-    if (norm=="powind" && n>1)
-    {
-      fft1<-t(apply(FUN=stats::fft,MARGIN=1,X=dat1)) #fft signals 1 and 2
-      fft2<-t(apply(FUN=stats::fft,MARGIN=1,X=dat2))
-      xfft1<-fft1*Conj(fft1) #get spectra
-      xfft2<-fft2*Conj(fft2)
-      freqs<-seq(from=0, to=1-(1/tt), by=1/tt)
-      filt.crosspec<-matrix(NA, nrow=m.max, ncol=tt) #initialize
-      altcoh.norm<-NA*numeric(m.max)
-      for(stage in 1:m.max)
-      {
-        #filter the ffts
-        s<-s2[stage]
-        xx<-sqrt(2*pi*s)*(exp(-s^2*(2*pi*(freqs-(1-(f0/s))))^2/2) - exp(-s^2*(2*pi*freqs)^2/2)*exp(-0.5*(2*pi*f0)^2))
-        xxn<-matrix(xx,n,tt,byrow=TRUE)
-        filtxfft1<-xxn*Conj(xxn)*xfft1/tt
-        filtxfft2<-xxn*Conj(xxn)*xfft2/tt
-        
-        #wavelet power for each n
-        powfiltxfft1<-rowMeans(filtxfft1)
-        powfiltxfft2<-rowMeans(filtxfft2)
-        
-        #normalize ffts
-        nfft1<-fft1/sqrt(matrix(powfiltxfft1,n,tt))
-        nfft2<-fft2/sqrt(matrix(powfiltxfft2,n,tt))
-        
-        #cross spectrum with the normalization
-        nxfft<-nfft1*Conj(nfft2)
-        
-        sxfft<-colMeans(nxfft) #1 by tt object, average cross spectrum appropriate to this scale, normalization incorporated
-        
-        filt.crosspec[stage,]<-xx*Conj(xx)*sxfft/tt
-      }
-      #normalized coherence for this stage
-      altcoh.norm<-rowMeans(filt.crosspec)
-      
-      surrcoh.norm<-matrix(NA, nrow=nrand, ncol=m.max)
-      for(rep in 1:nrand)
-      {
-        ts1surrangmat<-matrix(ts1surrang[rep,], nrow=m.max, ncol=tt, byrow=T) #make surrogates
-        filt.crosspec.surr<-filt.crosspec*exp(complex(imaginary=ts1surrangmat))
-        surrcoh.norm[rep,]<-rowMeans(filt.crosspec.surr)
-      }
-      
-      signif<-list(coher=altcoh.norm,scoher=surrcoh.norm)  
-    }
+    randnums<-runif(nrand*floor((ncol(dat1)-1)/2))
+    signif<-fastcohtest(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnums,norm)
     
     #prepare result  
     if (wasvect1){dat1<-as.vector(dat1)}
@@ -340,7 +191,7 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
     class(result)<-c("coh","list")
     return(result)    
   }
-  
+
   #*otherwise sigmethod is one of "fftsurrog1", "fftsurrog2", 
   #"fftsurrog12", "aaftsurrog1", "aaftsurrog2", "aaftsurrog12",
   #all handled below

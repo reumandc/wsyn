@@ -14,7 +14,7 @@ test_that("error checking",{
 
 test_that("test against the igraph function - only tests the main result, not the decomp",{
   gr<-igraph::make_graph(edges="Bull")
-  ma<-as_adj(gr,sparse=FALSE)
+  ma<-igraph::as_adj(gr,sparse=FALSE)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res1<-modularity(ma,membership,decomp=FALSE)
@@ -22,7 +22,7 @@ test_that("test against the igraph function - only tests the main result, not th
   expect_equal(res1,resi)
   
   gr<-igraph::make_graph(edges="Chvatal")
-  ma<-as_adj(gr,sparse=FALSE)
+  ma<-igraph::as_adj(gr,sparse=FALSE)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res1<-modularity(ma,membership,decomp=FALSE)
@@ -30,7 +30,7 @@ test_that("test against the igraph function - only tests the main result, not th
   expect_equal(res1,resi)
 
   gr<-igraph::make_graph(edges="Coxeter")
-  ma<-as_adj(gr,sparse=FALSE)
+  ma<-igraph::as_adj(gr,sparse=FALSE)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res1<-modularity(ma,membership,decomp=FALSE)
@@ -38,7 +38,7 @@ test_that("test against the igraph function - only tests the main result, not th
   expect_equal(res1,resi)
 
   gr<-igraph::make_graph(edges="Cubical")
-  ma<-as_adj(gr,sparse=FALSE)
+  ma<-igraph::as_adj(gr,sparse=FALSE)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res1<-modularity(ma,membership,decomp=FALSE)
@@ -49,7 +49,7 @@ test_that("test against the igraph function - only tests the main result, not th
 test_that("tests of the decomposition",{
   #test that the decomps add up to the total
   gr<-igraph::make_graph(edges="Bull")
-  ma<-as_adj(gr,sparse=FALSE)
+  ma<-igraph::as_adj(gr,sparse=FALSE)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res<-modularity(ma,membership,decomp=TRUE)
@@ -57,7 +57,7 @@ test_that("tests of the decomposition",{
   expect_equal(res$totQ,sum(res$nodeQ))
     
   gr<-igraph::make_graph(edges="Chvatal")
-  ma<-as_adj(gr,sparse=FALSE)
+  ma<-igraph::as_adj(gr,sparse=FALSE)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res<-modularity(ma,membership,decomp=TRUE)
@@ -65,7 +65,7 @@ test_that("tests of the decomposition",{
   expect_equal(res$totQ,sum(res$nodeQ))
 
   gr<-igraph::make_graph(edges="Coxeter")
-  ma<-as_adj(gr,sparse=FALSE)
+  ma<-igraph::as_adj(gr,sparse=FALSE)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res<-modularity(ma,membership,decomp=TRUE)
@@ -73,7 +73,7 @@ test_that("tests of the decomposition",{
   expect_equal(res$totQ,sum(res$nodeQ))
 
   gr<-igraph::make_graph(edges="Cubical")
-  ma<-as_adj(gr,sparse=FALSE)
+  ma<-igraph::as_adj(gr,sparse=FALSE)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res<-modularity(ma,membership,decomp=TRUE)

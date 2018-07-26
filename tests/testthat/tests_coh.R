@@ -358,7 +358,9 @@ test_that("compare to a previous coherence example, fast algorithm",{
   
   res<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powall",sigmethod="fast",nrand=1000,
            f0=0.5,scale.max.input=28)
-
+  #res_new<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powall",sigmethod="fast_new",nrand=1000,
+  #             f0=0.5,scale.max.input=28)
+  
   #Make a plot to check visually. Expected to look like panel panel g of supp fig 5 in the 
   #reference cited above in some respects 
   #qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
