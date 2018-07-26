@@ -98,7 +98,6 @@
 #' #Not written yet but need some
 #' 
 #' @export
-#' @importFrom stats fft
 
 coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale.max.input=NULL,sigma=1.05,f0=1)
 {
