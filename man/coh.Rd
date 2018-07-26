@@ -75,7 +75,8 @@ separately for each \eqn{i} and \eqn{n}.
 The slot \code{signif} is \code{NA} if \code{sigmethod} is "\code{none}". Otherwise, and
 if \code{sigmethod} is not "\code{fast}", then \code{signif$coher} is the same as 
 \code{coher}, and \code{signif$scoher} is a matrix of dimensions \code{nrand} by 
-\code{length(coher)} with rows equal to coherences of surrogate datasets, computed using
+\code{length(coher)} with rows with magnitudes equal to coherences of surrogate 
+datasets, computed using
 the normalization specified by \code{norm}. The type of surrogate used (Fourier surrogates 
 or amplitude adjusted Fourier surrogates, see \code{surrog}), as well as which of the 
 datasets surrogates are computed on (\code{dat1}, \code{dat2}, or both) is determined by 
