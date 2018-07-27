@@ -72,7 +72,7 @@
 #' Significance testing is performed using standard approaches (\code{method} flag containg
 #' \code{std}; for correlation coefficients, 
 #' although these are inappropriate for autocorrelated data), or surrogates generated using the 
-#' Fourier (\ocde{method} flag containing \code{"fft"}) or amplitude adjusted Fourier 
+#' Fourier (\code{method} flag containing \code{"fft"}) or amplitude adjusted Fourier 
 #' surrogates (\code{"aaft"}). For 
 #' \code{"coh"} and \code{"ReXWT"}, the fast testing algorithm of Sheppard et al. (2017) is also
 #' implemented (\code{"fast"}). That method uses implicit Fourier surrogates. The choice of 
