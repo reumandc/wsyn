@@ -14,7 +14,7 @@ clust(dat, times, coords, method, tsrange = c(0, Inf), nsurrogs = 1000,
 \item{times}{The times at which measurements were made, spacing 1}
 
 \item{coords}{A data frame containing X,Y coordinates of locations in \code{data}, with column
-names either \code{X} and \code{Y} or \code{long} and \code{lat} or \code{longitude} and 
+names either \code{X} and \code{Y} or \code{lon} and \code{lat} or \code{longitude} and 
 \code{latitude}. The data frame may contain other columns with additional metainformation 
 about the sites.}
 
@@ -52,9 +52,8 @@ link to be realized. Typically 0.95, 0.99, or 0.999, etc. Only used if \code{wei
 \item{dat}{The input}
 \item{times}{The input}
 \item{coords}{The input}
-\item{methodspecs}{A list with elements specifying the method used. The first entry is the input
-\code{method}. Subsequent entries are those inputs needed to fully specify all parameters of the 
-method. The inputs needed and included here depend on the value of \code{method}.}
+\item{methodspecs}{A list with elements specifying the method used, and methodological 
+parameters that were in the input.}
 \item{adj}{The adjacency matrix that defines the synchrony network}
 \item{clusters}{A list with one element for each successive split of the networks into 
 subcomponents carried out by the clustering algorithm. Each element is a vector of length equal
@@ -63,9 +62,7 @@ first element is a vector of all 1s, corresponding to before the first clusterin
 performed.}
 \item{modres}{A list of the same length as \code{clusters}, with each element containing the 
 results of calling \code{modularity} on the network split to that level.}
-\item{mns}{Mean time series for modules. \code{NA} when \code{clust} is first called, but 
-\code{addmeans} adds this entry, which is a list. See documentation for the method 
-\code{addmeans}.}
+\item{mns}{Mean time series for modules. A list if the same length as \code{clusters}.}
 \item{wmfs}{Wavelet mean fields for modules. \code{NA} when \code{clust} is first called, but 
 \code{addwmfs} adds this entry, which is a list. See documentation for the method 
 \code{addwmfs}.}
@@ -78,9 +75,43 @@ Generator function for the \code{clust} S3 class, which supports tools for detec
 (aka, modules, sub-networks, communities, etc.) of especially synchronous locations.
 }
 \details{
-***DAN: Incorporate the below info when you write this
-For syn.method involving significance testing, 1-p can be used in weighted networks. Currently the eigenvector-based
-modularity method of Newman (2006) is the only implemented algorithm for detecting modules.
+The following values are valid for \code{method}: 
+\code{"pearson"}, \code{"pearson.sig.std"}, \code{"pearson.sig.fft"}, 
+\code{"pearson.sig.aaft"}, 
+\code{"spearman"}, \code{"spearman.sig.std"}, \code{"spearman.sig.fft"}, 
+\code{"spearman.sig.aaft"}, 
+\code{"kendall"}, \code{"kendall.sig.std"}, \code{"kendall.sig.fft"}, 
+\code{"kendall.sig.aaft"}, 
+\code{"ReXWT"}, \code{"ReXWT.sig.fft"}, \code{"ReXWT.sig.aaft"}, \code{"ReXWT.sig.fast"}, 
+\code{"coh"}, \code{"coh.sig.fft"}, \code{"coh.sig.aaft"}, \code{"coh.sig.fast"},
+\code{"phasecoh"}, \code{"phasecoh.sig.fft"}, and \code{"phasecoh.sig.aaft"}.
+The first portions of these identifiers correspond to the Pearson, Spearman, and Kendall 
+correlations, the real part of the cross-wavelet transform, the wavelet coherence, and the 
+wavelet phase coherence. The second portions of these identifiers, when present, indicates
+that significance of the measure specified in the first portion of the identifies is to
+be used for establishing the synchrony matrix. Otherwise the value itself is used. The
+third part of the \code{method} identifier indicates what type of significance is used.
+
+Significance testing is performed using standard approaches (\code{method} flag containg
+\code{std}; for correlation coefficients, 
+although these are inappropriate for autocorrelated data), or surrogates generated using the 
+Fourier (\ocde{method} flag containing \code{"fft"}) or amplitude adjusted Fourier 
+surrogates (\code{"aaft"}). For 
+\code{"coh"} and \code{"ReXWT"}, the fast testing algorithm of Sheppard et al. (2017) is also
+implemented (\code{"fast"}). That method uses implicit Fourier surrogates. The choice of 
+wavelet coherence (method flag containing \code{"coh"}) or the real part of 
+the cross-wavelet 
+transform (method flag containing \code{"ReXWT"}) depends mainly 
+on treatment of out-of-phase 
+relationships. The \code{"ReXWT"} is more akin to a correlation coefficient in that 
+strong in-phase relationships approach 1 and strong antiphase relationships approach -1. 
+Wavelet coherence allows any phase relationship and ranges from 0 to 1. Power normalization
+is applied for \code{"coh"} and for \code{"ReXWT"}. All significance tests are one-tailed. 
+Synchrony matrices for significance-based methods when \code{weighted} is \code{TRUE} 
+contain 1 minus the p-values. 
+
+Clustering is performed using the the eigenvector-based modularity method of 
+Newman (2006).
 }
 \examples{
 #Not written yet but need some
@@ -91,5 +122,6 @@ Walter, J. A., et al. (2017) The geography of spatial synchrony. Ecology Letters
 doi: 10.1111/ele.12782
 }
 \author{
-Jonathan Walter, \email{jaw3es@virginia.edu}; Daniel Reuman, \email{reuman@ku.edu}
+Jonathan Walter, \email{jaw3es@virginia.edu}; Daniel Reuman, \email{reuman@ku.edu}; 
+Lei Zhao, \email{lei_journal@yahoo.com}
 }

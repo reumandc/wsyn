@@ -4,7 +4,7 @@
 \alias{modularity}
 \title{Modularity of a community structure of a graph}
 \usage{
-modularity(adj, membership, decomp = F)
+modularity(adj, membership, decomp = FALSE)
 }
 \arguments{
 \item{adj}{An adjacency matrix, which should be symmetric with zeros on the diagonal.}

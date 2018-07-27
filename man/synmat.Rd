@@ -62,19 +62,26 @@ The following values are valid for \code{method}:
 \code{"phasecoh"}, \code{"phasecoh.sig.fft"}, and \code{"phasecoh.sig.aaft"}.
 The first portions of these identifiers correspond to the Pearson, Spearman, and Kendall 
 correlations, the real part of the cross-wavelet transform, the wavelet coherence, and the 
-wavelet phase coherence. 
+wavelet phase coherence. The second portions of these identifiers, when present, indicates
+that significance of the measure specified in the first portion of the identifies is to
+be used for establishing the synchrony matrix. Otherwise the value itself is used. The
+third part of the \code{method} identifier indicates what type of significance is used.
 
-Significance testing is performed using standard approaches (for correlation coefficients, 
+Significance testing is performed using standard approaches (\code{method} flag containg
+\code{std}; for correlation coefficients, 
 although these are inappropriate for autocorrelated data), or surrogates generated using the 
-Fourier (\code{"fft"}) or amplitude adjusted Fourier surrogates (\code{"aaft"}) methods. For 
+Fourier (\ocde{method} flag containing \code{"fft"}) or amplitude adjusted Fourier 
+surrogates (\code{"aaft"}). For 
 \code{"coh"} and \code{"ReXWT"}, the fast testing algorithm of Sheppard et al. (2017) is also
 implemented (\code{"fast"}). That method uses implicit Fourier surrogates. The choice of 
-wavelet coherence (method containing \code{"coh"}) or the real part of the cross-wavelet 
-transform (method containing \code{"ReXWT"}) depends mainly on treatment of out-of-phase 
+wavelet coherence (method flag containing \code{"coh"}) or the real part of 
+the cross-wavelet 
+transform (method flag containing \code{"ReXWT"}) depends mainly 
+on treatment of out-of-phase 
 relationships. The \code{"ReXWT"} is more akin to a correlation coefficient in that 
 strong in-phase relationships approach 1 and strong antiphase relationships approach -1. 
 Wavelet coherence allows any phase relationship and ranges from 0 to 1. Power normalization
-is applied for \code{"coh"} and for \code{"ReXWT"}. Significance tests are one-tailed. 
+is applied for \code{"coh"} and for \code{"ReXWT"}. All significance tests are one-tailed. 
 Synchrony matrices for significance-based methods when \code{weighted} is \code{TRUE} 
 contain 1 minus the p-values.
 }
@@ -87,5 +94,6 @@ Walter, J. A., et al. (2017) The geography of spatial synchrony. Ecology
 Letters. doi: 10.1111/ele.12782
 }
 \author{
-Jonathan Walter, \email{jaw3es@virginia.edu}; Daniel Reuman, \email{reuman@ku.edu}
+Jonathan Walter, \email{jaw3es@virginia.edu}; Daniel Reuman, \email{reuman@ku.edu};
+Lei Zhao, \email{lei_journal@yahoo.com}
 }

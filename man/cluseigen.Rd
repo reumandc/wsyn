@@ -12,8 +12,8 @@ cluseigen(adj)
 \value{
 \code{cluseigen} returns a list with one element for each of the splits 
 performed by the clustering algorithm. Each element is a vector with entries 
-corresponding to rows and columns of adj an indicating the module membership
-of the node following the split. The last element of the list is the final 
+corresponding to rows and columns of adj and indicating the module membership
+of the node, following the split. The last element of the list is the final 
 clustering determined by algorithm when its halting condition is satisfied.
 The first element is always a vector of all 1s (corresponding to before any splits
 are performed).
