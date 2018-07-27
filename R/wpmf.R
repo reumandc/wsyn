@@ -53,7 +53,7 @@ wpmf<-function(dat,times,scale.min=2, scale.max.input=NULL, sigma=1.05, f0=1, si
   
   if (sigmethod %in% c("quick","fft","aaft"))
   {
-    #error check rnand
+    #error check nrand
     if (!is.numeric(nrand) || !is.finite(nrand) || length(nrand)!=1 || nrand<=0)
     {
       stop("Error in wpmf: inappropriate value for nrand")

@@ -32,7 +32,7 @@ DONE wlm and tests
 DONE wlm set and get methods 
 DONE wlmtest generator function and accompanying wlmfit internal, and tests 
 ***have not yet implemented the fast algorithm
-***also, the only normalization that is properly implemeneted, throughout wlms, is powall
+***also, the only normalization that is properly implemeneted, throughout the wlm codes, is powall
 DONE do you want to add slots for scale.min, scale.max.input, sigma, and f0 to wt, wmf, wpmf, and coh methods? You would also need set and get methods for these slots for each class. Or maybe stick them together into a list called wopts which makes a single slot, and then you would have to make a similar change to wlm.
 DONE DAN: check the vignette for what effects the above change would have had, both on runs and on descriptions
 DONE wlmtest methods, and tests thereof
@@ -44,13 +44,13 @@ DONE predsync and tests - wrote the function and some tests, but need to go thro
 DONE power function for tts class and tests
 ***modsync and tests
 DONE propexpl and tests - proportion of synchrony explained as a function of timescale and related quantities - ended up calling it syncexpl
-***vignette - see about using the plankton data, the version we said we would release if the plankton paper is published. Include in package and base the wlm part of the vignette on these data.
+***vignette - see about using the plankton data, the version we said we would release if the plankton paper is published. Include in package and base the wlm part of the vignette on these data. Got permission from Chris to do this, but waiting until Lawrence's plankton paper is accepted.
 ***looscore and tests
 ***locassoc tester function and tests
 ***examining if phases of coefficients are consistent with predictor/response phases - do this later, together with functionality for plotting phases of various things (I have left a lot of phase plot functions out)
 12) DONE everything you need for deer
 ***13) synmat for kelp and Jon's bird stuff
-The functions to work from in reumannplatz are synmat, SynNetModules, cluster_eigen, and modularity. These are in reumannplatz. Ignore the older functions wsynmat and ModularityDecomp, which were superseded by the above but never removed from reumannplatz.
+DONE The functions to work from in reumannplatz are synmat, SynNetModules, cluster_eigen, and modularity. These are in reumannplatz. Ignore the older functions wsynmat and ModularityDecomp, which were superseded by the above but never removed from reumannplatz.
 To do with regard to the clustering stuff:
 ***spec the methods associated with clust
 DONE fill in cluseigen
@@ -60,17 +60,17 @@ DONE tests
 DONE tests for wavmatwork
 DONE fill in synmat - only the fast algorithms remaining
 DONE tests - only the fast algorithms remaining
-write clust
-tests
-set and get methods for clust
-tests
-other methods for clust - addmns, addwmfs, addwpmfs as internal functions, plotmap, plotdend, plotwmfs, plotwpmfs as methods for the clust class - see below description
-tests
-***To get a speedup, and for other reasons, it may be worth improving the fast coherence algorithm as it exists in synmat as follows:
--write a version of the algorithm (currently in coh) that takes the necessary random numbers as inputs. persumably coh would then call that code after generating the random numbers
--then synmat would generate one set of random numbers for all pairwise coherence significance calculations it needs to do, and pass the same set to all pairwise calculations of coherence significance
--having the version of the fast coherence algorithm that accepts random numbers as inputs will also be useful for other reasons, e.g., comparing to matlab code results
-***Lawrence says it should be possible to test the significance of the real part of the cross wavelet transform using an adapted version of his fast algorithm
+DONE write clust
+DONE tests
+***set and get methods for clust
+***tests
+***other methods for clust - addmns, addwmfs, addwpmfs as internal functions, plotmap, plotdend, plotwmfs, plotwpmfs as methods for the clust class - see below description
+***tests
+DONE To get a speedup, and for other reasons, it may be worth improving the fast coherence algorithm as it exists in synmat as follows:
+DONE -write a version of the algorithm (currently in coh) that takes the necessary random numbers as inputs. persumably coh would then call that code after generating the random numbers
+DONE -then synmat would generate one set of random numbers for all pairwise coherence significance calculations it needs to do, and pass the same set to all pairwise calculations of coherence significance
+DONE -having the version of the fast coherence algorithm that accepts random numbers as inputs will also be useful for other reasons, e.g., comparing to matlab code results
+DONE Lawrence says it should be possible to test the significance of the real part of the cross wavelet transform using an adapted version of his fast algorithm
 ***14) write the phase plotter functions, and unit tests, for tts, wt, wpmd, wmf. 
 ***15) print and summary methods for all the classes
 

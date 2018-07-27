@@ -48,7 +48,7 @@
 #' 
 #' @export
 
-modularity<-function(adj,membership,decomp=F)
+modularity<-function(adj,membership,decomp=FALSE)
 {
   #error checking
   if (!is.numeric(adj))
@@ -128,7 +128,7 @@ modularity<-function(adj,membership,decomp=F)
     Q.decomp.node<-(rowSums(Q)+colSums(Q))/4/(m.pos+m.neg)
     Q.decomp.node.rescale<-(Q.decomp.node-min(Q.decomp.node))/diff(range(Q.decomp.node))
     return(list(totQ=sum(Q)/2/(m.pos+m.neg), modQ=Q.decomp.mod, 
-                nodeQ=Q.decomp.node, nodeQ.rescale=Q.decomp.node.rescale))
+                nodeQ=Q.decomp.node, nodeQrs=Q.decomp.node.rescale))
   }
 }
 
