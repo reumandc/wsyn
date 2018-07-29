@@ -43,7 +43,7 @@ set_values.wt<-function(obj,newval)
 #' @export
 set_dat.wt<-function(obj,newval)
 {
-  stop("Error in set_dat: values should not be altered for a wt object")
+  stop("Error in set_dat: dat should not be altered for a wt object")
 }
 
 #value getting - methods not needed except for dat, others inherited from tts
