@@ -64,7 +64,12 @@ DONE write clust
 DONE tests
 DONE set and get methods for clust
 DONE tests
-***other methods for clust - addwmfs, addwpmfs as internal functions, plotmap, plotdend, plotmns, plotwmfs, plotwpmfs as methods for the clust class - see below description
+DONE addwmfs
+DONE tests
+DONE addwpmfs 
+DONE tests
+***should the nodeQrs output of modularity be rescale how? or options? does this even make sense as a measure of strength of membership of a module in its node? See reference that Jon sent, also the original clustering algorithm pub, which I believe indicated module membership strength results were available. Get to the bottom of this.
+***other methods for clust - plotmap, plotdend, plotmns, plotwmfs, plotwpmfs as methods for the clust class - see below description
 ***tests
 DONE To get a speedup, and for other reasons, it may be worth improving the fast coherence algorithm as it exists in synmat as follows:
 DONE -write a version of the algorithm (currently in coh) that takes the necessary random numbers as inputs. persumably coh would then call that code after generating the random numbers
