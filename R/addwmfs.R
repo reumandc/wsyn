@@ -16,17 +16,39 @@
 
 addwmfs<-function(obj)
 {
+  #if there are NAs in wmfs, proceed, otherwise don't overwrite
   if (!any(is.na(obj$wmfs)))
   {
     return(obj)  
   }
   
-  #***DAN; did not get this part done yet
+  #compute the wmfs
   wmfs<-list()
-  for (counter in 1:length(obj$clusters))
-  {
+  for (levcount in 1:length(obj$clusters))
+  { #for each clustering level, produce a list of wmf objects which are the wmfs 
+    #for the clusters that that level of clustering 
     thiswmfs<-list()
+    thisclust<-obj$clusters[[levcount]]
+    for (clustcount in 1:max(thisclust))
+    { #do each cluster
+      inds<-which(thisclust==clustcount)
+      if (length(inds)==1)
+      { #for clusters with one node, no wmf
+        thiswmfs[[clustcount]]<-NA
+      }else
+      {
+        thisdat<-obj$dat[thisclust==clustcount,]
+        thiswmfs[[clustcount]]<-wmf(dat=thisdat,times=obj$times,
+                                    scale.min=obj$methodspecs$scale.min,
+                                    scale.max.input=obj$methodspecs$scale.max.input,
+                                    sigma=obj$methodspecs$sigma,
+                                    f0=obj$methodspecs$f0)
+      }
+    }
+    wmfs[[levcount]]<-thiswmfs
   }
   
-  
+  #put result into the object and return
+  obj$wmfs<-wmfs
+  return(obj)
 }
