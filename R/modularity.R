@@ -1,6 +1,6 @@
 #' Modularity of a community structure of a graph
 #' 
-#' Computes the modularity of partitioning of a graph into sub-graphs. Same as the
+#' Computes the modularity of partitioning of a graph into sub-graphs. Similar to the
 #' \code{modularity} function in the \code{igraph} package, but allows negative
 #' edge weights.
 #' 
@@ -14,8 +14,6 @@
 #' \item{totQ}{The total modularity. This is the only output if \code{decomp=FALSE}}
 #' \item{modQ}{The contribution of each module to the total modularity}
 #' \item{nodeQ}{The contribution of each node to the total modularity}
-#' \item{nodeQrs}{The output \code{nodeQ} rescaled to span (0,1) to give the relative 
-#' contribution of each node to the total modularity}
 #' 
 #' @details The difference between this function and the function \code{modularity} 
 #' in the package \code{igraph} is that this function can be used with an adjacency 
@@ -126,9 +124,9 @@ modularity<-function(adj,membership,decomp=FALSE)
       Q.decomp.mod[i]<-sum(Q[tmp,tmp])/2/(m.pos+m.neg)
     }
     Q.decomp.node<-(rowSums(Q)+colSums(Q))/4/(m.pos+m.neg)
-    Q.decomp.node.rescale<-(Q.decomp.node-min(Q.decomp.node))/diff(range(Q.decomp.node))
+    #Q.decomp.node.rescale<-(Q.decomp.node-min(Q.decomp.node))/diff(range(Q.decomp.node))
     return(list(totQ=sum(Q)/2/(m.pos+m.neg), modQ=Q.decomp.mod, 
-                nodeQ=Q.decomp.node, nodeQrs=Q.decomp.node.rescale))
+                nodeQ=Q.decomp.node))#, nodeQrs=Q.decomp.node.rescale))
   }
 }
 

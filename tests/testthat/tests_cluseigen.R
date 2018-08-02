@@ -42,3 +42,47 @@ test_that("test on a simple example where there should be two splits",{
   expect_equal(res[[2]],c(rep(2,4),rep(1,4)))
   expect_equal(res[[4]],c(4,4,3,3,2,2,1,1))
 })
+
+test_that("test for accuracy against the igraph function in some cases that function applies",{
+  gr<-igraph::make_graph(edges="Bull")
+  ma<-igraph::as_adj(gr,sparse=FALSE)
+  res<-cluseigen(ma)
+  ires<-igraph::cluster_leading_eigen(gr)
+  expect_equal(res[[length(res)]],ires$membership) #currently fails
+  
+  gr<-igraph::make_graph(edges="Chvatal")
+  ma<-igraph::as_adj(gr,sparse=FALSE)
+  res<-cluseigen(ma)
+  ires<-igraph::cluster_leading_eigen(gr)
+  h<-res[[length(res)]]
+  hnew<-h
+  hnew[h==1]<-2
+  hnew[h==2]<-1 #reverse edge names, since they are arbitrary anyway
+  expect_equal(hnew,ires$membership) 
+  
+  gr<-igraph::make_graph(edges="Coxeter")
+  ma<-igraph::as_adj(gr,sparse=FALSE)
+  res<-cluseigen(ma)
+  ires<-igraph::cluster_leading_eigen(gr)
+  expect_equal(res[[length(res)]],ires$membership) #currently fails very badly
+  
+  gr<-igraph::make_graph(edges="Cubical")
+  ma<-igraph::as_adj(gr,sparse=FALSE)
+  res<-cluseigen(ma)
+  ires<-igraph::cluster_leading_eigen(gr)
+  expect_equal(res[[length(res)]],ires$membership) 
+  
+  gr<-igraph::make_graph(edges="Dodecahedral")
+  ma<-igraph::as_adj(gr,sparse=FALSE)
+  res<-cluseigen(ma)
+  ires<-igraph::cluster_leading_eigen(gr)
+  expect_equal(res[[length(res)]],ires$membership) #currently fails badly, since this graph represents
+  #a dodecahedron, one intuitively expects one cluster only, which is what igraph gives but not what 
+  #cluseigen gives
+  
+  gr<-igraph::make_graph(edges="Franklin")
+  ma<-igraph::as_adj(gr,sparse=FALSE)
+  res<-cluseigen(ma)
+  ires<-igraph::cluster_leading_eigen(gr)
+  expect_equal(res[[length(res)]],ires$membership) #currently fails badly
+})

@@ -49,7 +49,7 @@ test_that("test for correct format",{
   expect_equal(class(res$modres),"list")
   expect_equal(length(res$modres),length(res$clusters))
   expect_equal(class(res$modres[[1]]),"list")
-  expect_equal(names(res$modres[[1]]),c("totQ","modQ","nodeQ","nodeQrs"))
+  expect_equal(names(res$modres[[1]]),c("totQ","modQ","nodeQ"))
   expect_equal(class(res$mns),"list")
   expect_equal(length(res$mns),length(res$clusters))
   expect_equal(dim(res$mns[[1]]),c(1,lents))
@@ -58,3 +58,4 @@ test_that("test for correct format",{
   expect_true(is.na(res$wmfs))
   expect_true(is.na(res$wpmfs))
 })
+

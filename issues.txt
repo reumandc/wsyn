@@ -68,11 +68,21 @@ DONE addwmfs
 DONE tests
 DONE addwpmfs 
 DONE tests
-***should the nodeQrs output of modularity be rescale how? or options? does this even make sense as a measure of strength of membership of a module in its node? See reference that Jon sent, also the original clustering algorithm pub, which I believe indicated module membership strength results were available. Get to the bottom of this.
+
+***Need more tests for modularity and cluseigen.
+  *cluseigen needs tests comparing directly to the igraph function - added these for unweighted graphs only and many of the tests currently fail badly
+  *Lei offered to make a test comparing to by-hand results for the modularity function, let him. Should be for a case with negative entries in the adjacency matrix. Maybe a couple of these. Should test not only the total but also the components.
+  *would also like such a test for cluseigen. could do a qualitative one (DAN - do it) but also want a quant one based on by-hand calculations
+  *how do we know the eigenvalue method of Newman works for the modularity definition of Gomez? Gomez does not provide a generalization of Newman's eigenvalue method to his new modularity, where did Lei get this? Does this need to be spelled out somewhere? I don't think Gomez even used Newman's eigenvalue method on his new definition.
+  *I do not understand the choices made for plotting node strength. The choice was made by Jon, back when we were using the algorithms and definitions of Newman, before we could properly deal with negative entries in the adjancency matrix. It was then copied by Lei once the new approach that could deal with negatives was installed, but I have seen no argument that it still applies, even if it did before. This is more about mathematical thinking than it is about any unit tests. Do we use for node strength the contribution of a node to modularity remapped to (0,1), or rescaled to have max value 1, or something else? Or do we provide options? Jon cites the Fletcher paper as the source for his node strength definition, but I need to understand that, and for one thing I do not think Fletcher is working with adjacency matrices with negatives weights. Fletcher also gives more than one quantity associated with each node. I do not understand how or whether either of the quantities provided by Fletcher maps onto the quantity Jon's code provides.
+  
+***should the nodeQrs output of modularity be rescale how? or options to the user? does this even make sense as a measure of strength of membership of a module in its node? See reference that Jon sent (Fletcher), also the original clustering algorithm pub, which I believe indicated module membership strength results were available. Get to the bottom of this.
 ***other methods for clust - plotmap, plotdend, plotmns, plotwmfs, plotwpmfs as methods for the clust class - see below description
 ***tests
+***There are lots of clustering algorithms in igraph (cluster_*) that could be used as options in clust for the clustering if we were willing to make negative weights in the adjacency matrix 0. This is assuming a graph in igraph does not allow negative weights, but that assumption *might* be wrong. Also, we would have to explore the individual algorithms and see if/when they work with negative weights, even if igraph does. igraph seems to allow weights (at least positive ones), but it might not be the standard in that package, so would also have to make sure the clustering algorithms in there are making use of the weights.
 DONE To get a speedup, and for other reasons, it may be worth improving the fast coherence algorithm as it exists in synmat as follows:
 DONE -write a version of the algorithm (currently in coh) that takes the necessary random numbers as inputs. persumably coh would then call that code after generating the random numbers
+***test against Lawrence's Matlab algorithm for exacy agreement, now that we can input the random variables
 DONE -then synmat would generate one set of random numbers for all pairwise coherence significance calculations it needs to do, and pass the same set to all pairwise calculations of coherence significance
 DONE -having the version of the fast coherence algorithm that accepts random numbers as inputs will also be useful for other reasons, e.g., comparing to matlab code results
 DONE Lawrence says it should be possible to test the significance of the real part of the cross wavelet transform using an adapted version of his fast algorithm

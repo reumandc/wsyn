@@ -32,7 +32,7 @@ test_that("test it",{
   expect_equal(class(res$modres),"list")
   expect_equal(length(res$modres),length(res$clusters))
   expect_equal(class(res$modres[[1]]),"list")
-  expect_equal(names(res$modres[[1]]),c("totQ","modQ","nodeQ","nodeQrs"))
+  expect_equal(names(res$modres[[1]]),c("totQ","modQ","nodeQ"))
   expect_equal(class(res$mns),"list")
   expect_equal(length(res$mns),length(res$clusters))
   expect_equal(dim(res$mns[[1]]),c(1,lents))
@@ -65,5 +65,5 @@ test_that("test it",{
   #the above pairs of plots were close enough to identical, so I commented and test for 
   #consistency through time using a hash
   #digest::digest(res)
-  expect_known_hash(res,"5909a6be9fbac3432e8c6025ca5fe6a8")
+  expect_known_hash(res,"970654301e160a8aa0097d1fa5259348")
 })

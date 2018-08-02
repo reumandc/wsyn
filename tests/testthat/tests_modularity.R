@@ -20,6 +20,8 @@ test_that("test against the igraph function - only tests the main result, not th
   res1<-modularity(ma,membership,decomp=FALSE)
   resi<-igraph::modularity(gr,membership)
   expect_equal(res1,resi)
+  expect_true(res1<=1 && res1>=-1) #Because Gomez et al says modularity is the difference of
+                                   #two probabilities
   
   gr<-igraph::make_graph(edges="Chvatal")
   ma<-igraph::as_adj(gr,sparse=FALSE)
@@ -28,7 +30,8 @@ test_that("test against the igraph function - only tests the main result, not th
   res1<-modularity(ma,membership,decomp=FALSE)
   resi<-igraph::modularity(gr,membership)
   expect_equal(res1,resi)
-
+  expect_true(res1<=1 && res1>=-1)
+  
   gr<-igraph::make_graph(edges="Coxeter")
   ma<-igraph::as_adj(gr,sparse=FALSE)
   n<-dim(ma)[1]
@@ -36,7 +39,8 @@ test_that("test against the igraph function - only tests the main result, not th
   res1<-modularity(ma,membership,decomp=FALSE)
   resi<-igraph::modularity(gr,membership)
   expect_equal(res1,resi)
-
+  expect_true(res1<=1 && res1>=-1)
+  
   gr<-igraph::make_graph(edges="Cubical")
   ma<-igraph::as_adj(gr,sparse=FALSE)
   n<-dim(ma)[1]
@@ -44,6 +48,7 @@ test_that("test against the igraph function - only tests the main result, not th
   res1<-modularity(ma,membership,decomp=FALSE)
   resi<-igraph::modularity(gr,membership)
   expect_equal(res1,resi)
+  expect_true(res1<=1 && res1>=-1)
 })
 
 test_that("tests of the decomposition",{
