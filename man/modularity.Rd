@@ -20,11 +20,9 @@ by modules and nodes. Default \code{FALSE}.}
 \item{totQ}{The total modularity. This is the only output if \code{decomp=FALSE}}
 \item{modQ}{The contribution of each module to the total modularity}
 \item{nodeQ}{The contribution of each node to the total modularity}
-\item{nodeQrs}{The output \code{nodeQ} rescaled to span (0,1) to give the relative 
-contribution of each node to the total modularity}
 }
 \description{
-Computes the modularity of partitioning of a graph into sub-graphs. Same as the
+Computes the modularity of partitioning of a graph into sub-graphs. Similar to the
 \code{modularity} function in the \code{igraph} package, but allows negative
 edge weights.
 }

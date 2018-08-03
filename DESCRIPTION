@@ -15,7 +15,7 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     stats (>= 3.4.4),
-    MASS (>= 7.3-50),
+    MASS (>= 7.3-47),
     fields (>= 9.6),
     graphics (>= 3.4.4),
     grDevices (>= 3.4.4)
