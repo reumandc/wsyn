@@ -1,6 +1,6 @@
 context("makeunweighted")
 
-test_that("test some example",{
+test_that("test some examples",{
   mat<-matrix(runif(100),10,10)
   res<-makeunweighted(mat,.05)
   expect_equal(diag(res),rep(NA*numeric(1),10))

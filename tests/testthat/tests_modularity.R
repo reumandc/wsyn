@@ -86,4 +86,115 @@ test_that("tests of the decomposition",{
   expect_equal(res$totQ,sum(res$nodeQ))
 })
 
+test_that("test against by-hand calculations for simple networks with positive weights",{
+  #Function written by Lei, tests written by Dan
+  
+  #Adjacency matrix is ...
+  A<-matrix(c(0,1,0,0,1,1,0,1,1,1,0,1,0,0,0,0,1,0,0,1,1,1,0,1,0),5,5)
+  k<-apply(FUN=sum,MARGIN=2,X=A)
+  m<-sum(A)/2
+  P<-matrix(k,5,1) %*% matrix(k,1,5) /(2*m)
+  #A particular partitioning is...
+  delt<-matrix(c(1,0,1,0,1,
+                 0,1,0,1,0,
+                 1,0,1,0,1,
+                 0,1,0,1,0,
+                 1,0,1,0,1),5,5)
+  res_hand<-sum((A-P)*delt)/(2*m)
+  gps<-c(1,2,1,2,1)
+  res_func<-modularity(A,gps,decomp=TRUE)
+  expect_equal(res_hand,res_func$totQ)
+  res_hand_decomp<-(A-P)*delt/(2*m)
+  res_hand_node<-colSums(res_hand_decomp)
+  expect_equal(res_hand_node,res_func$nodeQ)
+  res_hand_mods<-c(sum(res_hand_node[gps==1]),sum(res_hand_node[gps==2]))
+  expect_equal(res_hand_mods,res_func$modQ)
+    
+  #now do a weighted one with positive weights
+  A<-matrix(c(0,.5,1,0,0,.5,0,0,0,3,1,0,0,.25,2,0,0,.25,0,1/3,0,3,2,1/3,0),5,5)
+  m<-sum(A)/2
+  k<-apply(FUN=sum,MARGIN=2,X=A)
+  P<-matrix(k,5,1) %*% matrix(k,1,5) /(2*m)
+  #A particular partitioning is...
+  delt<-matrix(c(1,1,0,0,0,
+                 1,1,0,0,0,
+                 0,0,1,0,1,
+                 0,0,0,1,0,
+                 0,0,1,0,1),5,5)
+  gps<-c(1,1,2,3,2)
+  res_hand<-sum((A-P)*delt)/(2*m)
+  res_func<-modularity(A,gps,decomp=TRUE)
+  expect_equal(res_hand,res_func$totQ)
+  res_hand_decomp<-(A-P)*delt/(2*m)
+  res_hand_node<-colSums(res_hand_decomp)
+  expect_equal(res_hand_node,res_func$nodeQ)
+  res_hand_mods<-c(sum(res_hand_node[gps==1]),
+                   sum(res_hand_node[gps==2]),
+                   sum(res_hand_node[gps==3]))
+  expect_equal(res_hand_mods,res_func$modQ)
+})
 
+test_that("test against a by-hand calculation for a simple network with some negative weights",{
+  #Function written by Lei, tests written by Dan
+  
+  #try a very simple one with only 1s and -1s
+  wij<-matrix(c(1,1,-1,-1,1,1,-1,-1,-1,-1,1,1,-1,-1,1,1),4,4)
+  diag(wij)<-0
+  wijplus<-pmax(wij,0)
+  wijminus<-pmax(-wij,0)
+  wiplus<-colSums(wijplus)
+  wiminus<-colSums(wijminus)
+  wplus<-sum(wijplus)/2
+  wminus<-sum(wijminus)/2
+  Pplus<-matrix(wiplus,4,1) %*% matrix(wiplus,1,4) /(2*wplus)
+  Pminus<-matrix(wiminus,4,1) %*% matrix(wiminus,1,4) /(2*wminus)
+  #a particular partitioning...
+  delta<-matrix(c(1,1,0,0,1,1,0,0,0,0,1,1,0,0,1,1),4,4)
+  Qplus<-sum((wijplus-Pplus)*delta)/(2*wplus)
+  Qminus<-sum((wijminus-Pminus)*delta)/(2*wminus)
+  res_hand<-(2*wplus/(2*wplus+2*wminus))*Qplus-(2*wminus/(2*wplus+2*wminus))*Qminus
+  gps<-c(1,1,2,2)
+  res_func<-modularity(wij,gps,decomp=TRUE)
+  expect_equal(res_hand,res_func$totQ)
+  Qplusdecomp<-(wijplus-Pplus)*delta/(2*wplus)
+  Qminusdecomp<-(wijminus-Pminus)*delta/(2*wminus)
+  Qdecomp<-(2*wplus/(2*wplus+2*wminus))*Qplusdecomp-
+    (2*wminus/(2*wplus+2*wminus))*Qminusdecomp
+  res_hand_node<-colSums(Qdecomp)
+  expect_equal(res_hand_node,res_func$nodeQ)
+  res_hand_mods<-c(sum(res_hand_node[gps==1]),sum(res_hand_node[gps==2]))
+  expect_equal(res_hand_mods,res_func$modQ)
+  
+  #try another
+  wij<-matrix(rnorm(25),5,5)
+  diag(wij)<-0
+  wij<-wij+t(wij)
+  wijplus<-pmax(wij,0)
+  wijminus<-pmax(-wij,0)
+  wiplus<-colSums(wijplus)
+  wiminus<-colSums(wijminus)
+  wplus<-sum(wijplus)/2
+  wminus<-sum(wijminus)/2
+  Pplus<-matrix(wiplus,5,1) %*% matrix(wiplus,1,5) /(2*wplus)
+  Pminus<-matrix(wiminus,5,1) %*% matrix(wiminus,1,5) /(2*wminus)
+  #a particular partitioning...
+  delta<-matrix(c(1,1,0,0,0,
+                  1,1,0,0,0,
+                  0,0,1,1,1,
+                  0,0,1,1,1,
+                  0,0,1,1,1),5,5)
+  Qplus<-sum((wijplus-Pplus)*delta)/(2*wplus)
+  Qminus<-sum((wijminus-Pminus)*delta)/(2*wminus)
+  res_hand<-(wplus/(wplus+wminus))*Qplus-(wminus/(wplus+wminus))*Qminus
+  gps<-c(1,1,2,2,2)
+  res_func<-modularity(wij,gps,decomp=TRUE)
+  expect_equal(res_hand,res_func$totQ)
+  Qplusdecomp<-(wijplus-Pplus)*delta/(2*wplus)
+  Qminusdecomp<-(wijminus-Pminus)*delta/(2*wminus)
+  Qdecomp<-(2*wplus/(2*wplus+2*wminus))*Qplusdecomp-
+    (2*wminus/(2*wplus+2*wminus))*Qminusdecomp
+  res_hand_node<-colSums(Qdecomp)
+  expect_equal(res_hand_node,res_func$nodeQ)
+  res_hand_mods<-c(sum(res_hand_node[gps==1]),sum(res_hand_node[gps==2]))
+  expect_equal(res_hand_mods,res_func$modQ)
+})
