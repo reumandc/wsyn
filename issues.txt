@@ -82,7 +82,7 @@ DONE tests
 ***There are lots of clustering algorithms in igraph (cluster_*) that could be used as options in clust for the clustering if we were willing to make negative weights in the adjacency matrix 0. This is assuming a graph in igraph does not allow negative weights, but that assumption *might* be wrong. Also, we would have to explore the individual algorithms and see if/when they work with negative weights, even if igraph does. igraph seems to allow weights (at least positive ones), but it might not be the standard in that package, so would also have to make sure the clustering algorithms in there are making use of the weights.
 DONE To get a speedup, and for other reasons, it may be worth improving the fast coherence algorithm as it exists in synmat as follows:
 DONE -write a version of the algorithm (currently in coh) that takes the necessary random numbers as inputs. persumably coh would then call that code after generating the random numbers
-***test against Lawrence's Matlab algorithm for exacy agreement, now that we can input the random variables
+***test against Lawrence's Matlab algorithm for exact agreement, now that we can input the random variables
 DONE -then synmat would generate one set of random numbers for all pairwise coherence significance calculations it needs to do, and pass the same set to all pairwise calculations of coherence significance
 DONE -having the version of the fast coherence algorithm that accepts random numbers as inputs will also be useful for other reasons, e.g., comparing to matlab code results
 DONE Lawrence says it should be possible to test the significance of the real part of the cross wavelet transform using an adapted version of his fast algorithm

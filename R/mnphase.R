@@ -1,6 +1,6 @@
 #' Mean phase of coherence
 #' 
-#' Gets the mean phaseof a bunch of complex numbers
+#' Gets the mean phase of a bunch of complex numbers
 #'  
 #' @param nums A vector of complex numbers
 #' 
