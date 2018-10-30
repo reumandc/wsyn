@@ -684,11 +684,11 @@ case of `syncpres=TRUE`) properties as the original data.
 
 ## Fast coherence
 \noindent The fast coherence algorithm implemented in `coh` (option `sigmethod="fast"`)
-implements Fourier surrgates only, and only applies for `norm` equal to `none`, `powall`, 
+implements Fourier surrogates only, and only applies for `norm` equal to `none`, `powall`, 
 or `powind`. It is described in detail elsewhere [@Sheppard_17].
 
 ## Alternatives to the "quick" method of assessing significance of wavelet phasor mean field values \label{sec:wpmfsignif}
-\noindent When `sigmethod` is `fft` in a call to `wpmf`, the  
+\noindent When `sigmethod` is `fft` in a call to `wpmf`, the
 empirical wavelet phasor mean field is compared to wavelet phasor mean fields of 
 Fourier surrogate datasets. 
 The `signif` slot of the output is a list with first element `"fft"`, second element equal to 
@@ -884,6 +884,11 @@ document them, then do some analyses here of those data using all our tools so f
 
 
 # Clustering
+
+Tools for clustering locations into network modules or communities according to a synchrony matrix are provided in \code{wsyn}. @Walter_17 applied this approach to gypsy moth data. Given an $N \times T$ matrix of values corresponding to measurements made in $N$ locations over $T$ times, the approch starts by generating an $N \times N$ synchrony matrix with $i,j$ entry describing the strength of synchrony between the time series from locations $i$ and $j$. This matrix is then passed to an existing clustering algorithm to partition the set of locations into subsets (called *modules* or network *communities*) that are more connected (synchronous), with less sychrony beyween locations in different clusters. 
+
+(in some way - there are many choices - see next section)
+
 
 # Acknowlegements
 

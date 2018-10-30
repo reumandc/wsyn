@@ -239,6 +239,49 @@ test_that("positive weights, by-hand checks",{
   #the modularity go down, because if it were it should not have been adopted
 })
 
-#test_that("positive and negative weights, by-hand checks",{
-#  
-#})
+test_that("positive and negative weights, by-hand checks",{
+  set.seed(101)
+  wij<-matrix(rnorm(100),10,10)
+  wij<-wij+t(wij)
+  diag(wij)<-0
+  wijplus<-matrix(pmax(0,wij),10,10)
+  wijminus<-matrix((-1)*pmin(0,wij),10,10)
+  wiplus<-colSums(wijplus)
+  wiminus<-colSums(wijminus)
+  wplus<-sum(wijplus)/2
+  wminus<-sum(wijminus)/2
+  B<-wij-(matrix(wiplus,length(wiplus),1) %*% matrix(wiplus,1,length(wiplus)))/(2*wplus)+
+    (matrix(wiminus,length(wiminus),1) %*% matrix(wiminus,1,length(wiminus)))/(2*wminus)
+  es<-eigen(B,symmetric=TRUE)
+  res<-cluseigen(A)
+  #res[[2]]
+  #sign(es$vectors[,1])
+  h<-sign(es$vectors[,1])
+  h[h==1]<-2
+  h[h==-1]<-1
+  expect_equal(res[[2]],h)  
+  
+  #do the next split
+  gp1inds<-which(res[[2]]==1)
+  Bg1<-B[gp1inds,gp1inds]
+  diag(Bg1)<-diag(Bg1)-rowSums(Bg1)
+  es1<-eigen(Bg1,symmetric=TRUE)
+  h<-sign(es1$vectors[,1])
+  #h
+  #res[[3]][gp1inds]
+  h[h==-1]<-2
+  expect_equal(h,res[[3]][gp1inds])
+  expect_gt(sum(Bg1[h==1,h==1])+sum(Bg1[h==2,h==2]),0) #make sure the proposed split was not making
+  #the modularity go down, because if it were it should not have been adopted
+  
+  gp2inds<-which(res[[2]]==2)
+  Bg2<-B[gp2inds,gp2inds]
+  diag(Bg2)<-diag(Bg2)-rowSums(Bg2)
+  es2<-eigen(Bg2,symmetric=TRUE)$vectors[,1]
+  h<-sign(es2)
+  #res[[3]][gp2inds]
+  #h #these disagreed so check that the proposed split was going to make the modularity go down
+  #and so that was why it was not adopted
+  expect_lt(sum(Bg2[h==1,h==1])+sum(Bg2[h==-1,h==-1]),0)
+})
+
