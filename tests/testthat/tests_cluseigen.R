@@ -43,46 +43,202 @@ test_that("test on a simple example where there should be two splits",{
   expect_equal(res[[4]],c(4,4,3,3,2,2,1,1))
 })
 
-test_that("test for accuracy against the igraph function in some cases that function applies",{
-  gr<-igraph::make_graph(edges="Bull")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
-  res<-cluseigen(ma)
-  ires<-igraph::cluster_leading_eigen(gr)
-  expect_equal(res[[length(res)]],ires$membership) #currently fails
+#test_that("test for accuracy against the igraph function in some cases that function applies",{
+#  gr<-igraph::make_graph(edges="Bull")
+#  ma<-igraph::as_adj(gr,sparse=FALSE)
+#  res<-cluseigen(ma)
+#  ires<-igraph::cluster_leading_eigen(gr)
+#  expect_equal(res[[length(res)]],ires$membership) #currently there is disagreement
+#  modularity(ma,res[[length(res)]]) 
+#  modularity(ma,ires$membership) #same modularity
+#  
+#  gr<-igraph::make_graph(edges="Chvatal")
+#  ma<-igraph::as_adj(gr,sparse=FALSE)
+#  res<-cluseigen(ma)
+#  ires<-igraph::cluster_leading_eigen(gr)
+#  h<-res[[length(res)]]
+#  hnew<-h
+#  hnew[h==1]<-2
+#  hnew[h==2]<-1 #reverse edge names, since they are arbitrary anyway
+#  expect_equal(hnew,ires$membership) 
+#  
+#  gr<-igraph::make_graph(edges="Coxeter")
+#  ma<-igraph::as_adj(gr,sparse=FALSE)
+#  res<-cluseigen(ma)
+#  ires<-igraph::cluster_leading_eigen(gr)
+#  expect_equal(res[[length(res)]],ires$membership) #currently major disagreement
+#  modularity(ma,res[[length(res)]]) #this is higher, so cluseigen is actually doing better
+#  modularity(ma,ires$membership)
+#  
+#  gr<-igraph::make_graph(edges="Cubical")
+#  ma<-igraph::as_adj(gr,sparse=FALSE)
+#  res<-cluseigen(ma)
+#  ires<-igraph::cluster_leading_eigen(gr)
+#  expect_equal(res[[length(res)]],ires$membership) 
+#  
+#  gr<-igraph::make_graph(edges="Dodecahedral")
+#  ma<-igraph::as_adj(gr,sparse=FALSE)
+#  res<-cluseigen(ma)
+#  ires<-igraph::cluster_leading_eigen(gr)
+#  expect_equal(res[[length(res)]],ires$membership) #currently major disagreement
+#  modularity(ma,res[[length(res)]]) #this is higher, so cluseigen is actually doing better
+#  modularity(ma,ires$membership)
+#  
+#  gr<-igraph::make_graph(edges="Franklin")
+#  ma<-igraph::as_adj(gr,sparse=FALSE)
+#  res<-cluseigen(ma)
+#  ires<-igraph::cluster_leading_eigen(gr)
+#  expect_equal(res[[length(res)]],ires$membership) #currently major disagreement
+#  modularity(ma,res[[length(res)]]) #this is higher, so cluseigen is actually doing better
+#  modularity(ma,ires$membership)
+#  
+#  #so it could be the cluseigen function that is faulty. So comment this whole
+#  #test suite out and instead test cluseigen by hand
+#})
+
+test_that("unweighted, by-hand checks",{
+  #code written by Lei, tests by Dan
+
+  #simple one
+  A<-matrix(c(1,1,1,0,0,
+              1,1,1,0,0,
+              1,1,1,0,0,
+              0,0,0,1,1,
+              0,0,0,1,1),5,5)
+  diag(A)<-0
+  k<-colSums(A)
+  m<-sum(A)
+  P<-matrix(k,length(k),1) %*% matrix(k,1,length(k))/(2*m)
+  B<-A-P
+  es<-eigen(B,symmetric=TRUE)
+  res<-cluseigen(A)
+  expect_equal(res[[2]],-1*sign(es$vectors[,1])/2+1.5)
   
-  gr<-igraph::make_graph(edges="Chvatal")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
-  res<-cluseigen(ma)
-  ires<-igraph::cluster_leading_eigen(gr)
-  h<-res[[length(res)]]
-  hnew<-h
-  hnew[h==1]<-2
-  hnew[h==2]<-1 #reverse edge names, since they are arbitrary anyway
-  expect_equal(hnew,ires$membership) 
+  #more complex one
+  set.seed(302)
+  A<-matrix(runif(100),10,10)/2
+  A<-A+t(A)
+  diag(A)<-0
+  A<-round(A)
+  k<-colSums(A)
+  m<-sum(A)/2
+  P<-matrix(k,length(k),1) %*% matrix(k,1,length(k))/(2*m)
+  B<-A-P
+  es<-eigen(B,symmetric=TRUE)
+  res<-cluseigen(A)
+  #res[[2]]
+  #sign(es$vectors[,1])
+  expect_equal(res[[2]],sign(es$vectors[,1])/2+1.5)
+
+  #check the subsequent splitting
+  gp1inds<-which(res[[2]]==1)
+  Bg1<-B[gp1inds,gp1inds]
+  diag(Bg1)<-diag(Bg1)-rowSums(Bg1)
+  es1<-eigen(Bg1,symmetric=TRUE)
+  expect_equal(es1$vectors[,1]<0,rep(TRUE,4))
   
-  gr<-igraph::make_graph(edges="Coxeter")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
-  res<-cluseigen(ma)
-  ires<-igraph::cluster_leading_eigen(gr)
-  expect_equal(res[[length(res)]],ires$membership) #currently fails very badly
+  gp2inds<-which(res[[2]]==2)
+  Bg2<-B[gp2inds,gp2inds]
+  diag(Bg2)<-diag(Bg2)-rowSums(Bg2)
+  es2<-eigen(Bg2,symmetric=TRUE)
+  expect_equal(sign(es2$vectors[,1]),c(-1,-1,-1,1,1,-1))
   
-  gr<-igraph::make_graph(edges="Cubical")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
-  res<-cluseigen(ma)
-  ires<-igraph::cluster_leading_eigen(gr)
-  expect_equal(res[[length(res)]],ires$membership) 
+  #another
+  set.seed(202)
+  A<-matrix(runif(100),10,10)/2
+  A<-A+t(A)
+  diag(A)<-0
+  A<-round(A)
+  k<-colSums(A)
+  m<-sum(A)/2
+  P<-matrix(k,length(k),1) %*% matrix(k,1,length(k))/(2*m)
+  B<-A-P
+  es<-eigen(B,symmetric=TRUE)
+  res<-cluseigen(A)
+  #res[[2]]
+  #sign(es$vectors[,1])
+  expect_equal(res[[2]],sign(es$vectors[,1])/2+1.5)  
   
-  gr<-igraph::make_graph(edges="Dodecahedral")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
-  res<-cluseigen(ma)
-  ires<-igraph::cluster_leading_eigen(gr)
-  expect_equal(res[[length(res)]],ires$membership) #currently fails badly, since this graph represents
-  #a dodecahedron, one intuitively expects one cluster only, which is what igraph gives but not what 
-  #cluseigen gives
+  #do a bigger one
+  set.seed(101)
+  A<-matrix(runif(2500),50,50)/2
+  A<-A+t(A)
+  diag(A)<-0
+  A<-round(A)
+  k<-colSums(A)
+  m<-sum(A)/2
+  P<-matrix(k,length(k),1) %*% matrix(k,1,length(k))/(2*m)
+  B<-A-P
+  es<-eigen(B,symmetric=TRUE)
+  res<-cluseigen(A)
+  h<-sign(es$vectors[,1])
+  #rbind(res[[2]],h)
+  h[h==1]<-2
+  h[h==-1]<-1
+  expect_equal(res[[2]],h)  
   
-  gr<-igraph::make_graph(edges="Franklin")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
-  res<-cluseigen(ma)
-  ires<-igraph::cluster_leading_eigen(gr)
-  expect_equal(res[[length(res)]],ires$membership) #currently fails badly
+  #check the subsequent splitting
+  gp1inds<-which(res[[2]]==1)
+  Bg1<-B[gp1inds,gp1inds]
+  diag(Bg1)<-diag(Bg1)-rowSums(Bg1)
+  es1<-eigen(Bg1,symmetric=TRUE)
+  h<-sign(es1$vectors[,1])
+  #rbind(res[[3]][gp1inds],h) #looks like it should have been split but wasnt so check whether the 
+  #proposed split actually makes the modularity go down, in which case it would not have been done
+  expect_lt(sum(Bg1[h<0,h<0])+sum(Bg1[h>0,h>0]),0)
+  
+  gp2inds<-which(res[[2]]==2)
+  Bg2<-B[gp2inds,gp2inds]
+  diag(Bg2)<-diag(Bg2)-rowSums(Bg2)
+  es2<-eigen(Bg2,symmetric=TRUE)
+  h<-sign(es2$vectors[,1])
+  #rbind(res[[3]][gp2inds],h)
+  h[h==1]<-2
+  h[h==-1]<-3
+  expect_equal(h,res[[3]][gp2inds])
+  expect_gt(sum(Bg2[h==2,h==2])+sum(Bg2[h==3,h==3]),0) #make sure the proposed split was not making
+  #the modularity go down, because if it were it should not have been adopted
 })
+
+test_that("positive weights, by-hand checks",{
+  set.seed(302)
+  A<-matrix(runif(100),10,10)
+  A<-A+t(A)
+  diag(A)<-0
+  k<-colSums(A)
+  m<-sum(A)/2
+  P<-matrix(k,length(k),1) %*% matrix(k,1,length(k))/(2*m)
+  B<-A-P
+  es<-eigen(B,symmetric=TRUE)
+  res<-cluseigen(A)
+  #res[[2]]
+  #sign(es$vectors[,1])
+  h<-sign(es$vectors[,1])
+  h[h==-1]<-2
+  expect_equal(res[[2]],h)  
+  
+  #check subsequent splits
+  gp1inds<-which(res[[2]]==1)
+  Bg1<-B[gp1inds,gp1inds]
+  diag(Bg1)<-diag(Bg1)-rowSums(Bg1)
+  es1<-eigen(Bg1,symmetric=TRUE)
+  h<-sign(es1$vectors[,1])
+  expect_equal(h,rep(-1,3)) #because gp 1 was not further split
+  
+  gp2inds<-which(res[[2]]==2)
+  Bg2<-B[gp2inds,gp2inds]
+  diag(Bg2)<-diag(Bg2)-rowSums(Bg2)
+  es2<-eigen(Bg2,symmetric=TRUE)$vectors[,1]
+  h<-sign(es2)
+  #res[[3]][gp2inds]
+  #h
+  h[h==-1]<-3
+  h[h==1]<-2
+  expect_equal(h,res[[3]][gp2inds])
+  expect_gt(sum(Bg2[h==2,h==2])+sum(Bg2[h==3,h==3]),0) #make sure the proposed split was not making
+  #the modularity go down, because if it were it should not have been adopted
+})
+
+#test_that("positive and negative weights, by-hand checks",{
+#  
+#})

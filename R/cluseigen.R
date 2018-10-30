@@ -24,9 +24,10 @@
 #'
 #' @references Gomez S., Jensen P. & Arenas A. (2009). Analysis of community structure 
 #' in networks of correlated data. Phys Rev E, 80, 016114. 
-#' Newman M.E. (2006). Finding community structure in networks using the eigenvectors of 
+#' Newman M.E.J. (2006). Finding community structure in networks using the eigenvectors of 
 #' matrices. Phys Rev E, 74, 036104.
-#'
+#' Newman M.E.J. (2006) Modularity and community structure in networks. PNAS 103, 8577-8582.
+#' 
 #' @examples
 #' adj<-matrix(0, 10, 10) # create a fake adjacency matrix
 #' adj[lower.tri(adj)]<-runif(10*9/2, -1, 1)
