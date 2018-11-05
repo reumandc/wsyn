@@ -874,10 +874,10 @@ explained. Results can only be interpreted when this is the case.
 See @Sheppard_18 for detailed information on cross terms and 
 interacting Moran effects.
 
-# An analysis of real data
+# Analysis of plankton populations in UK seas
 \noindent All examples so far have used artificial data. It makes sense at this
 stage to demonstrate the tools described so far on real data. We carry out a 
-much-simplified version of some of the analyses of @Sheppard_18. 
+much simplified version of some of the analyses of @Sheppard_18. 
 
 <!--DAN: embed the B-C transformed cal fin, PCI, and temp data in the package and 
 document them, then do some analyses here of those data using all our tools so far.-->
@@ -885,9 +885,86 @@ document them, then do some analyses here of those data using all our tools so f
 
 # Clustering
 
-Tools for clustering locations into network modules or communities according to a synchrony matrix are provided in \code{wsyn}. @Walter_17 applied this approach to gypsy moth data. Given an $N \times T$ matrix of values corresponding to measurements made in $N$ locations over $T$ times, the approch starts by generating an $N \times N$ synchrony matrix with $i,j$ entry describing the strength of synchrony between the time series from locations $i$ and $j$. This matrix is then passed to an existing clustering algorithm to partition the set of locations into subsets (called *modules* or network *communities*) that are more connected (synchronous), with less sychrony beyween locations in different clusters. 
+Tools are provided in `wsyn` for clustering sampling locations into network "modules" 
+or "communities" consisting of sites that are especially synchronous with each other. 
+@Walter_17 applied this kind of approach to gypsy moth data. Given an $N \times T$ matrix of 
+values corresponding to measurements made in $N$ locations over $T$ times, the approach starts 
+by generating an $N \times N$ synchrony matrix with $i,j$ entry describing the strength 
+of synchrony between the time series from locations $i$ and $j$. This matrix is then passed 
+to an existing clustering algorithm to partition the set of locations into subsets 
+called *modules* or network *communities*.  
 
-(in some way - there are many choices - see next section)
+## The synchrony matrix
+
+There are numerous ways to generate a synchrony matrix, and `synmat` provides several 
+alternatives. For an initial demonstration, create some data in two synchronous clusters.
+```{r artificial_clustering_data}
+N<-5
+Tmax<-100
+rho<-0.5
+sig<-matrix(rho,N,N)
+diag(sig)<-1
+d<-t(cbind(mvtnorm::rmvnorm(Tmax,mean=rep(0,N),sigma=sig),
+           mvtnorm::rmvnorm(Tmax,mean=rep(0,N),sigma=sig)))
+d<-cleandat(d,1:Tmax,1)$cdat
+```
+
+Then make a synchrony matrix using Pearson correlation.
+```{r pearson_synmat}
+sm<-synmat(d,1:Tmax,method="pearson")
+graphics::image(1:10,1:10,sm,col=heat.colors(20))
+```
+
+The function `synmat` provides many other options, beyond correlation, for different kinds of synchrony matrices. We demonstrate a frequency-specific approach. First create some artificial data.
+```{r freq_spec_synmat}
+N<-20
+Tmax<-500
+tim<-1:Tmax
+
+ts1<-sin(2*pi*tim/5)
+ts1s<-sin(2*pi*tim/5+pi/2)
+ts2<-sin(2*pi*tim/12)
+ts2s<-sin(2*pi*tim/12+pi/2)
+
+gp1A<-1:5
+gp1B<-6:10
+gp2A<-11:15
+gp2B<-16:20
+
+d<-matrix(NA,Tmax,N)
+d[,c(gp1A,gp1B)]<-ts1
+d[,c(gp2A,gp2B)]<-ts1s
+d[,c(gp1A,gp2A)]<-d[,c(gp1A,gp2A)]+matrix(ts2,Tmax,N/2)
+d[,c(gp1B,gp2B)]<-d[,c(gp1B,gp2B)]+matrix(ts2s,Tmax,N/2)
+d<-d+matrix(rnorm(Tmax*N,0,2),Tmax,N)
+d<-t(d)
+
+d<-cleandat(d,1:Tmax,1)$cdat
+```
+
+These data have period-5 oscillations which are synchronous within location groups 1 and 2, but are asynchronous between these groups. Superimposed on the period-5 oscillations are period-12 oscillations which are synchronous within location groups A and B, but are asynchronous between these groups. Groups 1 and 2 are locations $1-10$ and $11-20$, respectively. Group A is locations $1-5$ and $11-15$. Group B is locations $6-10$ and $16-20$. So the spatial structure of period-5 oscillations differs from that of period-12 oscillations. Strong local noise is superimposed on top of the periodic oscillations.     
+
+We measure synchrony matrices using portions of the the cross-wavelet transform centered on periods 5, and 12 (in separate synchrony matrices), to detect the different structures on different timescales.
+```{r detect_tsspecific_sync}
+sm5<-synmat(dat=d,times=1:Tmax,method="ReXWT",tsrange=c(4,6))
+graphics::image(1:N,1:N,sm5,col=heat.colors(20))
+sm12<-synmat(dat=d,times=1:Tmax,method="ReXWT",tsrange=c(11,13))
+graphics::image(1:N,1:N,sm12,col=heat.colors(20))
+```
+
+This timescale-specific approach reveals the structure of the data better than a correlation approach. 
+```{r abuse_cor}
+sm<-synmat(dat=d,times=1:Tmax,method="pearson")
+graphics::image(1:N,1:N,sm,col=heat.colors(20))
+```
+
+Several additional synchrony measures with which `synmat` can construct synchrony matrices are described in the documentation of the function.
+
+## Clustering
+
+We pass the sync
+
+# Analysis of gypsy moth defoliation time series
 
 
 # Acknowlegements

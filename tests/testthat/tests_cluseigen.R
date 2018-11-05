@@ -253,7 +253,7 @@ test_that("positive and negative weights, by-hand checks",{
   B<-wij-(matrix(wiplus,length(wiplus),1) %*% matrix(wiplus,1,length(wiplus)))/(2*wplus)+
     (matrix(wiminus,length(wiminus),1) %*% matrix(wiminus,1,length(wiminus)))/(2*wminus)
   es<-eigen(B,symmetric=TRUE)
-  res<-cluseigen(A)
+  res<-cluseigen(wij)
   #res[[2]]
   #sign(es$vectors[,1])
   h<-sign(es$vectors[,1])

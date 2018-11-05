@@ -45,7 +45,7 @@ on significance.}
 
 \item{sigthresh}{Significance threshold needed, if \code{weighted} is false, for a network
 link to be realized. Typically 0.95, 0.99, or 0.999, etc. Only used if \code{weighted} is
-\code{FALSE}}
+\code{FALSE}.}
 }
 \value{
 \code{clust} returns an object of class \code{clust}. Slots are:
@@ -62,7 +62,7 @@ first element is a vector of all 1s, corresponding to before the first clusterin
 performed.}
 \item{modres}{A list of the same length as \code{clusters}, with each element containing the 
 results of calling \code{modularity} on the network split to that level.}
-\item{mns}{Mean time series for modules. A list if the same length as \code{clusters}.}
+\item{mns}{Mean time series for modules. A list of the same length as \code{clusters}.}
 \item{wmfs}{Wavelet mean fields for modules. \code{NA} when \code{clust} is first called, but 
 \code{plotwmfs} causes this entry to be added. It is a list. See documentation for the method 
 \code{plotwmfs}.}

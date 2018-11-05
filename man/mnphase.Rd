@@ -13,7 +13,7 @@ mnphase(nums)
 \code{mnphase} returns the mean phase
 }
 \description{
-Gets the mean phaseof a bunch of complex numbers
+Gets the mean phase of a bunch of complex numbers
 }
 \note{
 Internal funcion, no error catching
