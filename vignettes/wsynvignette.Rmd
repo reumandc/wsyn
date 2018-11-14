@@ -962,9 +962,58 @@ graphics::image(1:N,1:N,sm,col=heat.colors(20))
 
 Several additional synchrony measures with which `synmat` can construct synchrony matrices are described in the documentation of the function.
 
+Important note: synchrony matrices can have negative values for some of the methods provided by `synmat`. This is appropriate, since correlation and other measures of synchrony can be negative, but it complicates cluster detection (see next section).
+
 ## Clustering
 
-To be completed later.
+The function `clust` computes network modules/clusters and helps keep information about them organized. The clustering algorithm is a slight adaptation of that of @Newman_2006 - see the next section for details. We illustrate the use of `clust` using the artificial data from the second example of the previous section.
+
+```{r clust_demo}
+#make some artificial coordinates for the geographic locations of where data were measured
+coords<-data.frame(X=c(rep(1,10),rep(2,10)),Y=rep(c(1:5,7:11),times=2))
+
+#create clusters based on the 5-year timescale range and map them using coords
+cl5<-clust(dat=d,times=1:Tmax,coords=coords,method="ReXWT",tsrange=c(4,6))
+get_clusters(cl5) #the first element of the list is always all 1s - prior to any splits
+#call the mapper here
+
+#plot mean time series for each module
+plot(get_times(cl5)[1:100],get_mns(cl5)[[2]][1,1:100],type='l',col='red',
+     ylim=range(get_mns(cl5)),xlab="Time step",ylab="Mean pop.")
+lines(get_times(cl5)[1:100],get_mns(cl5)[[2]][2,1:100],type='l',col='green')
+legend(x="topright",legend=c("mod1","mod2"),lty=c(1,1),col=c("red","green"))
+
+#create wavelet mean fields for each module and plot
+cl5<-addwmfs(cl5)
+plotmag(get_wmfs(cl5)[[2]][[1]])
+plotmag(get_wmfs(cl5)[[2]][[2]])
+
+#create clusters based on the 12-year timescale range and map them using coords
+cl12<-clust(dat=d,times=1:Tmax,coords=coords,method="ReXWT",tsrange=c(11,13))
+cl12$clusters
+#call the mapper here
+
+#plot mean time series for each module
+plot(get_times(cl12)[1:100],get_mns(cl12)[[2]][1,1:100],type='l',col='red',
+     ylim=range(get_mns(cl12)),xlab="Time step",ylab="Mean pop.")
+lines(get_times(cl12)[1:100],get_mns(cl12)[[2]][2,1:100],type='l',col='green')
+legend(x="topright",legend=c("mod1","mod2"),lty=c(1,1),col=c("red","green"))
+
+#create wavelet mean fields for each module and plot
+cl12<-addwmfs(cl12)
+plotmag(get_wmfs(cl12)[[2]][[1]])
+plotmag(get_wmfs(cl12)[[2]][[2]])
+```
+
+The function `addwpmfs` is similar to the function `addwmfs` demonstrated above.
+
+## The clustering algorithm
+
+The clustering algorithm used by `clust` is implemented in `cluseigen`, and is a generalization of the algorithm of @Newman_2006. The algorithm makes use of the concept of modularity. Modularity was defined by @Newman_2006 for any unweighted, undirected network paired with a paritioning of the nodes into modules. The modularity is then a single numeric score which is higher for better partitionings, i.e., partitionings that more effectively group nodes that are more heavily connected and separate nodes that are less connected. The ideal goal would be to find the partitioning that maximizes the modularity score, but this is computationally infeasible for realistically large networks @Newman_2006. Instead, the algorithm of @Newman_2006, which is computationally very efficient, provides a good partitioning that is not guaranteed to be optimal but is typically close to optimal @Newman_2006. The modularity itself can be computed rapidly, given a partitioning, with the function `modularity` in `wsyn`. 
+
+Modularity is defined in @Newman_2006 for unweighted networks, and the definition generalizes straightforwardly to weighted networks for which all weights are non-negative . But synchrony matrices can represent weighted networks for which some weights are allowed to be negative. A generalization of modularity for this more general type of network was defined by @Gomez_2009, and the `modularity` function computes this generalization. Values are the same as the definition of @Newman_2006 for non-negatively weighted networks. The algorithm implemented by `cluseigen` is a slight generalization of the original @Newman_2006 algorithm that applies to weighted networks for which some edges are allowed to have negative weight.
+
+
 
 # Analysis of gypsy moth defoliation time series
 

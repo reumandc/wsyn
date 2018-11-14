@@ -29,11 +29,18 @@ Unlike \code{wmf}, old values in \code{obj$wpmfs} are overwritten.
 When a \code{clust} object is created, the \code{wpmfs} slot is NA. This function fills it in, 
 or adds to it.
 }
-\note{
-Internal function, no error checking performed
+\details{
+This function uses the values of \code{scale.min}, \code{scale.max.input}, 
+\code{sigma} and \code{f0} stored in \code{obj$methodspecs}. It is possible to create 
+a clust object with bad values for these slots. This function throws an error in that 
+case. You can use a correlation-based method for calculating the synchrony matrix and 
+still pass values of \code{scale.min}, \code{scale.max.input}, \code{sigma} and \code{f0} 
+to \code{clust} (in fact, this happens by default) - they won't be used by \code{clust}, 
+but they will be there for later use by \code{addwmfs} and \code{addwpmfs}.
 }
 \examples{
 #Not written yet but need some
+
 }
 \author{
 Daniel Reuman, \email{reuman@ku.edu}

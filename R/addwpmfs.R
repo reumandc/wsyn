@@ -16,15 +16,31 @@
 #' case the user may want to set \code{level} equal only to one clustering level of interest.
 #' Unlike \code{wmf}, old values in \code{obj$wpmfs} are overwritten. 
 #'  
-#' @author Daniel Reuman, \email{reuman@@ku.edu}
+#' @details This function uses the values of \code{scale.min}, \code{scale.max.input}, 
+#' \code{sigma} and \code{f0} stored in \code{obj$methodspecs}. It is possible to create 
+#' a clust object with bad values for these slots. This function throws an error in that 
+#' case. You can use a correlation-based method for calculating the synchrony matrix and 
+#' still pass values of \code{scale.min}, \code{scale.max.input}, \code{sigma} and \code{f0} 
+#' to \code{clust} (in fact, this happens by default) - they won't be used by \code{clust}, 
+#' but they will be there for later use by \code{addwmfs} and \code{addwpmfs}.
 #' 
-#' @note Internal function, no error checking performed
+#' @author Daniel Reuman, \email{reuman@@ku.edu}
 #' 
 #' @examples
 #' #Not written yet but need some
+#' 
+#' @export
 
 addwpmfs<-function(obj,level=1:length(obj$clusters),sigmethod="quick",nrand=1000)
 {
+  #error checking
+  if (any(class(obj)!=c("clust","list")))
+  {
+    stop("Error in addwpmfs: obj must be a clust object")
+  }
+  h<-obj$methodspecs
+  errcheck_wavparam(h$scale.min,h$scale.max.input,h$sigma,h$f0,obj$times,"addwpmfs")
+  
   #compute the wpmfs
   wpmfs<-obj$wpmfs
   if (length(wpmfs)==1 && is.na(wpmfs))

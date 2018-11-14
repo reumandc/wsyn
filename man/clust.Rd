@@ -64,11 +64,11 @@ performed.}
 results of calling \code{modularity} on the network split to that level.}
 \item{mns}{Mean time series for modules. A list of the same length as \code{clusters}.}
 \item{wmfs}{Wavelet mean fields for modules. \code{NA} when \code{clust} is first called, but 
-\code{plotwmfs} causes this entry to be added. It is a list. See documentation for the method 
-\code{plotwmfs}.}
+\code{addwmfs} causes this entry to be added. It is a list. See documentation for the method 
+\code{addwmfs}.}
 \item{wpmfs}{Wavelet phasor mean fields for modules. \code{NA} when \code{clust} is first 
-called, but \code{plotwpmfs} causes this entry to be added. It is a list. See documentation for 
-the method \code{plotwpmfs}.}
+called, but \code{addwpmfs} causes this entry to be added. It is a list. See documentation for 
+the method \code{addwpmfs}.}
 }
 \description{
 Generator function for the \code{clust} S3 class, which supports tools for detecting clusters

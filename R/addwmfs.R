@@ -6,16 +6,32 @@
 #' 
 #' @return \code{addwmfs} returns another \code{clust} object with \code{wmfs} slot now included. 
 #' If  \code{obj$wmfs} was not NA, the object is returned as is.
-#' 
+#'
+#' @details This function uses the values of \code{scale.min}, \code{scale.max.input}, 
+#' \code{sigma} and \code{f0} stored in \code{obj$methodspecs}. It is possible to create 
+#' a clust object with bad values for these slots. This function throws an error in that 
+#' case. You can use a correlation-based method for calculating the synchrony matrix and 
+#' still pass values of \code{scale.min}, \code{scale.max.input}, \code{sigma} and \code{f0} 
+#' to \code{clust} (in fact, this happens by default) - they won't be used by \code{clust}, 
+#' but they will be there for later use by \code{addwmfs} and \code{addwpmfs}.
+#'  
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
-#' 
-#' @note Internal function, no error checking performed
 #' 
 #' @examples
 #' #Not written yet but need some
+#' 
+#' @export
 
 addwmfs<-function(obj)
 {
+  #error checking
+  if (any(class(obj)!=c("clust","list")))
+  {
+    stop("Error in addwmfs: obj must be a clust object")
+  }
+  h<-obj$methodspecs
+  errcheck_wavparam(h$scale.min,h$scale.max.input,h$sigma,h$f0,obj$times,"addwmfs")
+  
   #if there are NAs in wmfs, proceed, otherwise don't overwrite
   if (!any(is.na(obj$wmfs)))
   {
