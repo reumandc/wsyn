@@ -1005,15 +1005,44 @@ plotmag(get_wmfs(cl12)[[2]][[1]])
 plotmag(get_wmfs(cl12)[[2]][[2]])
 ```
 
-The function `addwpmfs` is similar to the function `addwmfs` demonstrated above.
+Color intensity on paps of clusters indicates the strength of contribution of a node to its module - details in the next section. The function `addwpmfs` is similar to the function `addwmfs` demonstrated above.
 
 ## The clustering algorithm
 
-The clustering algorithm used by `clust` is implemented in `cluseigen`, and is a generalization of the algorithm of @Newman_2006. The algorithm makes use of the concept of modularity. Modularity was defined by @Newman_2006 for any unweighted, undirected network paired with a paritioning of the nodes into modules. The modularity is then a single numeric score which is higher for better partitionings, i.e., partitionings that more effectively group nodes that are more heavily connected and separate nodes that are less connected. The ideal goal would be to find the partitioning that maximizes the modularity score, but this is computationally infeasible for realistically large networks @Newman_2006. Instead, the algorithm of @Newman_2006, which is computationally very efficient, provides a good partitioning that is not guaranteed to be optimal but is typically close to optimal @Newman_2006. The modularity itself can be computed rapidly, given a partitioning, with the function `modularity` in `wsyn`. 
+The clustering algorithm used by `clust` is implemented in `cluseigen`, and is a generalization of the algorithm of @Newman_2006. The algorithm makes use of the concept of modularity. Modularity was defined by @Newman_2006 for any unweighted, undirected network paired with a partitioning of the nodes into modules. The modularity is then a single numeric score which is higher for better partitionings, i.e., for partitionings that more effectively group nodes that are more heavily connected and separate nodes that are less connected. The ideal goal would be to find the partitioning that maximizes the modularity score, but this is computationally infeasible for realistically large networks [@Newman_2006]. Instead, the algorithm of @Newman_2006, which is computationally very efficient, provides a good partitioning that is not guaranteed to be optimal but is typically close to optimal [@Newman_2006]. The modularity itself can be computed rapidly, given a partitioning, with the function `modularity` in `wsyn`. 
 
-Modularity is defined in @Newman_2006 for unweighted networks, and the definition generalizes straightforwardly to weighted networks for which all weights are non-negative . But synchrony matrices can represent weighted networks for which some weights are allowed to be negative. A generalization of modularity for this more general type of network was defined by @Gomez_2009, and the `modularity` function computes this generalization. Values are the same as the definition of @Newman_2006 for non-negatively weighted networks. The algorithm implemented by `cluseigen` is a slight generalization of the original @Newman_2006 algorithm that applies to weighted networks for which some edges are allowed to have negative weight.
+Modularity is defined in @Newman_2006 for unweighted networks, and the definition generalizes straightforwardly to weighted networks for which all weights are non-negative. But synchrony matrices can represent weighted networks for which some weights are allowed to be negative. A generalization of modularity for this more general type of network was defined by @Gomez_2009, and the `modularity` function computes this generalization. Values are the same as the definition of @Newman_2006 for non-negatively weighted networks. The algorithm implemented by `cluseigen` is a slight generalization of the original @Newman_2006 algorithm that applies to weighted networks for which some edges are allowed to have negative weight.
 
+We here describe the generalized algorithm, the validity of which was realized by Lei Zhao. Let $w_{ij}$ be the adjacency matrix for a network, so the $ij$th entry of this matrix is the weight of the edge between nodes $i$ and $j$, $0$ if there is no edge. Let $C_i$ be the community/module to which node $i$ is assigned and let $C_j$ be the same for node $j$. The original definition of modularity, for non-negative $w_{ij}$, is
+$$Q=\frac{1}{2w}\sum_{ij} \left(w_{ij}-\frac{w_i w_j}{2w}\right)\delta(C_i,C_j),$$
+where $w_i=\sum_j w_{ij}$, $w=\frac{1}{2}\sum_i w_i$, and $\delta$ is the Kronecker delta function, equal to $1$ when $C_i=C_j$ and $0$ otherwise.
 
+For the case of partitioning into two clusters, @Newman_2006 notes that $\delta(C_i,C_j)=\frac{1}{2}(s_i s_j +1)$, where we define $s_i$ to be $1$ if node $i$ is in group $1$ and $-1$ if it is in group $2$. Then 
+$$Q=\frac{1}{4w}\sum_{ij} \left(w_{ij}-\frac{w_i w_j}{2w}\right)(s_i s_j +1),$$
+and it is easy to show this is
+$$Q=\frac{1}{4w}\sum_{ij} \left(w_{ij}-\frac{w_i w_j}{2w}\right)s_i s_j.$$
+Defining a matrix $\mathbf{B}$ such that $B_{ij}=w_{ij}-\frac{w_i w_j}{2w}$, we have 
+$$Q=\frac{1}{4w}\mathbf{s}^\tau \mathbf{B} \mathbf{s},$$
+where $\tau$ is transpose and the bold quantities are the vectors/matrices composed of the indexed quantities denoted with the same symbol. @Newman_2006 presents an argument that a good way to come close to optimizing $Q$ over possible partitions into two modules is to choose $s_i$ to be the same sign as the $i$th entry of the leading eigenvector of $\mathbf{B}$, if the leading eigenvalue is postive (otherwise the algorithm halts with no splits, returning the trivial "decomposition" into one module). This gives the first split, according to the Newman algorithm, of the network into modules. Subsequent splits are handled in a similar but not identical way described by @Newman_2006. (In particular it is incorrect to simply delete edges connecting the two modules from the first split and apply the algorithm to the resulting graphs.)
+
+The generalized modularity of @Gomez_2009 is defined as follows. Let $w_{ij}^+ = \max(0,w_{ij})$ and $w_{ij}^- = \max(0,-w_{ij})$ so that $w_{ij}=w_{ij}^+ - w_{ij}^-$. Let $w_i^+ = \sum_j w_{ij}^+$, $w_i^- = \sum_j w_{ij}^-$, $w^+ = \frac{1}{2} \sum_i w_i^+$, and $w^- = \frac{1}{2} \sum_i w_i^-$. Then @Gomez_2009 justifies the definitions
+$$Q^+ = \frac{1}{2w^+} \sum_{ij}\left(w_{ij}^+-\frac{w_i^+ w_j^+}{2w^+}\right)\delta(C_i,C_j),$$
+$$Q^- = \frac{1}{2w^-} \sum_{ij}\left(w_{ij}^- - \frac{w_i^- w_j^-}{2w^-}\right)\delta(C_i,C_j),$$
+and
+$$Q=\frac{2w^+}{2w^+ + 2w^-}Q^+ - \frac{2w^-}{2w^+ + 2w^-}Q^-.$$
+This is a generalization of the old definition of $Q$, in the sense that it reduces to that definition in the case of non-negatively weighted networks. @Gomez_2009 provides a probabilistic interpretation that generalizes the probabilisticc interpretation of @Newman_2006. 
+
+It is straightforward to show
+$$Q=\frac{1}{2w^+ + 2w^-} \sum_{ij} \left(w_{ij}-\left(\frac{w_i^+ w_j^+}{2w^+} - \frac{w_i^- w_j^-}{2w^-}\right)\right)\delta(C_i,C_j).$$
+Again considering an initial 2-module split and define $s_i$ and $s_j$ as previously, we have 
+$$Q=\frac{1}{4w^+ + 4w^-} \sum_{ij} \left(w_{ij}-\left(\frac{w_i^+ w_j^+}{2w^+} - \frac{w_i^- w_j^-}{2w^-}\right)\right)s_i s_j,$$
+which can be written in matrix form as
+$$Q=\frac{1}{4w^+ + 4w^-} \mathbf{s}^\tau \mathbf{E} \mathbf{s}.$$
+Because the generalized modularity of @Gomez_2009 can be written in the same matrix format as the modularity expression of @Newman_2006, the same eigenvector-based algorithm for finding a close-to-optimal value of the modularity can be used. 
+
+The quantity
+$$\frac{1}{2w^+ + 2w^-} \sum_{j} \left(w_{ij}-\left(\frac{w_i^+ w_j^+}{2w^+} - \frac{w_i^- w_j^-}{2w^-}\right)\right)\delta(C_i,C_j)$$
+is the contribution of node $i$ to the modularity. It is the extent to which node $i$ is more connected to other nodes in its module than expected by chance [@Newman_2006;@Gomez_2009], and can be interpreted as a strength of membership of a node in its module. The `plotmap` function (demonstrated above) has an option for coloring nodes according to this quantity.
 
 # Analysis of gypsy moth defoliation time series
 
