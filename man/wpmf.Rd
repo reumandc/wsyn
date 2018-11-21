@@ -40,7 +40,7 @@ creator function for the \code{wpmf} class. The \code{wpmf} class inherits from 
 }
 \details{
 For \code{sigmethod} equal to \code{quick}, the empirical wpmf is compared to a distribution of 
-magnitudes of sums of random phaors, using the same number of phasors as there are time series. The \code{signif}
+magnitudes of sums of random phasors, using the same number of phasors as there are time series. The \code{signif}
 output is a list with first element "\code{quick}" and second element a vector of \code{nrand} magnitudes of sums 
 of random phasors. For \code{sigmethod} equal to \code{fft}, the empirical wpmf is compared to wmpfs of 
 Fourier surrogate datasets. The \code{signif} output is a list with first element "\code{fft}", second element 

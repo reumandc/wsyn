@@ -102,7 +102,7 @@ aggregate significance results over any timescale band of choice. These are fill
 when needed by other methods, see \code{plotranks} and \code{bandtest}. 
 
 Regardless of what the variables represent, the normalized transform of dat1 is multiplied 
-by the conjugate of the normalized transform of dat2. Thus, positive a phase of the coherence 
+by the conjugate of the normalized transform of dat2. Thus, a positive phase of the coherence 
 indicates dat1 would be leading dat2.
 }
 \examples{
