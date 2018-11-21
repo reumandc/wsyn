@@ -118,16 +118,41 @@ get_values.tts<-function(obj)
   return(obj$values)
 }
 
-#This is based on an existing generic so not sure if this will work like this
-#summary.tts<-function(obj)
-#{
-#  
-#}
+#' @export
+print.tts<-function(x,...)
+{
+  cat("tts object:\n")
 
-#This is based on an existing generic so not sure if this will work like this
-#print.tts<-function(obj)
-#{
-#  
-#}
+  cat("times, a length",length(x$times),"numeric vector:\n")
+  if (length(x$times)<12)
+  {
+    cat(paste(x$times),"\n")  
+  }else
+  {
+    cat(paste(x$times[1:5]),"...",paste(x$times[(length(x$times)-4):(length(x$times))]),"\n")
+  }
 
-#What else? 
+  cat("timescales, a length",length(x$timescales),"numeric vector:\n")
+  if (length(x$timescales)<12)
+  {
+    cat(paste(x$timescales),"\n")  
+  }else
+  {
+    cat(paste(x$timescales[1:5]),"...",paste(x$timescales[(length(x$timescales)-4):(length(x$timescales))]),"\n")
+  }
+
+  if (length(x$timescales)<=5 && length(x$times)<=5)
+  {
+    cat("values, a",dim(x$values)[1],"by",dim(x$values)[2],"matrix:\n")
+    print(x$values)
+  }else
+  {
+    cat("values, a",dim(x$values)[1],"by",dim(x$values)[2],"matrix, upper left is:\n")
+    print(x$values[1:5,1:5])
+  }
+}
+
+#summary.tts<-function(object,...)
+#{
+#  return("A tts object.\nSlots are times, timescales, values.\nUse set_* and get_* methods and plotmag for summary information.")
+#}
