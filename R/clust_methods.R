@@ -318,4 +318,10 @@ get_wpmfs.clust<-function(obj)
   return(obj$wpmfs)
 }
 
-#summary and print methods when the time comes
+#' @export
+print.clust<-function(x,...)
+{
+  
+}
+
+#summary method when the time comes

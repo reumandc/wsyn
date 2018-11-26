@@ -106,8 +106,8 @@ print.wt<-function(x,...)
   }
   
   w<-x$wtopt
-  cat("wtopt:\n")
-  cat("scale.min=",w$scale.min,"; scale.max.input=",w$scale.max.input,"; sigma=",w$sigma,"; f0=",w$f0,sep="")
+  if (is.null(w$scale.max.input)){w$scale.max.input<-"NULL"}
+  cat("wtopt: scale.min=",w$scale.min,"; scale.max.input=",w$scale.max.input,"; sigma=",w$sigma,"; f0=",w$f0,sep="")
 }
 
 #write a summary method when the time comes

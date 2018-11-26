@@ -2,4 +2,8 @@ context("clust_methods")
 
 #tests of set and get functions considered unnecessary
 
-#when print and summary functions written, add tests
+test_that("test print.clust",{
+  
+})
+
+#when summary function written, add tests

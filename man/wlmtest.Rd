@@ -22,11 +22,11 @@ which is the response, is not allowed here.}
 \item{wlmobj}{The input}
 \item{drop}{The input}
 \item{signif}{A list with information from the significance testing. Elements are 
-\code{coher} and \code{scoher}. See details.}
+\code{sigmethod} (the input), \code{coher} and \code{scoher}. See details.}
 \item{ranks}{A list with ranking information for \code{signif}. \code{NA} until 
 \code{plotranks} is called, see documentation for \code{plotranks}.}
 \item{bandp}{A data frame containing results of computing significances across 
-timescale bands. Empty on an initial call to \code{coh}, filled in by the function 
+timescale bands. Empty on an initial call to \code{wlmtest}, filled in by the function 
 \code{bandtest}. See details.}
 }
 \description{
@@ -56,7 +56,7 @@ directly to \code{signif$scoher}. Statements about significance of the coherence
 should be made using \code{signif$coher} and \code{signif$scoher}, whereas \code{wlmobj$coher}
 should be used whenever the actual value of the coherence is needed. 
 
-The slots \code{ranks} and \code{bandp} are empty on an initial call to \code{coh}. 
+The slots \code{ranks} and \code{bandp} are empty on an initial call to \code{wlmtest}. 
 They are made to compute and hold 
 aggregate significance results over any timescale band of choice. These are filled in
 when needed by other methods, see \code{plotranks} and \code{bandtest}.

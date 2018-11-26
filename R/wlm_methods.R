@@ -186,4 +186,48 @@ get_coher.wlm<-function(obj)
   return(obj$coher)
 }
 
-#Need print and summary methods
+#' @export
+print.wlm<-function(x,...)
+{
+  cat("wlm object:\n")
+
+  cat("times, a length",length(x$times),"numeric vector:\n")
+  if (length(x$times)<12)
+  {
+    cat(paste(x$times),"\n")  
+  }else
+  {
+    cat(paste(x$times[1:5]),"...",paste(x$times[(length(x$times)-4):(length(x$times))]),"\n")
+  }
+  
+  cat("Number of sampling locations:",dim(x$dat[[1]])[1],"\n")
+
+  cat("timescales, a length",length(x$timescales),"numeric vector:\n")
+  if (length(x$timescales)<12)
+  {
+    cat(paste(x$timescales),"\n")  
+  }else
+  {
+    cat(paste(x$timescales[1:5]),"...",paste(x$timescales[(length(x$timescales)-4):(length(x$timescales))]),"\n")
+  }
+  
+  regform<-paste0(names(x$dat)[1],"~")
+  for (counter in 2:length(x$dat))
+  {
+    regform<-paste0(regform,names(x$dat)[counter])
+    if (counter<length(x$dat))
+    {
+      regform<-paste0(regform,"+")
+    }
+  }
+  cat("The wavelet regression:",regform,"\n")
+  
+  cat("norm, the normalization used:",x$norm,"\n")
+  
+  w<-x$wtopt
+  if (is.null(w$scale.max.input)){w$scale.max.input<-"NULL"}
+  cat("wtopt: scale.min=",w$scale.min,"; scale.max.input=",w$scale.max.input,"; sigma=",w$sigma,"; f0=",w$f0,"\n",sep="")
+}
+
+#Need summary method
+

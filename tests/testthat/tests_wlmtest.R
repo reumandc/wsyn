@@ -44,7 +44,7 @@ test_that("test that results are in the right format",{
   expect_equal(wlmobj,res$wlmobj)
   expect_equal(drop,res$drop)
   expect_equal(class(res$signif),"list")
-  expect_equal(names(res$signif),c("coher","scoher"))
+  expect_equal(names(res$signif),c("sigmethod","coher","scoher"))
   expect_equal(length(res$wlmobj$timescales),length(res$signif$coher))
   expect_equal(dim(res$signif$scoher),c(10,length(res$wlmobj$timescales)))  
   expect_equal(class(res$signif$coher),"complex")  

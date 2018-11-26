@@ -114,4 +114,76 @@ get_bandp.wlmtest<-function(obj)
   return(obj$bandp)
 }
 
-#add print and summary methods when the time comes
+#' @export
+print.wlmtest<-function(x,...)
+{
+  cat("wlmtest object:\n")
+  
+  cat("wlmobj$times, a length",length(x$wlmobj$times),"numeric vector:\n")
+  if (length(x$wlmobj$times)<12)
+  {
+    cat(paste(x$wlmobj$times),"\n")  
+  }else
+  {
+    cat(paste(x$wlmobj$times[1:5]),"...",paste(x$wlmobj$times[(length(x$wlmobj$times)-4):(length(x$wlmobj$times))]),"\n")
+  }
+  
+  cat("Number of sampling locations:",dim(x$wlmobj$dat[[1]])[1],"\n")
+  
+  cat("wlmobj$timescales, a length",length(x$wlmobj$timescales),"numeric vector:\n")
+  if (length(x$wlmobj$timescales)<12)
+  {
+    cat(paste(x$wlmobj$timescales),"\n")  
+  }else
+  {
+    cat(paste(x$wlmobj$timescales[1:5]),"...",paste(x$wlmobj$timescales[(length(x$wlmobj$timescales)-4):(length(x$wlmobj$timescales))]),"\n")
+  }
+  
+  regform<-paste0(names(x$wlmobj$dat)[1],"~")
+  for (counter in 2:length(x$wlmobj$dat))
+  {
+    regform<-paste0(regform,names(x$wlmobj$dat)[counter])
+    if (counter<length(x$wlmobj$dat))
+    {
+      regform<-paste0(regform,"+")
+    }
+  }
+  cat("The original wavelet regression:",regform,"\n")
+  
+  if (is.numeric(x$drop))
+  {
+    cat("The indices in wlmobj$dat of predictors dropped:",paste(x$drop),"\n")
+  }else
+  {
+    cat("The names of predictors dropped:",paste(x$drop),"\n")
+  }
+  
+  cat("wlmobj$norm, the normalization used:",x$wlmobj$norm,"\n")
+  
+  cat("sigmethod, the type of significance testing used:",x$signif$sigmethod,"\n")
+  
+  cat("Number of surrogates:",dim(x$signif$scoher)[1],"\n")
+  
+  w<-x$wlmobj$wtopt
+  if (is.null(w$scale.max.input)){w$scale.max.input<-"NULL"}
+  cat("wtopt: scale.min=",w$scale.min,"; scale.max.input=",w$scale.max.input,"; sigma=",w$sigma,"; f0=",w$f0,"\n",sep="")
+
+  if (class(x$ranks)=="list")
+  {
+    cat("The ranks slot is: filled\n")
+  }else
+  {
+    cat("The ranks slot is: empty\n")  
+  }
+  
+  if (class(x$bandp)=="data.frame")
+  {
+    cat("Timescale bands tested in bandp slot:\n")
+    h<-print(x$bandp[,c(1,2)])
+  }else
+  {
+    cat("Timescale bands tested in bandp slot: none")
+  }
+}
+
+#add summary methods when the time comes

@@ -38,7 +38,7 @@ coh(dat1, dat2, times, norm, sigmethod = "none", nrand = 1000,
 \item{timescales}{The timescales associated with the coherence}
 \item{coher}{The complex magnitude of this quantity is the coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
 \item{signif}{A list with information from the significance testing. Elements are \code{coher} and \code{scoher}. See details.}
-\item{ranks}{A list with ranking information for \code{signif}. \code{NA} until \code{plotranks} is called, see documentation for \code{plotranks}.}
+\item{ranks}{A list with ranking information for \code{signif}. \code{NA} until \code{plotrank} is called, see documentation for \code{plotrank}.}
 \item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. Empty on an initial call to \code{coh}, filled in by the function \code{bandtest}. See details.}
 }
 \description{
@@ -99,7 +99,7 @@ throws an error.
 The slots \code{ranks} and \code{bandp} are empty on an initial call to \code{coh}. 
 They are made to compute and hold 
 aggregate significance results over any timescale band of choice. These are filled in
-when needed by other methods, see \code{plotranks} and \code{bandtest}. 
+when needed by other methods, see \code{plotrank} and \code{bandtest}. 
 
 Regardless of what the variables represent, the normalized transform of dat1 is multiplied 
 by the conjugate of the normalized transform of dat2. Thus, a positive phase of the coherence 

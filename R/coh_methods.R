@@ -306,4 +306,63 @@ get_bandp.coh<-function(obj)
   return(obj$bandp)
 }
 
-#need summary and print method later
+#' @export
+print.coh<-function(x,...)
+{
+  cat("coh object:\n")
+  
+  cat("times, a length",length(x$times),"numeric vector:\n")
+  if (length(x$times)<12)
+  {
+    cat(paste(x$times),"\n")  
+  }else
+  {
+    cat(paste(x$times[1:5]),"...",paste(x$times[(length(x$times)-4):(length(x$times))]),"\n")
+  }
+  
+  cat("Number of sampling locations:",dim(x$dat1)[1],"\n")
+  
+  cat("timescales, a length",length(x$timescales),"numeric vector:\n")
+  if (length(x$timescales)<12)
+  {
+    cat(paste(x$timescales),"\n")  
+  }else
+  {
+    cat(paste(x$timescales[1:5]),"...",paste(x$timescales[(length(x$timescales)-4):(length(x$timescales))]),"\n")
+  }
+  
+  cat("norm, the normalization used:",x$norm,"\n")
+  
+  w<-x$wtopt
+  if (is.null(w$scale.max.input)){w$scale.max.input<-"NULL"}
+  cat("wtopt: scale.min=",w$scale.min,"; scale.max.input=",w$scale.max.input,"; sigma=",w$sigma,"; f0=",w$f0,"\n",sep="")
+
+  cat("sigmethod, the type of significance testing used:",x$sigmethod,"\n")
+  
+  if (class(x$signif)=="list")
+  {
+    cat("Number of surrogates:",dim(x$signif$scoher)[1],"\n")
+  }else
+  {
+    cat("Number of surrogates: NA\n")
+  }
+
+  if (class(x$ranks)=="list")
+  {
+    cat("The ranks slot is: filled\n")
+  }else
+  {
+    cat("The ranks slot is: empty\n")  
+  }
+
+  if (class(x$bandp)=="data.frame")
+  {
+    cat("Timescale bands tested in bandp slot:\n")
+    h<-print(x$bandp[,c(1,2)])
+  }else
+  {
+    cat("Timescale bands tested in bandp slot: none")
+  }
+}
+
+#need summary method later
