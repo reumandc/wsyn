@@ -321,7 +321,62 @@ get_wpmfs.clust<-function(obj)
 #' @export
 print.clust<-function(x,...)
 {
+  cat("clust object:\n")
   
+  #info on times
+  cat("times, a length",length(x$times),"numeric vector:\n")
+  if (length(x$times)<12)
+  {
+    cat(paste(x$times),"\n")  
+  }else
+  {
+    cat(paste(x$times[1:5]),"...",paste(x$times[(length(x$times)-4):(length(x$times))]),"\n")
+  }
+  
+  #number of sampling locations
+  cat("Number of sampling locations:",dim(x$dat)[1],"\n")
+  
+  #summary of methodspecs
+  cat("methodspecs:\n")
+  w<-x$methodspecs
+  if (is.null(w$scale.max.input)){w$scale.max.input<-"NULL"}
+  cat("method=",w$method,"; tsrange=",w$tsrange[1]," to ",w$tsrange[2],"; nsurrogs=",w$nsurrogs,"; weighted=",w$weighted,"; sigthresh=",w$sigthresh,
+      ";\nscale.min=",w$scale.min,"; scale.max.input=",w$scale.max.input,"; sigma=",w$sigma,"; f0=",w$f0,
+      "\n",sep="")
+  
+  #number of non-zeros in adj and range of values
+  cat("adj has",sum(x$adj!=0,na.rm=TRUE),"of",prod(dim(x$adj))-dim(x$adj)[1],
+      "off-diagonal entries differing from 0; values range from",min(x$adj,na.rm=T),"to",max(x$adj,na.rm=T),"\n")
+  
+  #number of splits done, number of clusters in final decomp
+  cat("Number of splitting steps done:",length(x$clusters)-1,"\n")
+  cat("Number of modules in final decomposition:",length(unique(x$clusters[[length(x$clusters)]])),"\n")
+  
+  #modularity values for each level
+  res<-c()
+  for (counter in 1:length(x$modres))
+  {
+    res<-c(res,x$modres[[counter]]$totQ)
+  }
+  cat("Modularity values for each step:",paste(res),"\n")
+  
+  #whether the wmfs slot is empty or filled
+  if (class(x$wmfs)=="list")
+  {
+    cat("The wmfs slot is: filled\n")
+  }else
+  {
+    cat("The wmfs slot is: empty\n")  
+  }
+  
+  #same for wpmfs slot
+  if (class(x$wpmfs)=="list")
+  {
+    cat("The wpmfs slot is: filled\n")
+  }else
+  {
+    cat("The wpmfs slot is: empty\n")  
+  }
 }
 
 #summary method when the time comes
