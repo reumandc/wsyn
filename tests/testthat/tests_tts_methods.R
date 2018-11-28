@@ -84,4 +84,21 @@ test_that("test print.tts", {
   expect_equal(capture_output(print(obj3)),"tts object:\ntimes, a length 5 numeric vector:\n1 2 3 4 5 \ntimescales, a length 5 numeric vector:\n1 2 3 4 5 \nvalues, a 5 by 5 matrix:\n     [,1] [,2] [,3] [,4] [,5]\n[1,]    1    6   11   16   21\n[2,]    2    7   12   17   22\n[3,]    3    8   13   18   23\n[4,]    4    9   14   19   24\n[5,]    5   10   15   20   25")
 })
 
-#need tests for summary method when written
+test_that("test summary.tts and the print method for the summary_wsyn class",{
+  times<-1:12
+  timescales<-1:12
+  values<-matrix(1:144,12,12)
+  obj1<-tts(times,timescales,values)
+  
+  h<-summary(obj1)
+  expect_equal(class(h),c("summary_wsyn","list"))
+  expect_equal(names(h),c("times_start","times_end","times_increment","timescale_start","timescale_end","timescale_length"))
+  expect_equal(h[[1]],1)
+  expect_equal(h[[2]],12)
+  expect_equal(h[[3]],1)
+  expect_equal(h[[4]],1)
+  expect_equal(h[[5]],12)
+  expect_equal(h[[6]],12)
+  
+  expect_equal(capture_output(print(h)),"times_start: 1\ntimes_end: 12\ntimes_increment: 1\ntimescale_start: 1\ntimescale_end: 12\ntimescale_length: 12")
+})
