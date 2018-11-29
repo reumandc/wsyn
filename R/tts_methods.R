@@ -164,7 +164,8 @@ print.summary_wsyn<-function(x,...)
 #' @export
 summary.tts<-function(x,...)
 {
-  res<-list(times_start=x$times[1],
+  res<-list(class="tts",
+            times_start=x$times[1],
             times_end=x$times[length(x$times)],
             times_increment=x$times[2]-x$times[1],
             timescale_start=x$timescales[1],

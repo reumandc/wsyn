@@ -379,4 +379,56 @@ print.clust<-function(x,...)
   }
 }
 
-#summary method when the time comes
+#' @export
+summary.clust<-function(x,...)
+{
+  ms<-x$methodspecs
+  h<-ms$scale.max.input
+  if (is.null(h)){h<-"NULL"}
+  
+  #whether the wmfs slot is empty or filled
+  if (class(x$wmfs)=="list")
+  {
+    h2<-"filled"
+  }else
+  {
+    h2<-"empty"
+  }
+  
+  #same for wpmfs slot
+  if (class(x$wpmfs)=="list")
+  {
+    h3<-"filled"
+  }else
+  {
+    h3<-"empty"
+  }
+  
+  res<-list(class="clust",
+            times_start=x$times[1],
+            times_end=x$times[length(x$times)],
+            times_increment=x$times[2]-x$times[1],
+            sampling_locs=dim(x$dat)[1],
+            method=ms$method,
+            tsrange1=ms$tsrange[1],
+            tsrange2=ms$tsrange[2],
+            nsurrogs=ms$nsurrogs,
+            weighted=ms$weighted,
+            sigthresh=ms$sigthresh,
+            scale.min=ms$scale.min,
+            scale.max.input=h,
+            sigma=ms$sigma,
+            f0=ms$f0,
+            num_split_steps=length(x$clusters)-1,
+            num_final_modules=max(x$clusters[[length(x$clusters)]]),
+            final_modularity=x$modres[[length(x$modres)]]$totQ,
+            wmf_slot_is=h2,
+            wpmf_slot_is=h3)
+  
+  #a summary_wsyn object inherits from the list class, but has its own print method, above
+  class(res)<-c("summary_wsyn","list")
+  return(res)
+}
+
+
+

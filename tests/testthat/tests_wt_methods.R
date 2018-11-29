@@ -27,4 +27,32 @@ test_that("test print.wt", {
   expect_equal(capture_output(print(obj3)),"wt object:\ntimes, a length 7 numeric vector:\n1 2 3 4 5 6 7 \ntimescales, a length 5 numeric vector:\n2 2.1 2.205 2.31525 2.4310125 \nvalues, a 7 by 5 matrix, upper left is:\n            [,1]             [,2]              [,3]             [,4]\n[1,]          NA               NA                NA               NA\n[2,]          NA               NA                NA               NA\n[3,]          NA               NA                NA               NA\n[4,] 2.242876+0i 2.1896+0.179423i 2.130585+0.34132i 2.0667+0.463176i\n[5,]          NA               NA                NA               NA\n                   [,5]\n[1,]                 NA\n[2,]                 NA\n[3,]                 NA\n[4,] 1.993106+0.531653i\n[5,]                 NA\nwtopt: scale.min=2; scale.max.input=NULL; sigma=1.05; f0=1")
 })
 
-#when summary function written, add tests
+test_that("test summary.wt and the print method for the summary_wsyn class",{
+  set.seed(201)
+  timeinc<-1 #one sample per year
+  startfreq<-0.2 #cycles per year
+  endfreq<-0.1 #cycles per year
+  times<-1:200
+  f<-seq(from=startfreq,by=(endfreq-startfreq)/(length(times)-1),to=endfreq) #frequency for each sample
+  phaseinc<-2*pi*cumsum(f*timeinc)
+  t.series<-sin(phaseinc)
+  t.series<-t.series-mean(t.series)
+  res<-wt(t.series, times)
+  
+  h<-summary(res)
+  expect_equal(class(h),c("summary_wsyn","list"))
+  expect_equal(names(h),c("class","times_start","times_end","times_increment",
+                          "timescale_start","timescale_end","timescale_length",
+                          "scale.min","scale.max.input","sigma","f0"))
+  expect_equal(h[[1]],"wt")
+  expect_equal(h[[2]],1)
+  expect_equal(h[[3]],200)
+  expect_equal(h[[4]],1)
+  expect_equal(h[[5]],2)
+  expect_equal(h[[8]],2)
+  expect_equal(h[[9]],"NULL")
+  expect_equal(h[[10]],1.05)
+  expect_equal(h[[11]],1)
+  
+  expect_equal(capture_output(print(h)),"class: wt\ntimes_start: 1\ntimes_end: 200\ntimes_increment: 1\ntimescale_start: 2\ntimescale_end: 81.54864\ntimescale_length: 77\nscale.min: 2\nscale.max.input: NULL\nsigma: 1.05\nf0: 1")
+})

@@ -88,5 +88,28 @@ print.wmf<-function(x,...)
   cat("wtopt: scale.min=",w$scale.min,"; scale.max.input=",w$scale.max.input,"; sigma=",w$sigma,"; f0=",w$f0,sep="")
 }
 
-#write a summary method when the time comes
+#' @export
+summary.wmf<-function(x,...)
+{
+  h<-x$wtopt$scale.max.input
+  if (is.null(h)){h<-"NULL"}
+  
+  res<-list(class="wmf",
+            times_start=x$times[1],
+            times_end=x$times[length(x$times)],
+            times_increment=x$times[2]-x$times[1],
+            sampling_locs=dim(x$dat)[1],
+            timescale_start=x$timescales[1],
+            timescale_end=x$timescales[length(x$timescales)],
+            timescale_length=length(x$timescales),
+            scale.min=x$wtopt$scale.min,
+            scale.max.input=h,
+            sigma=x$wtopt$sigma,
+            f0=x$wtopt$f0)
+  
+  #a summary_wsyn object inherits from the list class, but has its own print method, above
+  class(res)<-c("summary_wsyn","list")
+  return(res)
+}
+
 

@@ -365,4 +365,42 @@ print.coh<-function(x,...)
   }
 }
 
-#need summary method later
+#' @export
+summary.coh<-function(x,...)
+{
+  h<-x$wtopt$scale.max.input
+  if (is.null(h)){h<-"NULL"}
+  
+  #whether the ranks slot is full
+  if (class(x$ranks)=="list")
+  {
+    h2<-"filled"
+  }else
+  {
+    h2<-"empty"
+  }
+  
+  res<-list(class="coh",
+            times_start=x$times[1],
+            times_end=x$times[length(x$times)],
+            times_increment=x$times[2]-x$times[1],
+            sampling_locs=dim(x$dat1)[1],
+            timescale_start=x$timescales[1],
+            timescale_end=x$timescales[length(x$timescales)],
+            timescale_length=length(x$timescales),
+            normalization=x$norm,
+            scale.min=x$wtopt$scale.min,
+            scale.max.input=h,
+            sigma=x$wtopt$sigma,
+            f0=x$wtopt$f0,
+            sigmethod=x$sigmethod,
+            ranks_slot_is=h2)
+  
+  #a summary_wsyn object inherits from the list class, but has its own print method, above
+  class(res)<-c("summary_wsyn","list")
+  return(res)
+}
+
+
+
+
