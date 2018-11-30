@@ -186,4 +186,64 @@ print.wlmtest<-function(x,...)
   }
 }
 
-#add summary methods when the time comes
+#' @export
+summary.wlmtest<-function(x,...)
+{
+  h<-x$wlmobj$wtopt$scale.max.input
+  if (is.null(h)){h<-"NULL"}
+  
+  regform<-paste0(names(x$wlmobj$dat)[1],"~")
+  for (counter in 2:length(x$wlmobj$dat))
+  {
+    regform<-paste0(regform,names(x$wlmobj$dat)[counter])
+    if (counter<length(x$wlmobj$dat))
+    {
+      regform<-paste0(regform,"+")
+    }
+  }
+  
+  #whether the ranks slot is full
+  if (class(x$ranks)=="list")
+  {
+    h2<-"filled"
+  }else
+  {
+    h2<-"empty"
+  }
+  
+  if (is.numeric(x$drop))
+  {
+    h3<-names(x$wlmobj$dat)[x$drop]
+  }else
+  {
+    h3<-x$drop
+  }
+  
+  res<-list(class="wlmtest",
+            times_start=x$wlmobj$times[1],
+            times_end=x$wlmobj$times[length(x$wlmobj$times)],
+            times_increment=x$wlmobj$times[2]-x$wlmobj$times[1],
+            sampling_locs=dim(x$wlmobj$dat[[1]])[1],
+            timescale_start=x$wlmobj$timescales[1],
+            timescale_end=x$wlmobj$timescales[length(x$wlmobj$timescales)],
+            timescale_length=length(x$wlmobj$timescales),
+            orig_wavelet_regression=regform,
+            predictors_dropped=h3,
+            normalization=x$wlmobj$norm,
+            sigmethod=x$signif$sigmethod,
+            nsurrogs=dim(x$signif$scoher)[1],
+            scale.min=x$wlmobj$wtopt$scale.min,
+            scale.max.input=h,
+            sigma=x$wlmobj$wtopt$sigma,
+            f0=x$wlmobj$wtopt$f0,
+            ranks_slot_is=h2)
+  
+  #a summary_wsyn object inherits from the list class, but has its own print method, above
+  class(res)<-c("summary_wsyn","list")
+  return(res)
+}
+
+
+
+
+
