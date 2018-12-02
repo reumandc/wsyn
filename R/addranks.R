@@ -12,9 +12,6 @@
 #' Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}
 #' 
 #' @note Internal function, no error checking performed
-#' 
-#' @examples
-#' #Not written yet but need some
 
 addranks<-function(obj)
 {

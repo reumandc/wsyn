@@ -94,10 +94,10 @@ test_that("test for reasonableness on an example",{
   res_dd<-wlmtest(wlmobj,drop="driver",sigmethod,nrand=nrand)
   
   #this also unit tests addranks and bandtest
-  res_di<-addranks(res_di)
+  #res_di<-addranks(res_di)
   res_di<-bandtest(res_di,c(5,15))
   
-  res_dd<-addranks(res_dd)
+  #res_dd<-addranks(res_dd)
   res_dd<-bandtest(res_dd,c(5,15))
   
   expect_gt(res_di$bandp[1,3],.05)
