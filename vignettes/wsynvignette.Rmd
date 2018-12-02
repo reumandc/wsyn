@@ -874,12 +874,12 @@ explained. Results can only be interpreted when this is the case.
 See @Sheppard_18 for detailed information on cross terms and 
 interacting Moran effects.
 
-# Analysis of plankton populations in UK seas
+<!--# Analysis of plankton populations in UK seas
 \noindent All examples so far have used artificial data. It makes sense at this
 stage to demonstrate the tools described so far on real data. We carry out a 
 much simplified version of some of the analyses of @Sheppard_18. 
 
-To be completed later.
+To be completed later.-->
 
 <!--DAN: embed the B-C transformed cal fin, PCI, and temp data in the package and 
 document them, then do some analyses here of those data using all our tools so far.-->
@@ -1044,15 +1044,17 @@ The quantity
 $$\frac{1}{2w^+ + 2w^-} \sum_{j} \left(w_{ij}-\left(\frac{w_i^+ w_j^+}{2w^+} - \frac{w_i^- w_j^-}{2w^-}\right)\right)\delta(C_i,C_j)$$
 is the contribution of node $i$ to the modularity. It is the extent to which node $i$ is more connected to other nodes in its module than expected by chance [@Newman_2006;@Gomez_2009], and can be interpreted as a strength of membership of a node in its module. The `plotmap` function (demonstrated above) has an option for coloring nodes according to this quantity.
 
-# Analysis of gypsy moth defoliation time series
+<!--# Analysis of gypsy moth defoliation time series
 
-To be completed later.
+To be completed later.-->
 
 # Acknowlegements
 
 This material is based upon work supported by the National Science Foundation 
-under Grant Numbers 17114195 and 1442595. Any opinions, findings, and conclusions 
-or recommendations expressed in this material are those of the author(s) and do 
-not necessarily reflect the views of the National Science Foundation.
+under grant numbers 17114195 and 1442595. Any opinions, findings, and conclusions 
+or recommendations expressed in this material are those of the authors and do 
+not necessarily reflect the views of the National Science Foundation. We thank all 
+users of the package who have reported or will later report ways in which the package
+could be improved.
 
 # References
