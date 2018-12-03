@@ -62,10 +62,26 @@ test_that("clev is 3",{
 test_that("clev is 4",{
   set.seed(101)
   times<-seq(1,100,1)
+  dat<-rnorm(100)
+  clev<-4
+  res<-cleandat(dat,times,clev)
+
+  #test format
+  expect_type(res,"list")
+  expect_equal(names(res),c("cdat","clev","optlambdas"))
+  expect_type(res$optlambdas,"double")
+  expect_equal(length(res$optlambdas),1)
+  expect_equal(res$clev,4)
+  expect_type(res$cdat,"double")
+  expect_equal(length(res$cdat),length(times))
+  expect_equal(mean(res$cdat),0)
+  expect_equal(unname(coef(lm(res$cdat~times))),c(0,0))
+
+  set.seed(101)
+  times<-seq(1,100,1)
   dat1<-.1*times+rnorm(length(times),mean=0,sd=.025*times+.5)+1
   dat2<-.1*times+rnorm(length(times),mean=0,sd=.025*times+.5)+1
   dat<-rbind(dat1,dat2)
-  clev<-4
   res<-cleandat(dat,times,clev,lambdas=seq(-2,2,.01),mints=NaN)
   
   #test format

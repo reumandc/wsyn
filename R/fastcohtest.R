@@ -30,9 +30,6 @@
 #' Sheppard, L.W., et al. (2017) Rapid surrogate testing of wavelet coherences. European Physical 
 #' Journal, Nonlinear and Biomedical Physics, 5, 1. DOI: 10.1051/epjnbp/2017000
 #' 
-#' @examples
-#' #Not written yet but need some
-#' 
 #' @importFrom stats fft
 
 fastcohtest<-function(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnums,norm)

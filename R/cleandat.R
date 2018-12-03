@@ -32,7 +32,13 @@
 #' Sheppard, LW, et al. (2015) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 #' 
 #' @examples 
-#' #Don't have any yet but need some
+#' times<-1:100
+#' dat<-rnorm(100)
+#' res1<-cleandat(dat,times,1) #this removes the mean
+#' res2<-cleandat(dat,times,2) #detrends and removes the mean
+#' res3<-cleandat(dat,times,3) #variances also standardized
+#' res4<-cleandat(dat,times,4) #also joint Box-Cox applied
+#' res5<-cleandat(dat,times,5) #1-3, also indiv Box-Cox
 #' 
 #' @export  
 #' @importFrom stats lm residuals
@@ -138,7 +144,9 @@ cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
     #now do the transformations
     for (crow in 1:dim(cdat)[1])
     {
-      cdat[crow,]<-bctrans(cdat[crow,],optlambdas)
+      thisrow<-cdat[crow,]
+      thisrow<-setmints(thisrow,mints)    
+      cdat[crow,]<-bctrans(thisrow,optlambdas)
     }
   }
   
