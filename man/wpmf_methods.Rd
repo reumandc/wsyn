@@ -58,7 +58,7 @@ A \code{print.wpmf} method is also available. For \code{wpmf} objects,
 i.e., \code{*} equal to \code{times}, \code{timescales}, \code{wtopt}, 
 \code{values}, \code{dat}, and \code{signif}. The \code{set_*} methods just throw an 
 error, to prevent breaking the consistency between the slots of a 
-\code{wt} object.
+\code{wpmf} object.
 }
 \description{
 Set, get, summary, and print methods for the \code{wpmf} class.

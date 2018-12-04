@@ -11,7 +11,7 @@
 #' i.e., \code{*} equal to \code{times}, \code{timescales}, \code{wtopt}, 
 #' \code{values}, and \code{dat}. The \code{set_*} methods just throw an 
 #' error, to prevent breaking the consistency between the slots of a 
-#' \code{wt} object.
+#' \code{wmf} object.
 #'  
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
 #' 
