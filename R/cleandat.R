@@ -41,7 +41,7 @@
 #' res5<-cleandat(dat,times,5) #1-3, also indiv Box-Cox
 #' 
 #' @export  
-#' @importFrom stats lm residuals
+#' @importFrom stats lm residuals sd
 #' @importFrom MASS boxcox
 
 cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)

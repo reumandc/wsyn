@@ -26,9 +26,6 @@
 #' @note Internal function, no error checking done.
 #' 
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
-#'  
-#' @examples 
-#' #Need some
 
 wavmatwork<-function(dat,times,scale.min,scale.max.input,sigma,f0,norm,treatment)
 {

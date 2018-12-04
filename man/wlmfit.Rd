@@ -26,9 +26,6 @@ Only \code{norm="powall"} works now, other options throw an error.
 \note{
 Internal function, no error checking done.
 }
-\examples{
-#Not written yet but need some
-}
 \references{
 Sheppard, LW et al. (2018) Synchrony is more than its top-down and climatic parts: interacting 
 Moran effects on phytoplankton in British seas, In review.

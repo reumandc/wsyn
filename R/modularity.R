@@ -42,7 +42,7 @@
 #' adj<-adj+t(adj)
 #' colnames(adj)<-letters[1:10]
 #' m<-cluseigen(adj)
-#' z<-modularity(adj, m[[length(m)]], decomp=T)
+#' z<-modularity(adj, m[[length(m)]], decomp=TRUE)
 #' 
 #' @export
 

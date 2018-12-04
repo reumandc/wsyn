@@ -43,10 +43,6 @@ This is the algorithm of Sheppard et al. (2017) (see references).
 \note{
 Internal function, minimal error checking.
 }
-\examples{
-#Not written yet but need some
-
-}
 \references{
 Sheppard, L.W., et al. (2017) Rapid surrogate testing of wavelet coherences. European Physical 
 Journal, Nonlinear and Biomedical Physics, 5, 1. DOI: 10.1051/epjnbp/2017000

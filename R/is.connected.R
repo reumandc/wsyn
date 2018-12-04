@@ -1,12 +1,15 @@
 #' Tests if a graph is connected
 #' 
-#' Tests if a graph represented by an adjacency matrix is connected. Idea by Ed Scheinerman, 
-#' circa 2006. Source: http://www.ams.jhu.edu/~ers/matgraph/; routine: matgraph/@graph/isconnected.m
+#' Tests if a graph represented by an adjacency matrix is connected. 
 #' 
 #' @param adj An adjacency matrix. Must be a numeric matrix with non-negative entries.
 #' 
 #' @return \code{is.connected} returns \code{TRUE} or \code{FALSE} depending on whether
 #' the graph represented in \code{adj} is a connected graph.
+#' 
+#' @details Idea by Ed Scheinerman, circa 2006. 
+#' Source: http://www.ams.jhu.edu/~ers/matgraph/; routine: 
+#' matgraph/@graph/isconnected.m
 #' 
 #' @author Lei Zhao, \email{lei_journal@yahoo.com}
 #' 

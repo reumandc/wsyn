@@ -187,8 +187,10 @@ print.wlmtest<-function(x,...)
 }
 
 #' @export
-summary.wlmtest<-function(x,...)
+summary.wlmtest<-function(object,...)
 {
+  x<-object
+  
   h<-x$wlmobj$wtopt$scale.max.input
   if (is.null(h)){h<-"NULL"}
   

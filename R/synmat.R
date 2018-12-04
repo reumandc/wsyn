@@ -70,7 +70,16 @@
 #' Letters. doi: 10.1111/ele.12782
 #'  
 #' @examples 
-#' #Need some
+#' sig<-matrix(.9,5,5)
+#' diag(sig)<-1
+#' dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+#' dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+#' dat<-rbind(dat1,dat2)
+#' times<-1:30
+#' dat<-cleandat(dat,times,clev=2)$cdat
+#' method<-"pearson.sig.fft"
+#' res<-synmat(dat,times,method,nsurrogs=100,weighted=FALSE,
+#'             sigthresh=0.95)
 #'   
 #' @export
 #' @importFrom stats cor cor.test
@@ -130,7 +139,7 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
       mat<-1-mat
     }else
     {
-      mat<-makeunweighted(mat,sigthresh)
+      mat<-makeunweighted(mat,1-sigthresh)
     }
     return(mat)
   }
@@ -165,7 +174,7 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
       mat<-1-mat
     }else
     {
-      mat<-makeunweighted(mat,sigthresh)
+      mat<-makeunweighted(mat,1-sigthresh)
     }
     return(mat)
   }
@@ -251,7 +260,7 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
       mat<-1-mat
     }else
     {
-      mat<-makeunweighted(mat,sigthresh)
+      mat<-makeunweighted(mat,1-sigthresh)
     }
     return(mat)
   }  
@@ -300,7 +309,7 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
       mat<-1-mat
     }else
     {
-      mat<-makeunweighted(mat,sigthresh)
+      mat<-makeunweighted(mat,1-sigthresh)
     }
     return(mat)
   }

@@ -1,77 +1,70 @@
-#Simple methods of the wt class
+#' Basic methods for the \code{wt} class
+#' 
+#' Set, get, summary, and print methods for the \code{wt} class.
+#' 
+#' @param object,x,obj An object of class \code{wt}
+#' @param newval A new value, for the \code{set_*} methods
+#' 
+#' @return \code{summary.wt} produces a summary of a \code{wt} object.
+#' A \code{print.wt} method is also available. For \code{wt} objects, 
+#' \code{set_*} and \code{get_*} methods are available for all slots,
+#' i.e., \code{*} equal to \code{times}, \code{timescales}, \code{wtopt}, 
+#' \code{values}, and \code{dat}. The \code{set_*} methods just throw an 
+#' error, to prevent breaking the consistency between the slots of a 
+#' \code{wt} object.
+#'  
+#' @author Daniel Reuman, \email{reuman@@ku.edu}
+#' 
+#' @examples
+#' time1<-1:100
+#' time2<-101:200
+#' ts1p1<-sin(2*pi*time1/15)
+#' ts1p2<-0*time1
+#' ts2p1<-0*time2
+#' ts2p2<-sin(2*pi*time2/8)
+#' ts1<-ts1p1+ts1p2
+#' ts2<-ts2p1+ts2p2
+#' ts<-c(ts1,ts2)
+#' ra<-rnorm(200,mean=0,sd=0.5)
+#' t.series<-ts+ra
+#' t.series<-t.series-mean(t.series)
+#' times<-c(time1,time2)
+#' h<-wt(t.series, times)
+#' get_times(h)
+#' summary(h)
+#' print(h)
+#' 
+#' @name wt_methods
+NULL
+#> NULL
 
-#value setting - these just throw an error, since we do not want
-#individual components of a wt object changed as that breaks the
-#consistency among the components
-
+#' @rdname wt_methods
 #' @export
-set_times.wt<-function(obj,newval)
+summary.wt<-function(object,...)
 {
-  stop("Error in set_times: times should not be altered for a wt object")
+  x<-object
+  
+  h<-x$wtopt$scale.max.input
+  if (is.null(h)){h<-"NULL"}
+  
+  res<-list(class="wt",
+            times_start=x$times[1],
+            times_end=x$times[length(x$times)],
+            times_increment=x$times[2]-x$times[1],
+            timescale_start=x$timescales[1],
+            timescale_end=x$timescales[length(x$timescales)],
+            timescale_length=length(x$timescales),
+            scale.min=x$wtopt$scale.min,
+            scale.max.input=h,
+            sigma=x$wtopt$sigma,
+            f0=x$wtopt$f0)
+  
+  #a summary_wsyn object inherits from the list class, but has its own print method, above
+  class(res)<-c("summary_wsyn","list")
+  return(res)
 }
 
-#' @export
-set_wtopt<-function(obj,newval)
-{
-  UseMethod("set_wtopt",obj)
-}
-
-#' @export
-set_wtopt.default<-function(obj,newval)
-{
-  stop("Error in set_wtopt: set_wtopt not defined for this class")
-}
-
-#' @export
-set_wtopt.wt<-function(obj,newval)
-{
-  stop("Error in set_wtopt: wtopt should not be altered for a wt object")
-}
-
-#' @export
-set_timescales.wt<-function(obj,newval)
-{
-  stop("Error in set_timescales: timescales should not be alterned for a wt object")
-}
-
-#' @export
-set_values.wt<-function(obj,newval)
-{
-  stop("Error in set_values: values should not be altered for a wt object")
-}
-
-#' @export
-set_dat.wt<-function(obj,newval)
-{
-  stop("Error in set_dat: dat should not be altered for a wt object")
-}
-
-#value getting - methods not needed except for dat, others inherited from tts
-
-#' @export
-get_dat.wt<-function(obj)
-{
-  return(obj$dat)
-}
-
-#' @export
-get_wtopt<-function(obj)
-{
-  UseMethod("get_wtopt",obj)
-}
-
-#' @export
-get_wtopt.default<-function(obj)
-{
-  stop("Error in get_wtopt: get_wtopt not defined for this class")
-}
-
-#' @export
-get_wtopt.wt<-function(obj)
-{
-  return(obj$wtopt)
-}
-
+#' @rdname wt_methods
 #' @export
 print.wt<-function(x,...)
 {
@@ -110,25 +103,129 @@ print.wt<-function(x,...)
   cat("wtopt: scale.min=",w$scale.min,"; scale.max.input=",w$scale.max.input,"; sigma=",w$sigma,"; f0=",w$f0,sep="")
 }
 
+#' @rdname wt_methods
 #' @export
-summary.wt<-function(x,...)
+set_times.wt<-function(obj,newval)
 {
-  h<-x$wtopt$scale.max.input
-  if (is.null(h)){h<-"NULL"}
-  
-  res<-list(class="wt",
-            times_start=x$times[1],
-            times_end=x$times[length(x$times)],
-            times_increment=x$times[2]-x$times[1],
-            timescale_start=x$timescales[1],
-            timescale_end=x$timescales[length(x$timescales)],
-            timescale_length=length(x$timescales),
-            scale.min=x$wtopt$scale.min,
-            scale.max.input=h,
-            sigma=x$wtopt$sigma,
-            f0=x$wtopt$f0)
-  
-  #a summary_wsyn object inherits from the list class, but has its own print method, above
-  class(res)<-c("summary_wsyn","list")
-  return(res)
+  stop("Error in set_times: times should not be altered for a wt object")
 }
+
+#' @rdname wt_methods
+#' @export
+set_timescales.wt<-function(obj,newval)
+{
+  stop("Error in set_timescales: timescales should not be alterned for a wt object")
+}
+
+#' @rdname wt_methods
+#' @export
+set_values.wt<-function(obj,newval)
+{
+  stop("Error in set_values: values should not be altered for a wt object")
+}
+
+#' @rdname setget_methods
+#' @export
+set_dat<-function(obj,newval)
+{
+  UseMethod("set_dat",obj)
+}
+
+#' @rdname setget_methods
+#' @export
+set_dat.default<-function(obj,newval)
+{
+  stop("Error in set_dat: set_dat not defined for this class")
+}
+
+#' @rdname wt_methods
+#' @export
+set_dat.wt<-function(obj,newval)
+{
+  stop("Error in set_dat: dat should not be altered for a wt object")
+}
+
+#' @rdname setget_methods
+#' @export
+set_wtopt<-function(obj,newval)
+{
+  UseMethod("set_wtopt",obj)
+}
+
+#' @rdname setget_methods
+#' @export
+set_wtopt.default<-function(obj,newval)
+{
+  stop("Error in set_wtopt: set_wtopt not defined for this class")
+}
+
+#' @rdname wt_methods
+#' @export
+set_wtopt.wt<-function(obj,newval)
+{
+  stop("Error in set_wtopt: wtopt should not be altered for a wt object")
+}
+
+#' @rdname wt_methods
+#' @export
+get_times.wt<-function(obj)
+{
+  return(obj$times)
+}
+
+#' @rdname wt_methods
+#' @export
+get_timescales.wt<-function(obj)
+{
+  return(obj$timescales)
+}
+
+#' @rdname wt_methods
+#' @export
+get_values.wt<-function(obj)
+{
+  return(obj$values)
+}
+
+#' @rdname setget_methods
+#' @export
+get_dat<-function(obj)
+{
+  UseMethod("get_dat",obj)
+}
+
+#' @rdname setget_methods
+#' @export
+get_dat.default<-function(obj)
+{
+  stop("Error in get_dat: get_dat not defined for this class")
+}
+
+#' @rdname wt_methods
+#' @export
+get_dat.wt<-function(obj)
+{
+  return(obj$dat)
+}
+
+#' @rdname setget_methods
+#' @export
+get_wtopt<-function(obj)
+{
+  UseMethod("get_wtopt",obj)
+}
+
+#' @rdname setget_methods
+#' @export
+get_wtopt.default<-function(obj)
+{
+  stop("Error in get_wtopt: get_wtopt not defined for this class")
+}
+
+#' @rdname wt_methods
+#' @export
+get_wtopt.wt<-function(obj)
+{
+  return(obj$wtopt)
+}
+

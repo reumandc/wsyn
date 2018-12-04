@@ -19,6 +19,7 @@
 #' 
 #' @export
 #' @importFrom grDevices pdf dev.off
+#' @importFrom graphics plot lines text
 
 plotphase<-function(object,...)
 {
@@ -55,7 +56,7 @@ plotphase<-function(object,...)
 
 #' @rdname plotphase
 #' @export
-plotphase.coh<-function(object,bandprows="all",filename=NA)
+plotphase.coh<-function(object,bandprows="all",filename=NA,...)
 {
   #extract the needed slots
   timescales<-get_timescales(object)

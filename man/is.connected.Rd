@@ -14,8 +14,12 @@ is.connected(adj)
 the graph represented in \code{adj} is a connected graph.
 }
 \description{
-Tests if a graph represented by an adjacency matrix is connected. Idea by Ed Scheinerman, 
-circa 2006. Source: http://www.ams.jhu.edu/~ers/matgraph/; routine: matgraph/@graph/isconnected.m
+Tests if a graph represented by an adjacency matrix is connected.
+}
+\details{
+Idea by Ed Scheinerman, circa 2006. 
+Source: http://www.ams.jhu.edu/~ers/matgraph/; routine: 
+matgraph/@graph/isconnected.m
 }
 \examples{
 g1<-matrix(c(0,0,0,1,1,0,0,0,0,1,0,0,0,0,1,0),4,4)

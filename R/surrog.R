@@ -23,7 +23,12 @@
 #' Prichard, D and Theiler, J (1994) Generating surrogate data for time series with several simultaneously measured variables. Physical Review Letters 73, 951-954.
 #'     
 #' @examples
-#' #Not yet written, but need some
+#' times<-1:100
+#' dat<-sin(2*pi*times/10)
+#' nsurrogs<-10
+#' surrtype<-"fft"
+#' syncpres<-TRUE
+#' res<-surrog(dat,nsurrogs,surrtype,syncpres)
 #' 
 #' @export 
 #' @importFrom stats qnorm rnorm fft 

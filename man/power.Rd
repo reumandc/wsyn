@@ -5,9 +5,9 @@
 \alias{power.tts}
 \title{Power of a \code{tts} object}
 \usage{
-power(object, ...)
+power(object)
 
-\method{power}{tts}(object, ploton = TRUE)
+\method{power}{tts}(object)
 }
 \arguments{
 \item{object}{A \code{tts} object}
@@ -20,8 +20,12 @@ Returns the power of a \code{tts} object, i.e., the mean over
 time of the square magnitude (which is a function of timescale)
 }
 \examples{
-Do not have any yet but need some
-
+times<-1:10
+timescales<-1:10
+values<-matrix(rep(complex(modulus=1,argument=2*pi*c(0:9)/10),times=10),10,10)
+ttsobj<-tts(times,timescales,values)
+res<-power(ttsobj)
+ 
 }
 \author{
 Daniel Reuman, \email{reuman@ku.edu}

@@ -230,8 +230,10 @@ print.wlm<-function(x,...)
 }
 
 #' @export
-summary.wlm<-function(x,...)
+summary.wlm<-function(object,...)
 {
+  x<-object
+  
   h<-x$wtopt$scale.max.input
   if (is.null(h)){h<-"NULL"}
   

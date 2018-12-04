@@ -22,10 +22,6 @@ Creates surrogate time series using Fourier surrogates
 \note{
 For internal use, no error checking
 }
-\examples{
-#Not yet written, but need some
-
-}
 \references{
 Sheppard, LW, et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 Schreiber, T and Schmitz, A (2000) Surrogate time series. Physica D 142, 346-382.

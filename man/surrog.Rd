@@ -28,7 +28,12 @@ some of the time series in the data have ties. Prenormalization (e.g., using \co
 make it possible to use \code{fft} surrogates.
 }
 \examples{
-#Not yet written, but need some
+times<-1:100
+dat<-sin(2*pi*times/10)
+nsurrogs<-10
+surrtype<-"fft"
+syncpres<-TRUE
+res<-surrog(dat,nsurrogs,surrtype,syncpres)
 
 }
 \references{

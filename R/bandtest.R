@@ -4,7 +4,7 @@
 #' across a timescale band, accounting for non-independence of timescales. Also gets the 
 #' average phase across the band, in the case of coherence.
 #' 
-#' @param obj An object of class \code{coh} or \code{wlmtest}, must have a non-\code{NA} 
+#' @param object An object of class \code{coh} or \code{wlmtest}, must have a non-\code{NA} 
 #' \code{signif} slot
 #' @param band A length-two numeric vector indicating a timescale band
 #' 
@@ -79,7 +79,7 @@ bandtest.default<-function(object,...)
 
 #' @rdname bandtest
 #' @export
-bandtest.coh<-function(object,band)
+bandtest.coh<-function(object,band,...)
 {
   #error checking
   if (any(is.na(object$signif)))
@@ -137,7 +137,7 @@ bandtest.coh<-function(object,band)
 
 #' @rdname bandtest
 #' @export
-bandtest.wlmtest<-function(object,band)
+bandtest.wlmtest<-function(object,band,...)
 {
   #error checking
   if (!is.numeric(band))

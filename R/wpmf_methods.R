@@ -23,18 +23,6 @@ set_values.wpmf<-function(obj,newval)
 }
 
 #' @export
-set_dat<-function(obj,newval)
-{
-  UseMethod("set_dat",obj)
-}
-
-#' @export
-set_dat.default<-function(obj,newval)
-{
-  stop("Error in set_dat: set_dat not defined for this class")
-}
-
-#' @export
 set_dat.wpmf<-function(obj,newval)
 {
   stop("Error in set_dat: dat should not be altered for a wpmf object")
@@ -65,18 +53,6 @@ set_wtopt.wpmf<-function(obj,newval)
 }
 
 #value getting - methods not needed except for dat, others inherited from tts
-
-#' @export
-get_dat<-function(obj)
-{
-  UseMethod("get_dat",obj)
-}
-
-#' @export
-get_dat.default<-function(obj)
-{
-  stop("Error in get_dat: get_dat not defined for this class")
-}
 
 #' @export
 get_dat.wpmf<-function(obj)
@@ -157,8 +133,10 @@ print.wpmf<-function(x,...)
 }
 
 #' @export
-summary.wpmf<-function(x,...)
+summary.wpmf<-function(object,...)
 {
+  x<-object
+  
   h<-x$wtopt$scale.max.input
   if (is.null(h)){h<-"NULL"}
   

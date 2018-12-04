@@ -11,20 +11,20 @@ bandtest(object, ...)
 
 \method{bandtest}{default}(object, ...)
 
-\method{bandtest}{coh}(object, band)
+\method{bandtest}{coh}(object, band, ...)
 
-\method{bandtest}{wlmtest}(object, band)
+\method{bandtest}{wlmtest}(object, band, ...)
 }
 \arguments{
-\item{band}{A length-two numeric vector indicating a timescale band}
-
-\item{obj}{An object of class \code{coh} or \code{wlmtest}, must have a non-\code{NA} 
+\item{object}{An object of class \code{coh} or \code{wlmtest}, must have a non-\code{NA} 
 \code{signif} slot}
+
+\item{band}{A length-two numeric vector indicating a timescale band}
 }
 \value{
 \code{bandtest} returns an object of the same class as its first input but with a
-\code{bandp} object added. Or if there was already a \code{bandp} object, the output has a 
-\code{bandp} object with an additional row. For a \code{coh} object, the \code{bandp} object 
+\code{bandp} slot added. Or if there was already a \code{bandp} slot, the output has a 
+\code{bandp} slot with an additional row. For a \code{coh} object, the \code{bandp} slot 
 is a data frame with four columns, the first two indicating the timescale band and the third 
 an associated p-value for the test of coherence over that band. The fourth column is the 
 average phase over the band. For a \code{wlmtest} object, the result is only the first three
@@ -34,6 +34,47 @@ of the above columns.
 Computes the aggregate significance of coherence or of a wavelet linear model test object
 across a timescale band, accounting for non-independence of timescales. Also gets the 
 average phase across the band, in the case of coherence.
+}
+\examples{
+#Example for a coh object
+times<-(-3:100)
+ts1<-sin(2*pi*times/10)
+ts2<-5*sin(2*pi*times/3)
+artsig_x<-matrix(NA,11,length(times)) #the driver
+for (counter in 1:11)
+{
+  artsig_x[counter,]=ts1+ts2+rnorm(length(times),mean=0,sd=1.5)
+}
+times<-0:100
+artsig_y<-matrix(NA,11,length(times)) #the driven
+for (counter1 in 1:11)
+{
+  for (counter2 in 1:101)
+  {
+    artsig_y[counter1,counter2]<-mean(artsig_x[counter1,counter2:(counter2+2)])
+  }
+}
+artsig_y<-artsig_y+matrix(rnorm(length(times)*11,mean=0,sd=3),11,length(times))
+artsig_x<-artsig_x[,4:104]
+artsig_x<-cleandat(artsig_x,times,1)$cdat
+artsig_y<-cleandat(artsig_y,times,1)$cdat
+cohobj<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powall",sigmethod="fast",nrand=1000,
+            f0=0.5,scale.max.input=28)
+cohobj<-bandtest(cohobj,c(2,4))
+  
+#Example for a wlmtest object
+artsig_i<-matrix(rnorm(11*length(times)),11,length(times)) #the irrelevant
+artsig_i<-cleandat(artsig_i,times,1)$cdat
+dat<-list(driven=artsig_y,driver=artsig_x,irrelevant=artsig_i)
+resp<-1
+pred<-2:3
+norm<-"powall"
+wlmobj<-wlm(dat,times,resp,pred,norm)
+sigmethod<-"fft"
+nrand<-5
+res_di<-wlmtest(wlmobj,drop="irrelevant",sigmethod,nrand=nrand)
+res_di<-bandtest(res_di,c(5,15))
+  
 }
 \references{
 Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 

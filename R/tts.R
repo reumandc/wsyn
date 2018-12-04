@@ -16,6 +16,14 @@
 #' \item{values}{a complex or numeric matrix of dimensions \code{length(times)} by \code{length(timescales)}}
 #' 
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
+#' 
+#' @examples
+#' times<-1:10
+#' timescales<-1/c(1:10)
+#' values<-matrix(1,length(times),length(timescales))
+#' h<-tts(times,timescales,values)
+#' 
+#' @export
 
 tts<-function(times,timescales,values)
 {

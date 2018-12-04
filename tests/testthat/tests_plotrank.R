@@ -53,7 +53,7 @@ test_that("test for an actual coh object",{
   
   #do the plot for testing
   Test_plotrank_coh<-function(){plotrank(res)}
-  expect_doppelganger(title="Test-plotrank-coh",fig=Test_plotrank_coh)
+  vdiffr::expect_doppelganger(title="Test-plotrank-coh",fig=Test_plotrank_coh)
 })
 
 test_that("test for an actual wlmtest pbject",{
@@ -98,5 +98,5 @@ test_that("test for an actual wlmtest pbject",{
   res<-bandtest(res,c(20,25))
   
   Test_plotrank_wlmtest<-function(){plotrank(object=res)}
-  expect_doppelganger(title="Test-plotrank-wlmtest",fig=Test_plotrank_wlmtest)  
+  vdiffr::expect_doppelganger(title="Test-plotrank-wlmtest",fig=Test_plotrank_wlmtest)  
 })

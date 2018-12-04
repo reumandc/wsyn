@@ -39,7 +39,13 @@ more time series is a boundary case or if there is more than one optimal lambda,
 range of \code{lambda} should be considered in the former case.
 }
 \examples{
-#Don't have any yet but need some
+times<-1:100
+dat<-rnorm(100)
+res1<-cleandat(dat,times,1) #this removes the mean
+res2<-cleandat(dat,times,2) #detrends and removes the mean
+res3<-cleandat(dat,times,3) #variances also standardized
+res4<-cleandat(dat,times,4) #also joint Box-Cox applied
+res5<-cleandat(dat,times,5) #1-3, also indiv Box-Cox
 
 }
 \references{

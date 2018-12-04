@@ -366,8 +366,10 @@ print.coh<-function(x,...)
 }
 
 #' @export
-summary.coh<-function(x,...)
+summary.coh<-function(object,...)
 {
+  x<-object
+  
   h<-x$wtopt$scale.max.input
   if (is.null(h)){h<-"NULL"}
   

@@ -9,9 +9,6 @@
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
 #' 
 #' @note Internal funcion, no error catching
-#' 
-#' @examples
-#' #Not written yet but need some
 
 mnphase<-function(nums)
 {

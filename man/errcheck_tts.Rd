@@ -9,11 +9,11 @@ errcheck_tts(times, timescales, values, callfunc)
 \arguments{
 \item{times}{times of measurement, spacing 1}
 
+\item{timescales}{timescales of analysis}
+
 \item{values}{a times by timescales matrix}
 
 \item{callfunc}{the function from which this one was called, for error tracking}
-
-\item{timescale}{timescales of analysis}
 }
 \value{
 \code{errcheck_tts} returns nothing but throws and error if inputs not appropriate

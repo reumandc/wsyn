@@ -27,7 +27,8 @@
 #' 
 #' @examples
 #' times<-1:30 #generate time steps
-#' dat<-matrix(rpois(20*length(time),20),nrow=20,ncol=length(time)) #generate fake count data for 20 locations
+#' #generate fake count data for 20 locations
+#' dat<-matrix(rpois(20*length(times),20),nrow=20,ncol=length(times)) 
 #' dat<-cleandat(dat=dat,times=times,clev=2)$cdat #detrend and demean
 #' wmf<-wmf(dat,times)
 #' 

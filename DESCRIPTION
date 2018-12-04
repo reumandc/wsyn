@@ -18,9 +18,9 @@ Imports:
     MASS (>= 7.3-47),
     fields (>= 9.6),
     graphics (>= 3.4.4),
-    grDevices (>= 3.4.4)
+    grDevices (>= 3.4.4),
+    vdiffr (>= 0.2.3)
 Suggests: testthat,
-    vdiffr,
     knitr,
     rmarkdown,
     mvtnorm

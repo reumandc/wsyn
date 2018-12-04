@@ -33,12 +33,6 @@ Creates an array of wavelet transforms from input timeseries
 Important for interpreting the phase: the phases grow through time, i.e., they 
 turn anti-clockwise. This function is internal, no error checking.
 }
-\examples{
-times<-1:30 #generate time steps
-dat<-matrix(rpois(20*length(time),20),nrow=20,ncol=length(time)) #generate fake count data for 20 locations
-dat<-cleandat(dat,times,clev=2)$cdat #detrend and demean
-res<-warray(dat,times)
-}
 \author{
 Lauren Hallett, \email{hallett@uoregon.edu}; Lawrence Sheppard, \email{lwsheppard@ku.edu};
 Daniel Reuman, \email{reuman@ku.edu}

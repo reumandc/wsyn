@@ -42,6 +42,23 @@ test_that("test pearson methods",{
   expect_true(all(res[1:5,6:10]<.95))
   expect_true(all(res[6:10,1:5]<.95))
   
+  set.seed(101)
+  sig<-matrix(.9,5,5)
+  diag(sig)<-1
+  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat<-rbind(dat1,dat2)
+  times<-1:30
+  dat<-cleandat(dat,times,clev=2)$cdat
+  method<-"pearson.sig.fft"
+  res<-synmat(dat,times,method,nsurrogs=100,weighted=FALSE,
+              sigthresh=0.95)
+  eres<-matrix(1,10,10)
+  eres[1:5,6:10]<-0
+  eres[6:10,1:5]<-0
+  diag(eres)<-NA
+  expect_equal(res,eres)
+  
   #pearson.sig.aaft
   method<-"pearson.sig.aaft"
   res<-synmat(dat,times,method,nsurrogs=100)

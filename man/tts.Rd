@@ -26,6 +26,13 @@ to times and the columns correspond to timescales. This is a general class from
 which other classes inherit (e.g., \code{wt}, \code{wmf}, \code{wpmf}). \code{tts} 
 inherits from the \code{list} class.
 }
+\examples{
+times<-1:10
+timescales<-1/c(1:10)
+values<-matrix(1,length(times),length(timescales))
+h<-tts(times,timescales,values)
+
+}
 \author{
 Daniel Reuman, \email{reuman@ku.edu}
 }

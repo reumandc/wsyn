@@ -20,9 +20,6 @@
 #' @references 
 #' Sheppard, LW et al. (2018) Synchrony is more than its top-down and climatic parts: interacting 
 #' Moran effects on phytoplankton in British seas, In review.
-#' 
-#' @examples
-#' #Not written yet but need some
 
 wlmfit<-function(wts,norm)
 {

@@ -42,9 +42,6 @@ on coherence or real part of the cross-wavelet transform.
 \note{
 Internal function, no error checking done.
 }
-\examples{
-#Need some
-}
 \author{
 Daniel Reuman, \email{reuman@ku.edu}
 }

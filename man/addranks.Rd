@@ -20,9 +20,6 @@ This function fills it in.
 \note{
 Internal function, no error checking performed
 }
-\examples{
-#Not written yet but need some
-}
 \author{
 Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; Lawrence 
 Sheppard, \email{lwsheppard@ku.edu}; Daniel Reuman, \email{reuman@ku.edu}

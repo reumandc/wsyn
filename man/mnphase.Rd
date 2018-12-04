@@ -18,9 +18,6 @@ Gets the mean phase of a bunch of complex numbers
 \note{
 Internal funcion, no error catching
 }
-\examples{
-#Not written yet but need some
-}
 \author{
 Daniel Reuman, \email{reuman@ku.edu}
 }

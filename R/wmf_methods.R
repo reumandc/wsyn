@@ -89,8 +89,10 @@ print.wmf<-function(x,...)
 }
 
 #' @export
-summary.wmf<-function(x,...)
+summary.wmf<-function(object,...)
 {
+  x<-object
+  
   h<-x$wtopt$scale.max.input
   if (is.null(h)){h<-"NULL"}
   

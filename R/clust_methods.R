@@ -380,8 +380,10 @@ print.clust<-function(x,...)
 }
 
 #' @export
-summary.clust<-function(x,...)
+summary.clust<-function(object,...)
 {
+  x<-object
+  
   ms<-x$methodspecs
   h<-ms$scale.max.input
   if (is.null(h)){h<-"NULL"}

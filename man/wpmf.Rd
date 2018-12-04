@@ -50,10 +50,11 @@ surrogates are used instead. Output has similar format to the \code{fft} case. V
 \code{fft}, and \code{aaft} for \code{sigmethod} result in no significance testing.
 }
 \examples{
-#***DAN has not checked these yet
-#time<-1:30
-#obs<-matrix(rnorm(20*length(time),0,1),nrow=20,ncol=length(time))
-#wmf<-wpmf(obs,times=time)
+times<-1:30 #generate time steps
+#generate fake count data for 20 locations
+dat<-matrix(rpois(20*length(times),20),nrow=20,ncol=length(times)) 
+dat<-cleandat(dat=dat,times=times,clev=2)$cdat #detrend and demean
+res<-wpmf(dat,times)#' 
 
 }
 \references{

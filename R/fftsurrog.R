@@ -18,9 +18,6 @@
 #'
 #' @note For internal use, no error checking
 #'      
-#' @examples
-#' #Not yet written, but need some
-#' 
 #' @importFrom stats fft rnorm
 
 fftsurrog<-function(dat,nsurrogs,syncpres)

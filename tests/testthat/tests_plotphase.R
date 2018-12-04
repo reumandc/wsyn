@@ -43,5 +43,5 @@ test_that("test for an actual coh object",{
 
   #do the plot for testing
   Test_plotphase_coh<-function(){plotphase(res)}
-  expect_doppelganger(title="Test-plotphase-coh",fig=Test_plotphase_coh)
+  vdiffr::expect_doppelganger(title="Test-plotphase-coh",fig=Test_plotphase_coh)
 })

@@ -52,7 +52,14 @@ are specified in appendices S7 and S9 of Sheppard et al, 2018. The output \code{
 is v in appendix S7, and \code{coefs} are the betas in equation 12 in that appendix.
 }
 \examples{
-#Not written yet but need some
+times<-1:30
+dat<-list(v1=matrix(rnorm(300),10,30),v2=matrix(rnorm(300),10,30),v3=matrix(rnorm(300),10,30),
+          v4=matrix(rnorm(300),10,30),v5=matrix(rnorm(300),10,30))
+dat<-lapply(FUN=function(x){cleandat(x,times,1)$cdat},X=dat)
+resp<-2
+pred<-c(1,3,4)
+norm<-"powall"
+res<-wlm(dat,times,resp,pred,norm)
 
 }
 \references{

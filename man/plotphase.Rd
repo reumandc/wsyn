@@ -8,7 +8,7 @@
 \usage{
 plotphase(object, ...)
 
-\method{plotphase}{coh}(object, bandprows = "all", filename = NA)
+\method{plotphase}{coh}(object, bandprows = "all", filename = NA, ...)
 
 \method{plotphase}{default}(object, ...)
 }
