@@ -16,9 +16,9 @@
 \alias{get_wtopt.wt}
 \title{Basic methods for the \code{wt} class}
 \usage{
-summary.wt(object, ...)
+\method{summary}{wt}(object, ...)
 
-print.wt(x, ...)
+\method{print}{wt}(x, ...)
 
 \method{set_times}{wt}(obj, newval)
 

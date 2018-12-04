@@ -4,7 +4,7 @@
 \alias{print.summary_wsyn}
 \title{Print method for \code{summary.wsyn} class}
 \usage{
-print.summary_wsyn(x, ...)
+\method{print}{summary_wsyn}(x, ...)
 }
 \arguments{
 \item{x}{A \code{summary.wsyn} object}
