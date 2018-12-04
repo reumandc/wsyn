@@ -14,10 +14,10 @@
 \alias{get_timescales.default}
 \alias{get_values}
 \alias{get_values.default}
-\alias{set_wtopt}
-\alias{set_wtopt.default}
 \alias{set_dat}
 \alias{set_dat.default}
+\alias{set_wtopt}
+\alias{set_wtopt.default}
 \alias{get_dat}
 \alias{get_dat.default}
 \alias{get_wtopt}
@@ -48,13 +48,13 @@ get_values(obj)
 
 \method{get_values}{default}(obj)
 
-set_wtopt(obj, newval)
-
-\method{set_wtopt}{default}(obj, newval)
-
 set_dat(obj, newval)
 
 \method{set_dat}{default}(obj, newval)
+
+set_wtopt(obj, newval)
+
+\method{set_wtopt}{default}(obj, newval)
 
 get_dat(obj)
 
@@ -77,7 +77,8 @@ slots is not allowed, as it breaks consistency with the other slots.
 \description{
 Set and get methods for classes in the \code{wsyn} package. There
 are methods for each slot of each class, named \code{set_*} and
-\code{get_*} for \code{*} the slot name.
+\code{get_*} for \code{*} the slot name. Below are listed function
+specs for the generics and the default methods.
 }
 \details{
 There are methods for the \code{tts}, \code{wt}, \code{wmf},

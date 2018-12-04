@@ -12,9 +12,9 @@
 \alias{get_values.tts}
 \title{Basic methods for the \code{tts} class}
 \usage{
-\method{summary}{tts}(object, ...)
+summary.tts(object, ...)
 
-\method{print}{tts}(x, ...)
+print.tts(x, ...)
 
 \method{set_times}{tts}(obj, newval)
 

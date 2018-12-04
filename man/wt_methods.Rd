@@ -5,24 +5,22 @@
 \alias{summary.wt}
 \alias{print.wt}
 \alias{set_times.wt}
-\alias{set_wtopt.wt}
 \alias{set_timescales.wt}
 \alias{set_values.wt}
 \alias{set_dat.wt}
-\alias{get_dat.wt}
-\alias{get_wtopt.wt}
+\alias{set_wtopt.wt}
 \alias{get_times.wt}
 \alias{get_timescales.wt}
 \alias{get_values.wt}
+\alias{get_dat.wt}
+\alias{get_wtopt.wt}
 \title{Basic methods for the \code{wt} class}
 \usage{
-\method{summary}{wt}(object, ...)
+summary.wt(object, ...)
 
-\method{print}{wt}(x, ...)
+print.wt(x, ...)
 
 \method{set_times}{wt}(obj, newval)
-
-\method{set_wtopt}{wt}(obj, newval)
 
 \method{set_timescales}{wt}(obj, newval)
 
@@ -30,15 +28,17 @@
 
 \method{set_dat}{wt}(obj, newval)
 
-\method{get_dat}{wt}(obj)
-
-\method{get_wtopt}{wt}(obj)
+\method{set_wtopt}{wt}(obj, newval)
 
 \method{get_times}{wt}(obj)
 
 \method{get_timescales}{wt}(obj)
 
 \method{get_values}{wt}(obj)
+
+\method{get_dat}{wt}(obj)
+
+\method{get_wtopt}{wt}(obj)
 }
 \arguments{
 \item{object, x, obj}{An object of class \code{wt}}
