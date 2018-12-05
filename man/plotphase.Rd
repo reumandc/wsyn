@@ -15,6 +15,8 @@ plotphase(object, ...)
 \arguments{
 \item{object}{A \code{coh} object.}
 
+\item{...}{Passed from the generic to specific methods. Not currently used.}
+
 \item{bandprows}{The rows of \code{object$bandp} for which to display p-value results in the plot}
 
 \item{filename}{Filename (without extension), for saving as pdf. Default value NA saves no file and uses the default graphics device.}

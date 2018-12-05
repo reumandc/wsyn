@@ -4,6 +4,8 @@
 #' 
 #' @param object,x,obj An object of class \code{coh}
 #' @param newval A new value, for the \code{set_*} methods
+#' @param ... Not currently used. Included for argument consistency
+#' with existing generics.
 #' 
 #' @return \code{summary.coh} produces a summary of a \code{coh} object.
 #' A \code{print.coh} method is also available. For \code{coh} objects, 

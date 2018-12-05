@@ -20,6 +20,8 @@ plotrank(object, ...)
 \arguments{
 \item{object}{A \code{coh} or \code{wlmtest} object. Must have a non-\code{NA} \code{signif} slot.}
 
+\item{...}{Passed from the generic to specific methods. Not currently used.}
+
 \item{sigthresh}{Significance threshold(s). Numeric vector with values between 0 and 1. Typically 
 0.95, 0.99, 0.999, etc. The threshhold(s) are plotted on the rank plot as dashed horizontal line(s).}
 

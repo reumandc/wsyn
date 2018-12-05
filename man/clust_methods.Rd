@@ -73,6 +73,9 @@
 \arguments{
 \item{object, x, obj}{An object of class \code{clust}}
 
+\item{...}{Not currently used. Included for argument consistency
+with existing generics.}
+
 \item{newval}{A new value, for the \code{set_*} methods}
 }
 \value{

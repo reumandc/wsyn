@@ -6,6 +6,7 @@
 #' @param object A \code{coh} object. 
 #' @param bandprows The rows of \code{object$bandp} for which to display p-value results in the plot
 #' @param filename Filename (without extension), for saving as pdf. Default value NA saves no file and uses the default graphics device.
+#' @param ... Passed from the generic to specific methods. Not currently used.
 #'    
 #' @author Thomas Anderson, \email{anderstl@@gmail.com}, Jon Walter, \email{jaw3es@@virginia.edu}; Lawrence 
 #' Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}

@@ -49,6 +49,9 @@
 \arguments{
 \item{object, x, obj}{An object of class \code{wpmf}}
 
+\item{...}{Not currently used. Included for argument consistency
+with existing generics.}
+
 \item{newval}{A new value, for the \code{set_*} methods}
 }
 \value{
@@ -68,7 +71,7 @@ times<-1:30 #generate time steps
 #generate fake count data for 20 locations
 dat<-matrix(rpois(20*length(times),20),nrow=20,ncol=length(times)) 
 dat<-cleandat(dat=dat,times=times,clev=2)$cdat #detrend and demean
-res<-wpmf(dat,times)
+h<-wpmf(dat,times)
 get_times(h)
 summary(h)
 print(h)

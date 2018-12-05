@@ -19,6 +19,8 @@ bandtest(object, ...)
 \item{object}{An object of class \code{coh} or \code{wlmtest}, must have a non-\code{NA} 
 \code{signif} slot}
 
+\item{...}{Passed from the generic to specific methods. Not currently used.}
+
 \item{band}{A length-two numeric vector indicating a timescale band}
 }
 \value{

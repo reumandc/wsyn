@@ -7,6 +7,7 @@
 #' @param object An object of class \code{coh} or \code{wlmtest}, must have a non-\code{NA} 
 #' \code{signif} slot
 #' @param band A length-two numeric vector indicating a timescale band
+#' @param ... Passed from the generic to specific methods. Not currently used.
 #' 
 #' @return \code{bandtest} returns an object of the same class as its first input but with a
 #' \code{bandp} slot added. Or if there was already a \code{bandp} slot, the output has a 

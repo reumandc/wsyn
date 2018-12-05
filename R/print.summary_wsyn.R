@@ -3,6 +3,8 @@
 #' Print method for \code{summary.wsyn} class
 #' 
 #' @param x A \code{summary.wsyn} object
+#' @param ... Not currently used. Included for argument consistency
+#' with existing generics.
 #' 
 #' @return \code{print.summary_wsyn} is called for its effect of
 #' printing to the screen.

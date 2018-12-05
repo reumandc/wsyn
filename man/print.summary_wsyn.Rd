@@ -8,6 +8,9 @@
 }
 \arguments{
 \item{x}{A \code{summary.wsyn} object}
+
+\item{...}{Not currently used. Included for argument consistency
+with existing generics.}
 }
 \value{
 \code{print.summary_wsyn} is called for its effect of

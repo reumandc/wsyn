@@ -4,6 +4,8 @@
 #' 
 #' @param object,x,obj An object of class \code{wlmtest}
 #' @param newval A new value, for the \code{set_*} methods
+#' @param ... Not currently used. Included for argument consistency
+#' with existing generics.
 #' 
 #' @return \code{summary.wlmtest} produces a summary of a \code{wlmtest} object.
 #' A \code{print.wlmtest} method is also available. For \code{wlmtest} objects, 

@@ -4,6 +4,8 @@
 #' 
 #' @param object,x,obj An object of class \code{wpmf}
 #' @param newval A new value, for the \code{set_*} methods
+#' @param ... Not currently used. Included for argument consistency
+#' with existing generics.
 #' 
 #' @return \code{summary.wpmf} produces a summary of a \code{wpmf} object.
 #' A \code{print.wpmf} method is also available. For \code{wpmf} objects, 
@@ -20,7 +22,7 @@
 #' #generate fake count data for 20 locations
 #' dat<-matrix(rpois(20*length(times),20),nrow=20,ncol=length(times)) 
 #' dat<-cleandat(dat=dat,times=times,clev=2)$cdat #detrend and demean
-#' res<-wpmf(dat,times)
+#' h<-wpmf(dat,times)
 #' get_times(h)
 #' summary(h)
 #' print(h)

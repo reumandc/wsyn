@@ -43,6 +43,9 @@
 \arguments{
 \item{object, x, obj}{An object of class \code{wlmtest}}
 
+\item{...}{Not currently used. Included for argument consistency
+with existing generics.}
+
 \item{newval}{A new value, for the \code{set_*} methods}
 }
 \value{
@@ -68,7 +71,7 @@ wlmobj<-wlm(dat,times,resp,pred,norm)
 drop<-3
 sigmethod<-"fft"
 h<-wlmtest(wlmobj,drop,sigmethod,nrand=10)
-get_times(h)
+get_times(get_wlmobj(h))
 summary(h)
 print(h)
 

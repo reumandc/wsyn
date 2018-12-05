@@ -4,6 +4,8 @@
 #' 
 #' @param object,x,obj An object of class \code{wt}
 #' @param newval A new value, for the \code{set_*} methods
+#' @param ... Not currently used. Included for argument consistency
+#' with existing generics.
 #' 
 #' @return \code{summary.wt} produces a summary of a \code{wt} object.
 #' A \code{print.wt} method is also available. For \code{wt} objects, 

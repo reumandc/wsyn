@@ -4,6 +4,8 @@
 #' 
 #' @param object,x,obj An object of class \code{tts}
 #' @param newval A new value, for the \code{set_*} methods
+#' @param ... Not currently used. Included for argument consistency
+#' with existing generics.
 #' 
 #' @return \code{summary.tts} produces a summary of a \code{tts} object.
 #' A \code{print.tts} method is also available. For \code{tts} objects, 
