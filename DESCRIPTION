@@ -10,7 +10,7 @@ Authors@R: c(
     person("Lawrence W.", "Sheppard", email="lwsheppard@ku.edu", role=c("aut"))
     )
 Description: This package contains tools for a wavelet-based approach to analyzing spatial synchrony, principally in ecological data.
-License: GPL (>=3)
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
