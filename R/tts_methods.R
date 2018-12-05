@@ -47,7 +47,9 @@ NULL
 #' 
 #' @details There are methods for the \code{tts}, \code{wt}, \code{wmf},
 #' \code{wpmf}, \code{coh}, \code{wlm}, \code{wlmtest}, and \code{clust}
-#' classes.
+#' classes. See documentation for the generator functions for these classes
+#' (which in all cases have the same name as the class) for lists of slots
+#' for each class.
 #'
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
 #'  
