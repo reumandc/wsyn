@@ -26,7 +26,7 @@
 #' drop<-3
 #' sigmethod<-"fft"
 #' h<-wlmtest(wlmobj,drop,sigmethod,nrand=10)
-#' get_times(h)
+#' get_times(get_wlmobj(h))
 #' summary(h)
 #' print(h)
 #' 
