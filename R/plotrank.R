@@ -47,7 +47,8 @@
 #' artsig_x<-cleandat(artsig_x,times,1)$cdat
 #' artsig_y<-cleandat(artsig_y,times,1)$cdat
 #' res<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powall",sigmethod="fast",
-#' nrand=500,f0=0.5,scale.max.input=28)
+#' nrand=100,f0=0.5,scale.max.input=28)
+#' #use larger nrand for a real application
 #' res<-bandtest(res,c(2,4))
 #' res<-bandtest(res,c(8,12))
 #' plotrank(res)
