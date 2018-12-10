@@ -31,13 +31,18 @@ approaches to synchrony include @Grenfell_01; @Viboud_06; @Keitt_08; @Sheppard_1
 @Sheppard_17; @Sheppard_18; @Walter_17; @Anderson_18. The focus here is on techniques 
 used by @Sheppard_16; @Sheppard_17; @Sheppard_18; @Walter_17; @Anderson_18.
 The techniques can also be used for data of the same format representing quantities
-not related to populations.
+not related to populations, or, in some cases, multiple measurements from the same
+location. Some of the functions of this package may also be useful for 
+studying the case of "community synchrony," i.e., co-located populations of 
+different species that fluctuate through time in a positively or negatively or 
+time-lag-correlated way.
 <!--Insert additional references from our work as they come out-->
 <!--Insert here a summary of the sections-->
 
 # Preparing the data
 \noindent A typical dataset for analysis using `wsyn` is an $N \times T$ matrix of numeric 
-values where rows correspond to sampling locations (so the number of sampling locations is $N$)
+values where rows correspond to sampling 
+locations (so the number of sampling locations is $N$)
 and columns correspond to evenly spaced times during which sampling was conducted (so the
 number of times sampling was conducted is $T$).
 
@@ -53,10 +58,14 @@ used the simple approach of
 replacing missing values in a time series by the median of the non-missing values in the
 time series [@Sheppard_16]. This approach, and other related simple 
 procedures [@Sheppard_16], seem
-unlikely to artefactually produce significant synchrony, or coherence relationships with other
+unlikely to artefactually produce significant synchrony, or 
+coherence relationships with other
 variables, but rely on the percentage of missing data being fairly low and may obscure 
 detection of synchrony or significant coherence relationships if too many data are 
-missing.
+missing. For applications with differ meaningfully from the prior work for which
+the tools of this package were developed 
+(e.g., @Sheppard_16; @Sheppard_17; @Sheppard_18; @Walter_17; @Anderson_18),
+different ways of dealing with missing data may be more appropriate.
 
 ## De-meaning, detrending, standardizing variance, and normalizing
 \noindent A function `cleandat` is provided that performs a variety of combinations
@@ -71,7 +80,11 @@ require time series with approximately normal marginals.
 \noindent The function `wt` implements the complex Morlet wavelet transform, on which most
 other `wsyn` functions are based. An S3 class is defined for `wt`, and it inherits from the
 generic class `tts`. See the help files for the generator functions `wt` and `tts` 
-for slot names and other information about these classes.
+for slot names and other information about these classes. Both classes have `set` 
+and `get` methods for interacting with the slots, see help files for `tts_methods`,
+`wt_methods` and `setget_methods`. The `set` methods just throw an error, since 
+generally one should not be changing the individual slots of objects of one of 
+classes in `wsyn` as it breaks the consistency between slots.
 
 Background on the wavelet transform is available from many sources, including 
 @Addison_02, and we do not recapitulate it. We instead describe the wavelet transform
@@ -134,6 +147,7 @@ names(wtres)
 Methods `get_times`, `get_timescales`, `get_values`, `get_wtopt`, and `get_dat` extract the slots. 
 Set methods also exist, but these just throw an error since setting individual slots of
 a `wt` object will break the relationship between the slots.
+
 There is a `plotmag` method for the `tts` class that plots the magnitude of the transform
 against time and timescale.
 
@@ -142,7 +156,8 @@ plotmag(wtres)
 ```
 
 We can see the oscillations at timescale $15$ for the first hundred time steps, and the 
-oscilaltions at timescale $8$ for the last 100 time steps. Because the wavelet transform
+oscilaltions at timescale $8$ for the last 100 time steps, as expected. 
+Because the wavelet transform
 is based on convolution of a wavelet function with the time series, times and timescales 
 for which the overlap of the wavelet with the time series is insufficient are unreliable
 and are omitted. This affects times closer to the edges of the time series, and is the 
@@ -151,7 +166,30 @@ for longer timescales because long-timescale wavelets overhang the end of the ti
 further in the convolution operation. All plots based on wavelet transforms have the same
 property.
 
-<!--Insert plotphase demo when possible-->
+There is also a `plotphase` method for the `tts` class that plots the phase of the transform 
+against time and timescale.
+
+```{r wt_example_1_plotphase, results=FALSE}
+plotphase(wtres)
+```
+
+One can compute the power.
+
+```{r wt_example_1_power, results=FALSE}
+h<-power(wtres)
+plot(log(1/h$timescales),h$power,type='l',lty="solid",xaxt="n",
+     xlab="Timescales",ylab="Power")
+xlocs<-c(min(h$timescales),pretty(h$timescales,n=8))
+graphics::axis(side=1,at=log(1/xlocs),labels=xlocs) 
+```
+
+There are also `print` and `summary` methods for the `wt` class and `tts` class. See the help files for
+`tts_methods` and `wt_methods`.
+
+```{r wt_example_1_psmeth}
+print(wtres)
+summary(wtres)
+```
 
 ```{r seed_setter_2, echo=F}
 set.seed(201)
@@ -172,9 +210,8 @@ t.series<-sin(phaseinc)
 t.series<-cleandat(t.series,times,1)$cdat
 res<-wt(t.series, times)
 plotmag(res)
+plotphase(res)
 ```
-
-<!--maybe also do a plotphase call when possible?-->
 
 The `times` argument to `wt` (and to several other functions, see below)
 is tightly constrained. It must be a numeric vector of unit-spaced times 
@@ -218,7 +255,9 @@ and are introduced in this section. S3 classes are
 defined for `wmf` and `wpmf`, both of which
 inherit from the generic class `tts`. See the help files for the generator functions for 
 these classes (`wmf`, `wpmf` and `tts`, respectively) for slot names and other
-information about the classes.
+information about the classes. There are again `set` and `get` methods for these classes,
+and `print` and `summary` methods.
+See help files for `wmf_methods` and `wpmf_methods`.
 
 ## The wavelet phasor mean field
 \noindent The wavelet phasor mean field (the `wpmf` function in `wsyn`) depicts the time and 
@@ -323,7 +362,7 @@ approximately $5$ and times about $15$ and $40$ on the above plot are false posi
 
 Signficance is based on stochastic generation of magnitudes of sums of random phasors,
 so significance contours will differ 
-slightly on repeat runs. Increasing the number of ranomizations (argument `nrand` to `wpmf`) 
+slightly on repeat runs. Increasing the number of randomizations (argument `nrand` to `wpmf`) 
 reduces this variation. 
 
 The `quick` method can be inaccurate for very short 
@@ -331,6 +370,8 @@ timescales. The two alternative methods, `fft` and `aaft`, mitigate this problem
 are substantially slower. The `fft` and `aaft` methods are based on surrogate 
 datasets (section \ref{sec:surrog})
 so are discussed in section \ref{sec:wpmfsignif}.
+
+The `power` and `plotphase` methods also work on `wpmf` objects.
 
 Examples of the wavelet phasor mean field technique applied to real datasets are in, 
 for instance, @Sheppard_18 (their Fig. S1) and @Anderson_18 (their Fig. 4).
@@ -361,6 +402,8 @@ significance of phase synchrony can be identified with the wavelet phasor mean f
 and then once significance is identified, synchrony can be described and studied using
 the wavelet mean field. 
 
+The `power` and `plotphase` methods also work on `wmf` objects.
+
 Examples of the wavelet mean field applied to real data
 are in @Sheppard_16 and @Sheppard_18.
 
@@ -385,7 +428,8 @@ locations. Coherences essentially measure the strength of association between th
 in a timescale-specific way that is also not confounded by lagged or phase-shifted 
 associations. Coherences and related quantities are analyzed in `wsyn` using the function
 `coh` and its corresponding S3 class, `coh`, and the S3 methods that go with the class.
-Methods comprise set and get methods, and `bandtest`, and `plotmag`, `plotrank`, and
+Methods comprise `set` and `get` and `print` and `summary` methods (see the help file for 
+`coh_methods` for these basic methods), as well as `bandtest`, and `plotmag`, `plotrank`, and
 `plotphase`.
 
 One possible normalization is phase normalization, 
@@ -398,7 +442,7 @@ across locations, as a function of timescale. The normalization descibed in the 
 mean field" section of the Methods of @Sheppard_16 gives the version of the 
 coherence that was there called the \emph{wavelet coherence}, or the 
 \emph{spatial wavelet coherence} if $N>1$. Set the `norm` 
-argument of `coh` to "`powall`" to use this normalization.
+argument of `coh` to "`powall`" to use this normalization. 
 If `norm` is "`powind`", then $w_{i,n,\sigma}(t)$ is obtained
 by dividing $W_{i,n,\sigma}(t)$ by the square root of the average of 
 $W_{i,n,\sigma}(t) \overline{W_{i,n,\sigma}(t)}$ over the times for which it is 
@@ -512,7 +556,7 @@ significant for timescales close to
 $3$ years, as expected since three values of $x$ are averaged to produce one value of $y$,
 so the $3$-year periodicity in $x$ is averaged away and does not pass to $y$.
 Thus coherence reveals a (timescale-specific) relationship between $x$ and $y$ that
-correlation mathods did not reveal.
+correlation methods did not reveal.
 
 Typically preferable [@Sheppard_17] is the `fast` option to `sigmethod`, because 
 far more surrogates can be used in the same computational time:
@@ -599,9 +643,11 @@ in `bandp` are also displayed on the plot, and these values
 aggregate across timescales appropriately and alleviate the multiple-testing problem.
 
 Average phases of $\Pi_\sigma^{(12)}$ across the timescale bands of interest were also 
-computed by `bandtest` and stored in the `bandp` slot. Phases of $\Pi_\sigma^{(12)}$
+computed by `bandtest` and stored in the `bandp` slot, in units of radians. These
+are average phases for the `coher` slot of a `coh` object.
+Phases of $\Pi_\sigma^{(12)}$
 can be plotted against timescale and average phases in `bandp` displayed using the
-`plotphase` functions:
+`plotphase` function:
 
 ```{r plotphase_1, results=FALSE}
 plotphase(res)
@@ -644,7 +690,7 @@ A Fourier surrogate of a time series $x(t)$ is obtained by the following steps:
 \end{itemize}
 This procedure can be done using `surrog` with `surrtype="fft"`. 
 Because only the phases of the Fourier transform are randomized, not the magnitudes,
-autocorrelation properties of the surrogate time series are the same as that of the
+autocorrelation properties of the surrogate time series are the same as those of
 $x(t)$. 
 
 Fourier surrogates of $N$ time series $x_n(t)$ measured at locations 
@@ -695,7 +741,9 @@ The `signif` slot of the output is a list with first element `"fft"`, second ele
 `nrand`, and third element the fraction of surrogate-based wavelet phasor mean field 
 magnitudes that the empirical wavelet phasor mean field magnitude is greater than 
 (a times by timescales matrix). For `sigmethod` equal to `aaft`, AAFT 
-surrogates are used instead. 
+surrogates are used instead. Non-synchrony-preserving surrogates are used.
+
+<!--***DAN: made it to here in proofing, 2018 12 10-->
 
 # Wavelet linear models and their uses for understanding synchrony
 \noindent Linear models on wavelet transforms were introduced by @Sheppard_18,

@@ -28,7 +28,9 @@
 #'
 #' @references 
 #' Box, GEP and Cox, DR (1964) An analysis of transformations (with discussion). Journal of the Royal Statistical Society B, 26, 211–252.
+#'
 #' Venables, WN and Ripley, BD (2002) Modern Applied Statistics with S. Fourth edition. Springer.
+#'
 #' Sheppard, LW, et al. (2015) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 #' 
 #' @examples 

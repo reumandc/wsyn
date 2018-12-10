@@ -60,7 +60,10 @@
 #' the normalization specified by \code{norm}. The type of surrogate used (Fourier surrogates 
 #' or amplitude adjusted Fourier surrogates, see \code{surrog}), as well as which of the 
 #' datasets surrogates are computed on (\code{dat1}, \code{dat2}, or both) is determined by 
-#' \code{sigmethod}. Synchrony-preserving surrogates are used. A variety of 
+#' \code{sigmethod}. The first part of the value of \code{sigmethod} specifies the
+#' type of surrogate used, and the numbers in the second part (1, 2, or 12) specify 
+#' whether surrogates are applied to \code{dat1}, \code{dat2}, or both, respectively.
+#' Synchrony-preserving surrogates are used. A variety of 
 #' statements of significance (or lack thereof) can be made
 #' by comparing \code{signif$coher} with \code{signif$scoher} (see the \code{plotmag}, 
 #' \code{plotrank}, and \code{bandtest} methods

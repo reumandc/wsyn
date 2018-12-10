@@ -136,7 +136,6 @@ plotmag.tts<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,colorbar=TRUE,t
   {
     grDevices::dev.off()
   }
-  return(NULL)
 }
 
 #' @rdname plotmag
@@ -233,7 +232,6 @@ plotmag.wpmf<-function(object,zlims=NULL,neat=TRUE,colorfill=NULL,sigthresh=0.95
   {
     grDevices::dev.off()
   }
-  return(NULL) 
 }
 
 #' @rdname plotmag
@@ -307,7 +305,7 @@ plotmag.coh<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA,.
     {
       grDevices::dev.off()
     }
-    return(NULL) 
+    return(NULL)
   } 
   
   #from here on is if signif and bandp are both present
@@ -347,7 +345,6 @@ plotmag.coh<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=NA,.
   {
     grDevices::dev.off()
   }
-  return(NULL)
 }
 
 #' @rdname plotmag
@@ -404,7 +401,7 @@ plotmag.wlmtest<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=
     {
       grDevices::dev.off()
     }
-    return(NULL) 
+    return(NULL)
   } 
   
   #from here on is if signif and bandp are both present
@@ -444,7 +441,6 @@ plotmag.wlmtest<-function(object,sigthresh=c(0.95,.99),bandprows="all",filename=
   {
     grDevices::dev.off()
   }
-  return(NULL)
 }
 
 #' @rdname plotmag

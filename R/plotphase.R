@@ -95,6 +95,30 @@ plotphase.tts<-function(object,filename=NA,...)
 
 #' @rdname plotphase
 #' @export
+#plotphase.wt just the same as tts, we define it explicitly instead of inheriting for the sake of the help files
+plotphase.wt<-function(object,filename=NA,...)
+{
+  return(plotphase.tts(object,filename=NA,...))
+}
+
+#' @rdname plotphase
+#' @export
+#plotphase.wmf just the same as tts, we define it explicitly instead of inheriting for the sake of the help files
+plotphase.wmf<-function(object,filename=NA,...)
+{
+  return(plotphase.tts(object,filename=NA,...))
+}
+
+#' @rdname plotphase
+#' @export
+#plotphase.wpmf just the same as tts, we define it explicitly instead of inheriting for the sake of the help files
+plotphase.wpmf<-function(object,filename=NA,...)
+{
+  return(plotphase.tts(object,filename=NA,...))
+}
+
+#' @rdname plotphase
+#' @export
 plotphase.coh<-function(object,bandprows="all",filename=NA,...)
 {
   #extract the needed slots
@@ -168,7 +192,7 @@ plotphase.coh<-function(object,bandprows="all",filename=NA,...)
     lines(log(1/c(b1,b1)),c(htl-wwd,htl+wwd))
     lines(log(1/c(b2,b2)),c(htl-wwd,htl+wwd))
     htt<-rg[2]-(counter-1.2/2-.1)*prc*drg
-    valh<-round(mnphs/pi,2)
+    valh<-round(mnphs,2)
     text(mean(log(1/c(b1,b2))),htt,
          bquote(bar(theta) == .(valh)),cex=0.66)
   }

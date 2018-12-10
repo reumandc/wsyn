@@ -3,6 +3,9 @@
 \name{plotphase}
 \alias{plotphase}
 \alias{plotphase.tts}
+\alias{plotphase.wt}
+\alias{plotphase.wmf}
+\alias{plotphase.wpmf}
 \alias{plotphase.coh}
 \alias{plotphase.default}
 \title{For plotting the phases of values in \code{tts} and \code{coh} objects}
@@ -10,6 +13,12 @@
 plotphase(object, ...)
 
 \method{plotphase}{tts}(object, filename = NA, ...)
+
+\method{plotphase}{wt}(object, filename = NA, ...)
+
+\method{plotphase}{wmf}(object, filename = NA, ...)
+
+\method{plotphase}{wpmf}(object, filename = NA, ...)
 
 \method{plotphase}{coh}(object, bandprows = "all", filename = NA, ...)
 
