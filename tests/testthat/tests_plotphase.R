@@ -1,6 +1,23 @@
 context("plotphase")
 
-test_that("test for an actual coh object",{
+test_that("test the default method, which just throws an error",{
+  object<-list("test","this","is")
+  expect_error(plotphase(object),"Error in plotphase: method not defined for this class")
+})
+
+test_that("test for a tts object",{
+  #use a made-up tts which is not a wt or anything else
+  times<-1:100
+  timescales<-1:100
+  cplx<-complex(modulus=1,argument=seq(from=-pi,to=pi,length.out=100))
+  values1<-matrix(cplx,length(times),length(timescales))
+  tts1<-tts(times,timescales,values1)  
+  
+  Test_plotphase_tts_1<-function(){plotphase(object=tts1)}
+  vdiffr::expect_doppelganger(title="Test-plotphase-tts-1",fig=Test_plotphase_tts_1)
+})
+
+test_that("test for a coh object",{
   #this test based on supplementary figure 5 in Sheppard et al, Nature Climate Change, 
   #2016, doi: 10.1038/NCLIMATE2881. 
   
@@ -31,7 +48,7 @@ test_that("test for an actual coh object",{
   #make the coh object
   res<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powall",sigmethod="fast",nrand=500,
            f0=0.5,scale.max.input=28)
-
+  
   #add ranks and bandp
   res<-bandtest(res,c(2,4))
   res<-bandtest(res,c(4,30))
@@ -40,7 +57,7 @@ test_that("test for an actual coh object",{
   #more error checking
   expect_error(plotphase(res,bandprows="test"),"Error in plotphase.coh: non-numeric value for bandprows")
   expect_error(plotphase(res,bandprows=c(1,4)),"Error in plotphase.coh: bandprows must contain row numbers for bandp")
-
+  
   #do the plot for testing
   Test_plotphase_coh<-function(){plotphase(res)}
   vdiffr::expect_doppelganger(title="Test-plotphase-coh",fig=Test_plotphase_coh)

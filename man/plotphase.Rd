@@ -2,11 +2,14 @@
 % Please edit documentation in R/plotphase.R
 \name{plotphase}
 \alias{plotphase}
+\alias{plotphase.tts}
 \alias{plotphase.coh}
 \alias{plotphase.default}
 \title{For plotting the phases of values in \code{tts} and \code{coh} objects}
 \usage{
 plotphase(object, ...)
+
+\method{plotphase}{tts}(object, filename = NA, ...)
 
 \method{plotphase}{coh}(object, bandprows = "all", filename = NA, ...)
 
@@ -15,18 +18,55 @@ plotphase(object, ...)
 \arguments{
 \item{object}{A \code{coh} object.}
 
-\item{...}{Passed from the generic to specific methods. Not currently used.}
+\item{...}{Passed from the generic to specific methods. The plotphase.tss method passes it to 
+fields::image.plot.}
+
+\item{filename}{Filename (without extension), for saving as pdf. Default value NA saves no file 
+and uses the default graphics device.}
 
 \item{bandprows}{The rows of \code{object$bandp} for which to display p-value results in the plot}
-
-\item{filename}{Filename (without extension), for saving as pdf. Default value NA saves no file and uses the default graphics device.}
 }
 \description{
 For plotting the phases of values in \code{tts} objects (and derived classes) 
 against time and timescale, and \code{coh} objects against timescale
 }
 \examples{
-#Not written yet but need some
+#For a tts object
+times<-1:100
+timescales<-1:100
+cplx<-complex(modulus=1,argument=seq(from=-pi,to=pi,length.out=100))
+values1<-matrix(cplx,length(times),length(timescales))
+tts1<-tts(times,timescales,values1)  
+plotphase(tts1)
+
+#For a coh oject
+times<-(-3:100)
+ts1<-sin(2*pi*times/10)
+ts2<-5*sin(2*pi*times/3)
+artsig_x<-matrix(NA,11,length(times)) #the driver
+for (counter in 1:11)
+{
+  artsig_x[counter,]=ts1+ts2+rnorm(length(times),mean=0,sd=1.5)
+}
+times<-0:100
+artsig_y<-matrix(NA,11,length(times)) #the driven
+for (counter1 in 1:11)
+{
+  for (counter2 in 1:101)
+  {
+    artsig_y[counter1,counter2]<-mean(artsig_x[counter1,counter2:(counter2+2)])
+  }
+}
+artsig_y<-artsig_y+matrix(rnorm(length(times)*11,mean=0,sd=3),11,length(times))
+artsig_x<-artsig_x[,4:104]
+artsig_x<-cleandat(artsig_x,times,1)$cdat
+artsig_y<-cleandat(artsig_y,times,1)$cdat
+res<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powall",sigmethod="fast",nrand=50,
+         f0=0.5,scale.max.input=28)
+res<-bandtest(res,c(2,4))
+res<-bandtest(res,c(4,30))
+res<-bandtest(res,c(8,12))
+plotphase(res)
 
 }
 \references{
@@ -34,6 +74,6 @@ Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synch
 pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 }
 \author{
-Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; Lawrence 
-Sheppard, \email{lwsheppard@ku.edu}; Daniel Reuman, \email{reuman@ku.edu}
+Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; 
+Lawrence Sheppard, \email{lwsheppard@ku.edu}; Daniel Reuman, \email{reuman@ku.edu}
 }
