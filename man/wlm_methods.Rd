@@ -24,9 +24,9 @@
 \alias{get_wts.wlm}
 \title{Basic methods for the \code{wlm} class}
 \usage{
-\method{summary}{wlm}(object, ...)
+summary.wlm(object, ...)
 
-\method{print}{wlm}(x, ...)
+print.wlm(x, ...)
 
 \method{set_times}{wlm}(obj, newval)
 

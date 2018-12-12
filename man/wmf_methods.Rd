@@ -16,9 +16,9 @@
 \alias{get_wtopt.wmf}
 \title{Basic methods for the \code{wmf} class}
 \usage{
-\method{summary}{wmf}(object, ...)
+summary.wmf(object, ...)
 
-\method{print}{wmf}(x, ...)
+print.wmf(x, ...)
 
 \method{set_times}{wmf}(obj, newval)
 

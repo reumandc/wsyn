@@ -26,9 +26,9 @@
 \alias{get_wpmfs.clust}
 \title{Basic methods for the \code{clust} class}
 \usage{
-\method{summary}{clust}(object, ...)
+summary.clust(object, ...)
 
-\method{print}{clust}(x, ...)
+print.clust(x, ...)
 
 \method{set_times}{clust}(obj, newval)
 

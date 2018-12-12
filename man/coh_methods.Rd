@@ -28,9 +28,9 @@
 \alias{get_bandp.coh}
 \title{Basic methods for the \code{coh} class}
 \usage{
-\method{summary}{coh}(object, ...)
+summary.coh(object, ...)
 
-\method{print}{coh}(x, ...)
+print.coh(x, ...)
 
 \method{set_times}{coh}(obj, newval)
 

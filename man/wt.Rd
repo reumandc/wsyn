@@ -27,7 +27,7 @@ wt(t.series, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05,
 \item{times}{The time steps specified (e.g. years)}
 \item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 \item{timescales}{The timescales (1/frequency) computed for the wavelet transform}
-\item{dat}{the data vector from which the transform was computed}
+\item{dat}{The data vector from which the transform was computed}
 }
 \description{
 Computes the wavelet transform of a timeseries. Also the creator function for the

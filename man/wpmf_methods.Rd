@@ -18,9 +18,9 @@
 \alias{get_signif.wpmf}
 \title{Basic methods for the \code{wpmf} class}
 \usage{
-\method{summary}{wpmf}(object, ...)
+summary.wpmf(object, ...)
 
-\method{print}{wpmf}(x, ...)
+print.wpmf(x, ...)
 
 \method{set_times}{wpmf}(obj, newval)
 

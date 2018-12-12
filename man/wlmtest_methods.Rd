@@ -16,9 +16,9 @@
 \alias{get_bandp.wlmtest}
 \title{Basic methods for the \code{wlmtest} class}
 \usage{
-\method{summary}{wlmtest}(object, ...)
+summary.wlmtest(object, ...)
 
-\method{print}{wlmtest}(x, ...)
+print.wlmtest(x, ...)
 
 \method{set_wlmobj}{wlmtest}(obj, newval)
 

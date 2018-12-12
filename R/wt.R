@@ -17,7 +17,7 @@
 #' \item{times}{The time steps specified (e.g. years)}
 #' \item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 #' \item{timescales}{The timescales (1/frequency) computed for the wavelet transform}
-#' \item{dat}{the data vector from which the transform was computed}
+#' \item{dat}{The data vector from which the transform was computed}
 #' 
 #' @note Important for interpreting the phase: the phases grow through time, i.e., they turn anti-clockwise. 
 #' 
