@@ -19,7 +19,7 @@ When a \code{clust} object is created, the \code{wmfs} slot is NA. This function
 \details{
 This function uses the values of \code{scale.min}, \code{scale.max.input}, 
 \code{sigma} and \code{f0} stored in \code{obj$methodspecs}. It is possible to create 
-a clust object with bad values for these slots. This function throws an error in that 
+a \code{clust} object with bad values for these slots. This function throws an error in that 
 case. You can use a correlation-based method for calculating the synchrony matrix and 
 still pass values of \code{scale.min}, \code{scale.max.input}, \code{sigma} and \code{f0} 
 to \code{clust} (in fact, this happens by default) - they won't be used by \code{clust}, 
@@ -39,6 +39,9 @@ method<-"coh.sig.fast"
 clustobj<-clust(dat,times,coords,method,nsurrogs = 100)
 res<-addwmfs(clustobj)
 
+}
+\seealso{
+\code{\link{clust}}, \code{\link{addwpmfs}}, \code{browseVignettes("wsyn")}
 }
 \author{
 Daniel Reuman, \email{reuman@ku.edu}

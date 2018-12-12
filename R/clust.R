@@ -91,11 +91,14 @@
 #' Newman (2006). 
 #' 
 #' @author Jonathan Walter, \email{jaw3es@@virginia.edu}; Daniel Reuman, \email{reuman@@ku.edu}; 
-#' Lei Zhao, \email{lei_journal@@yahoo.com}
+#' Lei Zhao, \email{lei.zhao@@cau.edu.cn}
 #'
 #' @references Walter, J. A., et al. (2017) The geography of spatial synchrony. Ecology Letters. 
 #' doi: 10.1111/ele.12782
-#'  
+#'
+#' @seealso \code{\link{cluseigen}}, \code{\link{modularity}}, \code{\link{addwmfs}}, 
+#' \code{\link{addwpmfs}},\code{\link{clust_methods}}, \code{\link{synmat}}, \code{browseVignettes("wsyn")}
+#'
 #' @examples
 #' sig<-matrix(.8,5,5)
 #' diag(sig)<-1

@@ -110,6 +110,9 @@ summary(h)
 print(h)
 
 }
+\seealso{
+\code{\link{coh}}, \code{browseVignettes("wsyn")}
+}
 \author{
 Daniel Reuman, \email{reuman@ku.edu}
 }

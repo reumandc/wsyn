@@ -33,8 +33,8 @@ average phase over the band. For a \code{wlmtest} object, the result is only the
 of the above columns.
 }
 \description{
-Computes the aggregate significance of coherence or of a wavelet linear model test object
-across a timescale band, accounting for non-independence of timescales. Also gets the 
+Computes the aggregate significance of coherence (\code{coh}) or of a wavelet linear model test object
+(\code{wlmtest}) across a timescale band, accounting for non-independence of timescales. Also gets the 
 average phase across the band, in the case of coherence.
 }
 \examples{
@@ -81,6 +81,9 @@ res_di<-bandtest(res_di,c(5,15))
 \references{
 Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
 pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+}
+\seealso{
+\code{\link{coh}}, \code{\link{wlm}}, \code{\link{wlmtest}}, \code{browseVignettes("wsyn")}
 }
 \author{
 Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; Lawrence 

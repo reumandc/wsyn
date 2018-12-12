@@ -1,15 +1,19 @@
 #' Clean (spatio)temporal data matrices to make them ready for analyses using the \code{wsyn} package
 #'
-#' A data cleaning function for optimal Box-Cox transformation, detrending, standarizing variance, de-meaning
+#' A data cleaning function for optimal Box-Cox transformation, detrending, standarizing variance, 
+#' de-meaning
 #' 
 #' @param dat A locations x time data matrix, or a time series vector (for 1 location)
 #' @param times The times of measurement, spacing 1
 #' @param clev The level of cleaning to do, 1 through 5. See details. 
-#' @param lambdas A vector of lambdas to test for optimal Box-Cox transformation, if Box-Cox is performed. Ignored for \code{clev<4}. Defaults to seq(-10,10, by=0.01). See details.
-#' @param mints If \code{clev} is 4 or 5, then time series are shifted to have this minimum value before Box-Cox transformation. Default NA means use the smallest difference between consecutive, distinct sorted values. NaN means perform no shift.
+#' @param lambdas A vector of lambdas to test for optimal Box-Cox transformation, if Box-Cox is 
+#' performed. Ignored for \code{clev<4}. Defaults to seq(-10,10, by=0.01). See details.
+#' @param mints If \code{clev} is 4 or 5, then time series are shifted to have this minimum value 
+#' before Box-Cox transformation. Default NA means use the smallest difference between consecutive, 
+#' distinct sorted values. NaN means perform no shift.
 #' 
-#' @return \code{cleandat} returns a list containing the cleaned data, \code{clev}, and the optimal lambdas from the 
-#' Box-Cox procedure (\code{NA} for \code{clev<4}, see details).
+#' @return \code{cleandat} returns a list containing the cleaned data, \code{clev}, and the optimal 
+#' lambdas from the Box-Cox procedure (\code{NA} for \code{clev<4}, see details).
 #' 
 #' @details NAs, Infs, etc. in \code{dat} trigger an error. If \code{clev==1}, time series are (individually) 
 #' de-meaned. If \code{clev==2}, time series are (individually) linearly detrended and de-meaned. If \code{clev==3}, 
@@ -24,7 +28,8 @@
 #' more time series is a boundary case or if there is more than one optimal lambda, it triggers a warning. A wider 
 #' range of \code{lambda} should be considered in the former case. 
 #'  
-#' @author Jonathan Walter, \email{jaw3es@@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}; Lei Zhao, \email{leizhao@@ku.edu}
+#' @author Jonathan Walter, \email{jaw3es@@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@@ku.edu}; 
+#' Daniel Reuman, \email{reuman@@ku.edu}; Lei Zhao, \email{lei.zhao@@cau.edu.cn}
 #'
 #' @references 
 #' Box, GEP and Cox, DR (1964) An analysis of transformations (with discussion). Journal of the Royal Statistical Society B, 26, 211–252.
@@ -32,6 +37,9 @@
 #' Venables, WN and Ripley, BD (2002) Modern Applied Statistics with S. Fourth edition. Springer.
 #'
 #' Sheppard, LW, et al. (2015) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+#' 
+#' @seealso \code{\link{wt}}, \code{\link{wmf}}, \code{\link{wpmf}}, \code{\link{coh}}, \code{\link{wlm}}, 
+#' \code{\link{wlmtest}}, \code{\link{clust}}, \code{browseVignettes("wsyn")}
 #' 
 #' @examples 
 #' times<-1:100

@@ -16,6 +16,8 @@
 #'  
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
 #' 
+#' @seealso \code{\link{clust}}, \code{browseVignettes("wsyn")}
+#' 
 #' @examples
 #' sig<-matrix(.8,5,5)
 #' diag(sig)<-1

@@ -18,11 +18,15 @@ bctrans(y, lambda)
 The one-parameter family of Box-Cox transformations
 }
 \details{
-No error checking done, so it is assumed the entries of y are positive.
+Internal function. No error checking done. It is assumed the entries of y are positive.
 }
 \references{
 Box, GEP and Cox, DR (1964) An analysis of transformations (with discussion). Journal of the Royal Statistical Society B, 26, 211–252.
+
 Venables, WN and Ripley, BD (2002) Modern Applied Statistics with S. Fourth edition. Springer.
+}
+\seealso{
+\code{\link{cleandat}}, \code{browseVignettes("wsyn")}
 }
 \author{
 Daniel Reuman, \email{reuman@ku.edu}

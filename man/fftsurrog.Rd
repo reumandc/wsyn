@@ -11,7 +11,8 @@ fftsurrog(dat, nsurrogs, syncpres)
 
 \item{nsurrogs}{The number of surrogates to produce}
 
-\item{syncpres}{Logical. TRUE for "synchrony preserving" surrogates (same phase randomizations used for all time series). FALSE leads to independent phase randomizations for all time series.}
+\item{syncpres}{Logical. TRUE for "synchrony preserving" surrogates (same phase randomizations used for all 
+time series). FALSE leads to independent phase randomizations for all time series.}
 }
 \value{
 \code{fftsurrog} returns a list of nsurrogs surrogate datasets
@@ -24,7 +25,9 @@ For internal use, no error checking
 }
 \references{
 Sheppard, LW, et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+
 Schreiber, T and Schmitz, A (2000) Surrogate time series. Physica D 142, 346-382.
+
 Prichard, D and Theiler, J (1994) Generating surrogate data for time series with several simultaneously measured variables. Physical Review Letters 73, 951-954.
 }
 \author{

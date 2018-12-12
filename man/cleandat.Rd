@@ -13,16 +13,20 @@ cleandat(dat, times, clev, lambdas = seq(-10, 10, by = 0.01), mints = NA)
 
 \item{clev}{The level of cleaning to do, 1 through 5. See details.}
 
-\item{lambdas}{A vector of lambdas to test for optimal Box-Cox transformation, if Box-Cox is performed. Ignored for \code{clev<4}. Defaults to seq(-10,10, by=0.01). See details.}
+\item{lambdas}{A vector of lambdas to test for optimal Box-Cox transformation, if Box-Cox is 
+performed. Ignored for \code{clev<4}. Defaults to seq(-10,10, by=0.01). See details.}
 
-\item{mints}{If \code{clev} is 4 or 5, then time series are shifted to have this minimum value before Box-Cox transformation. Default NA means use the smallest difference between consecutive, distinct sorted values. NaN means perform no shift.}
+\item{mints}{If \code{clev} is 4 or 5, then time series are shifted to have this minimum value 
+before Box-Cox transformation. Default NA means use the smallest difference between consecutive, 
+distinct sorted values. NaN means perform no shift.}
 }
 \value{
-\code{cleandat} returns a list containing the cleaned data, \code{clev}, and the optimal lambdas from the 
-Box-Cox procedure (\code{NA} for \code{clev<4}, see details).
+\code{cleandat} returns a list containing the cleaned data, \code{clev}, and the optimal 
+lambdas from the Box-Cox procedure (\code{NA} for \code{clev<4}, see details).
 }
 \description{
-A data cleaning function for optimal Box-Cox transformation, detrending, standarizing variance, de-meaning
+A data cleaning function for optimal Box-Cox transformation, detrending, standarizing variance, 
+de-meaning
 }
 \details{
 NAs, Infs, etc. in \code{dat} trigger an error. If \code{clev==1}, time series are (individually) 
@@ -55,6 +59,11 @@ Venables, WN and Ripley, BD (2002) Modern Applied Statistics with S. Fourth edit
 
 Sheppard, LW, et al. (2015) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 }
+\seealso{
+\code{\link{wt}}, \code{\link{wmf}}, \code{\link{wpmf}}, \code{\link{coh}}, \code{\link{wlm}}, 
+\code{\link{wlmtest}}, \code{\link{clust}}, \code{browseVignettes("wsyn")}
+}
 \author{
-Jonathan Walter, \email{jaw3es@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@ku.edu}; Daniel Reuman, \email{reuman@ku.edu}; Lei Zhao, \email{leizhao@ku.edu}
+Jonathan Walter, \email{jaw3es@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@ku.edu}; 
+Daniel Reuman, \email{reuman@ku.edu}; Lei Zhao, \email{lei.zhao@cau.edu.cn}
 }

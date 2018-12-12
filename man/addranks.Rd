@@ -20,6 +20,9 @@ This function fills it in.
 \note{
 Internal function, no error checking performed
 }
+\seealso{
+\code{\link{coh}}, \code{\link{wlmtest}}, \code{\link{bandtest}}, \code{browseVignettes("wsyn")}
+}
 \author{
 Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; Lawrence 
 Sheppard, \email{lwsheppard@ku.edu}; Daniel Reuman, \email{reuman@ku.edu}

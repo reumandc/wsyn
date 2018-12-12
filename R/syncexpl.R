@@ -7,12 +7,12 @@
 #' 
 #' @return \code{syncexpl} returns a data frame with columns for \code{timescales},
 #' \code{sync} (the time-averaged square magnitude of the wavelet mean field of the
-#' responbse transforms), \code{syncexpl} (synchrony explained by the model 
+#' response transforms), \code{syncexpl} (synchrony explained by the model 
 #' predictors), columns named for each predictor (synchrony explained by that 
 #' predictor), \code{interactions} (synchrony explained by all interaction effects),
 #' columns named for each pair of predictors (synchrony explained by individual
 #' pairwise interactions). There are also columns for \code{crossterms} and 
-#' \code{resids} (residuals) that must be small for a given timescale band for
+#' \code{resids} (residuals). The cross terms must be small for a given timescale band for
 #' the other results to be meaningful. All columns are functions of timescales.
 #' 
 #' @details This function only works for \code{norm="powall"} at present. See

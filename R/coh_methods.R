@@ -16,6 +16,8 @@
 #'  
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
 #' 
+#' @seealso \code{\link{coh}}, \code{browseVignettes("wsyn")}
+#' 
 #' @examples
 #' times<-1:100
 #' dat1<-matrix(rnorm(1000),10,100)

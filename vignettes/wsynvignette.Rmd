@@ -15,7 +15,7 @@ urlcolor: blue
 bibliography: wsynvignette_refs.bib 
 
 vignette: >
-  %\VignetteIndexEntry{"Matrix model selection package vignette"}
+  %\VignetteIndexEntry{"wsyn vignette"}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -743,8 +743,6 @@ magnitudes that the empirical wavelet phasor mean field magnitude is greater tha
 (a times by timescales matrix). For `sigmethod` equal to `aaft`, AAFT 
 surrogates are used instead. Non-synchrony-preserving surrogates are used.
 
-<!--***DAN: made it to here in proofing, 2018 12 10-->
-
 # Wavelet linear models and their uses for understanding synchrony
 \noindent Linear models on wavelet transforms were introduced by @Sheppard_18,
 where they were used for understanding the causes of synchrony. We demonstrate
@@ -791,7 +789,7 @@ for (counter in 1:numlocs)
 
 Next create an irrelevant environmental variable. With real data, of course,
 one will not necessarily know in advance whether an environmental
-variable is irrelevant to a population system, but, for the purpose of 
+variable is irrelevant to a population system. But, for the purpose of 
 demonstrating the methods, we are playing the dual role of data creator and 
 analyst.
 ```{r dirrel}
@@ -829,11 +827,11 @@ synchrony at timescales of about $3$ and $12$ for all three variables.
 ```{r wmfs_wlmexample, results=FALSE}
 dat<-list(pops=pops,d1=d1,d2=d2,dirrel=dirrel)
 dat<-lapply(FUN=function(x){cleandat(x,times,1)$cdat},X=dat)
-wmfpop<-wmf(dat$pops,times)
+wmfpop<-wmf(dat$pops,times,scale.max.input=28)
 plotmag(wmfpop)
-wmfd1<-wmf(dat$d1,times)
+wmfd1<-wmf(dat$d1,times,scale.max.input=28)
 plotmag(wmfd1)
-wmfd2<-wmf(dat$d2,times)
+wmfd2<-wmf(dat$d2,times,scale.max.input=28)
 plotmag(wmfd2)
 ```
 
@@ -909,6 +907,13 @@ se<-syncexpl(wlm_all)
 se_short<-se[se$timescales>=bshort[1] & se$timescales<=bshort[2],]
 round(100*colMeans(se_short[,c(3:12)])/mean(se_short$sync),4)
 ```
+These are percentages of sychrony explained by various factors: `syncexpl` is total
+synchrony explained by the predictors for which we have data; `crossterms` must be small
+enough for the rest of the results to be interpretable; `d1`, `d2` and `dirrel` 
+are percentages of sychrony explained by those predictors; 
+`interactions` is percentage of 
+synchrony explained by interactions between predictors (see @Sheppard_18); and the 
+remaining terms are percentages of synchrony explained by individual interactions.
 
 For long timescales, Moran effects of both drivers are present, as are interactions
 between these Moran effects:
@@ -917,10 +922,33 @@ se_long<-se[se$timescales>=blong[1] & se$timescales<=blong[2],]
 round(100*colMeans(se_long[,c(3:12)])/mean(se_long$sync),4)
 ```
 
-Note that "cross terms" are small in both these analyses compared to synchrony 
+Note that cross terms are fairly small in both these analyses compared to synchrony 
 explained. Results can only be interpreted when this is the case. 
 See @Sheppard_18 for detailed information on cross terms and 
 interacting Moran effects.
+
+The pattern of synchrony that would pertain if the only drivers of synchrony were 
+those included in a model can also be produced, and compared to the actual pattern
+of synchrony (as represented by the wavelet mean field) to help evaluate the model.
+
+```{r examp_predsync_1}
+pres<-predsync(wlm_all)
+plotmag(pres)
+plotmag(wmfpop)
+```
+
+The similarity is pretty good. Now make the comparison using the model with sole 
+predictor `d1`.
+
+```{r examp_predsync_2}
+wlm_d1<-wlm(dat,times,resp=1,pred=2,norm="powall",scale.max.input=28)
+pres<-predsync(wlm_d1)
+plotmag(pres)
+```
+
+The similarity with the wavelet mean field of the populations is pretty good at 
+long timescales (where the model with sole predictor `d1` was found to be a 
+good model), but not at short timescales.
 
 <!--# Analysis of plankton populations in UK seas
 \noindent All examples so far have used artificial data. It makes sense at this
@@ -932,17 +960,19 @@ To be completed later.-->
 <!--DAN: embed the B-C transformed cal fin, PCI, and temp data in the package and 
 document them, then do some analyses here of those data using all our tools so far.-->
 
-
 # Clustering
 
-Tools are provided in `wsyn` for clustering sampling locations into network "modules" 
-or "communities" consisting of sites that are especially synchronous with each other. 
-@Walter_17 applied this kind of approach to gypsy moth data. Given an $N \times T$ matrix of 
+Tools are provided in `wsyn` for separating sampling locations into 
+network "clusters" or "modules" 
+or "communities" (these are three alternative names used) 
+consisting of sites that are especially synchronous with each other. 
+@Walter_17 applied this kind of approach to gypsy moth 
+data. Given an $N \times T$ matrix of 
 values corresponding to measurements made in $N$ locations over $T$ times, the approach starts 
-by generating an $N \times N$ synchrony matrix with $i,j$ entry describing the strength 
-of synchrony between the time series from locations $i$ and $j$. This matrix is then passed 
-to an existing clustering algorithm to partition the set of locations into subsets 
-called *modules* or network *communities*.  
+by generating an $N \times N$ synchrony matrix with $i,j$th entry describing the strength 
+of synchrony between the time series from locations $i$ and $j$ (in one of 
+several ways - see below). This matrix is then passed 
+to an existing clustering algorithm to partition the set of locations.  
 
 ## The synchrony matrix
 
@@ -962,7 +992,7 @@ d<-cleandat(d,1:Tmax,1)$cdat
 Then make a synchrony matrix using Pearson correlation.
 ```{r pearson_synmat}
 sm<-synmat(d,1:Tmax,method="pearson")
-graphics::image(1:10,1:10,sm,col=heat.colors(20))
+fields::image.plot(1:10,1:10,sm,col=heat.colors(20))
 ```
 
 The function `synmat` provides many other options, beyond correlation, for different kinds of synchrony matrices. We demonstrate a frequency-specific approach. First create some artificial data.
@@ -997,24 +1027,32 @@ These data have period-5 oscillations which are synchronous within location grou
 We measure synchrony matrices using portions of the the cross-wavelet transform centered on periods 5, and 12 (in separate synchrony matrices), to detect the different structures on different timescales.
 ```{r detect_tsspecific_sync}
 sm5<-synmat(dat=d,times=1:Tmax,method="ReXWT",tsrange=c(4,6))
-graphics::image(1:N,1:N,sm5,col=heat.colors(20))
+fields::image.plot(1:N,1:N,sm5,col=heat.colors(20))
 sm12<-synmat(dat=d,times=1:Tmax,method="ReXWT",tsrange=c(11,13))
-graphics::image(1:N,1:N,sm12,col=heat.colors(20))
+fields::image.plot(1:N,1:N,sm12,col=heat.colors(20))
 ```
 
 This timescale-specific approach reveals the structure of the data better than a correlation approach. 
 ```{r abuse_cor}
 sm<-synmat(dat=d,times=1:Tmax,method="pearson")
-graphics::image(1:N,1:N,sm,col=heat.colors(20))
+fields::image.plot(1:N,1:N,sm,col=heat.colors(20))
 ```
 
-Several additional synchrony measures with which `synmat` can construct synchrony matrices are described in the documentation of the function.
+Several additional synchrony measures with which `synmat` can construct 
+synchrony matrices are described in the documentation of the function.
 
 Important note: synchrony matrices can have negative values for some of the methods provided by `synmat`. This is appropriate, since correlation and other measures of synchrony can be negative, but it complicates cluster detection (see next section).
 
 ## Clustering
 
-The function `clust` computes network modules/clusters and helps keep information about them organized. The clustering algorithm is a slight adaptation of that of @Newman_2006 - see the next section for details. We illustrate the use of `clust` using the artificial data from the second example of the previous section.
+The function `clust` computes network modules/clusters and helps keep 
+information about them organized. That function is also the generator 
+function for the `clust` class. The class has `print` and `summary` and 
+`set` and `get` methods (see the help file for `clust_methods`). 
+The clustering algorithm used is a 
+slight adaptation of that of @Newman_2006 - see the next section for 
+details. We illustrate the use of `clust` using the artificial data 
+from the second example of the previous section.
 
 ```{r clust_demo}
 #make some artificial coordinates for the geographic locations of where data were measured
@@ -1053,44 +1091,109 @@ plotmag(get_wmfs(cl12)[[2]][[1]])
 plotmag(get_wmfs(cl12)[[2]][[2]])
 ```
 
-Color intensity on paps of clusters indicates the strength of contribution of a node to its module - details in the next section. The function `addwpmfs` is similar to the function `addwmfs` demonstrated above.
+Color intensity on maps of clusters indicates the strength of contribution 
+of a node to its module - details in the next section. The function `addwpmfs` 
+is similar to the function `addwmfs` demonstrated above, but adds wavelet phasor
+mean field information to a `clust` object.
 
 ## The clustering algorithm
 
-The clustering algorithm used by `clust` is implemented in `cluseigen`, and is a generalization of the algorithm of @Newman_2006. The algorithm makes use of the concept of modularity. Modularity was defined by @Newman_2006 for any unweighted, undirected network paired with a partitioning of the nodes into modules. The modularity is then a single numeric score which is higher for better partitionings, i.e., for partitionings that more effectively group nodes that are more heavily connected and separate nodes that are less connected. The ideal goal would be to find the partitioning that maximizes the modularity score, but this is computationally infeasible for realistically large networks [@Newman_2006]. Instead, the algorithm of @Newman_2006, which is computationally very efficient, provides a good partitioning that is not guaranteed to be optimal but is typically close to optimal [@Newman_2006]. The modularity itself can be computed rapidly, given a partitioning, with the function `modularity` in `wsyn`. 
+The clustering algorithm used by `clust` is implemented in `cluseigen`, and is 
+a generalization of the algorithm of @Newman_2006. The algorithm makes use of 
+the concept of modularity. Modularity was defined by @Newman_2006 for 
+any unweighted, undirected network paired with a partitioning of the nodes 
+into modules. The modularity is then a single numeric score which is higher 
+for better partitionings, i.e., for partitionings that more effectively 
+group nodes that are more heavily connected and separate nodes that are 
+less connected. The ideal goal would be to find the partitioning that 
+maximizes the modularity score, but this is computationally infeasible 
+for realistically large networks [@Newman_2006]. Instead, the algorithm 
+of @Newman_2006, which is computationally very efficient, provides a 
+good partitioning that is not guaranteed to be optimal but is typically 
+close to optimal [@Newman_2006]. The modularity itself can be computed 
+rapidly, given a partitioning, with the function `modularity` in `wsyn`. 
 
-Modularity is defined in @Newman_2006 for unweighted networks, and the definition generalizes straightforwardly to weighted networks for which all weights are non-negative. But synchrony matrices can represent weighted networks for which some weights are allowed to be negative. A generalization of modularity for this more general type of network was defined by @Gomez_2009, and the `modularity` function computes this generalization. Values are the same as the definition of @Newman_2006 for non-negatively weighted networks. The algorithm implemented by `cluseigen` is a slight generalization of the original @Newman_2006 algorithm that applies to weighted networks for which some edges are allowed to have negative weight.
+Modularity is defined in @Newman_2006 for unweighted networks, and the 
+definition generalizes straightforwardly to weighted networks for which 
+all weights are non-negative. But synchrony matrices can represent 
+weighted networks for which some weights are allowed to be negative. 
+A generalization of modularity for this more general type of network was 
+defined by @Gomez_2009, and the `modularity` function computes this 
+generalization. Values are the same as the definition of @Newman_2006 
+for non-negatively weighted networks. The algorithm implemented by 
+`cluseigen` is a slight generalization of the original @Newman_2006 
+algorithm that applies to weighted networks for which some edges are 
+allowed to have negative weight.
 
-We here describe the generalized algorithm, the validity of which was realized by Lei Zhao. Let $w_{ij}$ be the adjacency matrix for a network, so the $ij$th entry of this matrix is the weight of the edge between nodes $i$ and $j$, $0$ if there is no edge. Let $C_i$ be the community/module to which node $i$ is assigned and let $C_j$ be the same for node $j$. The original definition of modularity, for non-negative $w_{ij}$, is
+We here describe the generalized algorithm, the validity of which was 
+realized by Lei Zhao. Let $w_{ij}$ be the adjacency matrix for a network, 
+so the $ij$th entry of this matrix is the weight of the edge between 
+nodes $i$ and $j$, $0$ if there is no edge. Let $C_i$ be the 
+community/module to which node $i$ is assigned and let $C_j$ be the 
+same for node $j$. The original definition of modularity, for 
+non-negative $w_{ij}$, is
 $$Q=\frac{1}{2w}\sum_{ij} \left(w_{ij}-\frac{w_i w_j}{2w}\right)\delta(C_i,C_j),$$
-where $w_i=\sum_j w_{ij}$, $w=\frac{1}{2}\sum_i w_i$, and $\delta$ is the Kronecker delta function, equal to $1$ when $C_i=C_j$ and $0$ otherwise.
+where $w_i=\sum_j w_{ij}$, $w=\frac{1}{2}\sum_i w_i$, and $\delta$ is 
+the Kronecker delta function, equal to $1$ when $C_i=C_j$ and $0$ otherwise.
 
-For the case of partitioning into two clusters, @Newman_2006 notes that $\delta(C_i,C_j)=\frac{1}{2}(s_i s_j +1)$, where we define $s_i$ to be $1$ if node $i$ is in group $1$ and $-1$ if it is in group $2$. Then 
+For the case of partitioning into two clusters, @Newman_2006 notes 
+that $\delta(C_i,C_j)=\frac{1}{2}(s_i s_j +1)$, where we define $s_i$ 
+to be $1$ if node $i$ is in group $1$ and $-1$ if it is in group $2$. 
+Then 
 $$Q=\frac{1}{4w}\sum_{ij} \left(w_{ij}-\frac{w_i w_j}{2w}\right)(s_i s_j +1),$$
 and it is easy to show this is
 $$Q=\frac{1}{4w}\sum_{ij} \left(w_{ij}-\frac{w_i w_j}{2w}\right)s_i s_j.$$
-Defining a matrix $\mathbf{B}$ such that $B_{ij}=w_{ij}-\frac{w_i w_j}{2w}$, we have 
+Defining a matrix $\mathbf{B}$ such that $B_{ij}=w_{ij}-\frac{w_i w_j}{2w}$, 
+we have 
 $$Q=\frac{1}{4w}\mathbf{s}^\tau \mathbf{B} \mathbf{s},$$
-where $\tau$ is transpose and the bold quantities are the vectors/matrices composed of the indexed quantities denoted with the same symbol. @Newman_2006 presents an argument that a good way to come close to optimizing $Q$ over possible partitions into two modules is to choose $s_i$ to be the same sign as the $i$th entry of the leading eigenvector of $\mathbf{B}$, if the leading eigenvalue is postive (otherwise the algorithm halts with no splits, returning the trivial "decomposition" into one module). This gives the first split, according to the Newman algorithm, of the network into modules. Subsequent splits are handled in a similar but not identical way described by @Newman_2006. (In particular it is incorrect to simply delete edges connecting the two modules from the first split and apply the algorithm to the resulting graphs.)
+where $\tau$ is transpose and the bold quantities are the vectors/matrices 
+composed of the indexed quantities denoted with the same symbol. 
+@Newman_2006 presents an argument that a good way to come close to 
+optimizing $Q$ over possible partitions into two modules is to choose 
+$s_i$ to be the same sign as the $i$th entry of the leading eigenvector 
+of $\mathbf{B}$, if the leading eigenvalue is postive (otherwise the 
+algorithm halts with no splits, returning the trivial "decomposition" 
+into one module). This gives the first split, according to the Newman 
+algorithm, of the network into modules. Subsequent splits are handled in 
+a similar but not identical way described by @Newman_2006. (In particular 
+it is incorrect to simply delete edges connecting the two modules from 
+the first split and apply the algorithm to the resulting graphs.)
 
-The generalized modularity of @Gomez_2009 is defined as follows. Let $w_{ij}^+ = \max(0,w_{ij})$ and $w_{ij}^- = \max(0,-w_{ij})$ so that $w_{ij}=w_{ij}^+ - w_{ij}^-$. Let $w_i^+ = \sum_j w_{ij}^+$, $w_i^- = \sum_j w_{ij}^-$, $w^+ = \frac{1}{2} \sum_i w_i^+$, and $w^- = \frac{1}{2} \sum_i w_i^-$. Then @Gomez_2009 justifies the definitions
+The generalized modularity of @Gomez_2009 is defined as follows. 
+Let $w_{ij}^+ = \max(0,w_{ij})$ and $w_{ij}^- = \max(0,-w_{ij})$ so 
+that $w_{ij}=w_{ij}^+ - w_{ij}^-$. Let $w_i^+ = \sum_j w_{ij}^+$, 
+$w_i^- = \sum_j w_{ij}^-$, $w^+ = \frac{1}{2} \sum_i w_i^+$, and 
+$w^- = \frac{1}{2} \sum_i w_i^-$. Then @Gomez_2009 justifies the 
+definitions
 $$Q^+ = \frac{1}{2w^+} \sum_{ij}\left(w_{ij}^+-\frac{w_i^+ w_j^+}{2w^+}\right)\delta(C_i,C_j),$$
 $$Q^- = \frac{1}{2w^-} \sum_{ij}\left(w_{ij}^- - \frac{w_i^- w_j^-}{2w^-}\right)\delta(C_i,C_j),$$
 and
 $$Q=\frac{2w^+}{2w^+ + 2w^-}Q^+ - \frac{2w^-}{2w^+ + 2w^-}Q^-.$$
-This is a generalization of the old definition of $Q$, in the sense that it reduces to that definition in the case of non-negatively weighted networks. @Gomez_2009 provides a probabilistic interpretation that generalizes the probabilisticc interpretation of @Newman_2006. 
+This is a generalization of the old definition of $Q$, in the sense 
+that it reduces to that definition in the case of non-negatively 
+weighted networks. @Gomez_2009 provides a probabilistic interpretation 
+that generalizes the probabilisticc interpretation of @Newman_2006. 
 
 It is straightforward to show
 $$Q=\frac{1}{2w^+ + 2w^-} \sum_{ij} \left(w_{ij}-\left(\frac{w_i^+ w_j^+}{2w^+} - \frac{w_i^- w_j^-}{2w^-}\right)\right)\delta(C_i,C_j).$$
-Again considering an initial 2-module split and define $s_i$ and $s_j$ as previously, we have 
+Again considering an initial 2-module split and define $s_i$ and 
+$s_j$ as previously, we have 
 $$Q=\frac{1}{4w^+ + 4w^-} \sum_{ij} \left(w_{ij}-\left(\frac{w_i^+ w_j^+}{2w^+} - \frac{w_i^- w_j^-}{2w^-}\right)\right)s_i s_j,$$
 which can be written in matrix form as
 $$Q=\frac{1}{4w^+ + 4w^-} \mathbf{s}^\tau \mathbf{E} \mathbf{s}.$$
-Because the generalized modularity of @Gomez_2009 can be written in the same matrix format as the modularity expression of @Newman_2006, the same eigenvector-based algorithm for finding a close-to-optimal value of the modularity can be used. 
+Because the generalized modularity of @Gomez_2009 can be written in the 
+same matrix format as the modularity expression of @Newman_2006, the 
+same eigenvector-based algorithm for finding a close-to-optimal value 
+of the modularity can be used. 
 
 The quantity
 $$\frac{1}{2w^+ + 2w^-} \sum_{j} \left(w_{ij}-\left(\frac{w_i^+ w_j^+}{2w^+} - \frac{w_i^- w_j^-}{2w^-}\right)\right)\delta(C_i,C_j)$$
-is the contribution of node $i$ to the modularity. It is the extent to which node $i$ is more connected to other nodes in its module than expected by chance [@Newman_2006;@Gomez_2009], and can be interpreted as a strength of membership of a node in its module. The `plotmap` function (demonstrated above) has an option for coloring nodes according to this quantity.
+is the contribution of node $i$ to the modularity. It is the extent to 
+which node $i$ is more connected to other nodes in its module than 
+expected by chance [@Newman_2006;@Gomez_2009], and can be interpreted as 
+a strength of membership of a node in its module. The `plotmap` 
+function (demonstrated above) has an option for coloring nodes according 
+to this quantity.
 
 <!--# Analysis of gypsy moth defoliation time series
 
@@ -1102,7 +1205,7 @@ This material is based upon work supported by the National Science Foundation
 under grant numbers 17114195 and 1442595. Any opinions, findings, and conclusions 
 or recommendations expressed in this material are those of the authors and do 
 not necessarily reflect the views of the National Science Foundation. We thank all 
-users of the package who have reported or will later report ways in which the package
-could be improved.
+users of the package who have reported or will later report ways in 
+which the package could be improved.
 
 # References

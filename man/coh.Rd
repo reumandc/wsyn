@@ -14,9 +14,11 @@ coh(dat1, dat2, times, norm, sigmethod = "none", nrand = 1000,
 
 \item{times}{The times at which measurements were made, spacing 1}
 
-\item{norm}{The normalization of wavelet transforms to use. Controls the version of the coherence that is performed. One of "none", "phase", "powall", "powind". See details.}
+\item{norm}{The normalization of wavelet transforms to use. Controls the version of the coherence that is 
+performed. One of "none", "phase", "powall", "powind". See details.}
 
-\item{sigmethod}{The method for significance testing. One of "none", "fftsurrog1", "fftsurrog2", "fftsurrog12", "aaftsurrog1", "aaftsurrog2", "aaftsurrog12", "fast". See details.}
+\item{sigmethod}{The method for significance testing. One of "none", "fftsurrog1", "fftsurrog2", "fftsurrog12", 
+"aaftsurrog1", "aaftsurrog2", "aaftsurrog12", "fast". See details.}
 
 \item{nrand}{Number of surrogate randomizations to use for significance testing.}
 
@@ -33,13 +35,18 @@ coh(dat1, dat2, times, norm, sigmethod = "none", nrand = 1000,
 \item{dat1, dat2}{The input data}
 \item{times}{The times associated with the data}
 \item{sigmethod}{The method for significance testing, as inputted.} 
-\item{norm}{The normalization of the wavelet transforms that will be used in computing the coherence. Different values result in different versions of the coherence. One of "none", "phase", "powall", "powind". See details.}
+\item{norm}{The normalization of the wavelet transforms that will be used in computing the coherence. Different 
+values result in different versions of the coherence. One of "none", "phase", "powall", "powind". See details.}
 \item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 \item{timescales}{The timescales associated with the coherence}
-\item{coher}{The complex magnitude of this quantity is the coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
-\item{signif}{A list with information from the significance testing. Elements are \code{coher} and \code{scoher}. See details.}
-\item{ranks}{A list with ranking information for \code{signif}. \code{NA} until \code{plotrank} is called, see documentation for \code{plotrank}.}
-\item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. Empty on an initial call to \code{coh}, filled in by the function \code{bandtest}. See details.}
+\item{coher}{The complex magnitude of this quantity is the coherence, calculated in the usual way (which depends 
+on \code{norm}, see details), and with scalloping of the transforms.} 
+\item{signif}{A list with information from the significance testing. Elements are \code{coher} and \code{scoher}. 
+See details.}
+\item{ranks}{A list with ranking information for \code{signif}. \code{NA} until \code{plotrank} is called, see 
+documentation for \code{plotrank}.}
+\item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. 
+Empty on an initial call to \code{coh}, filled in by the function \code{bandtest}. See details.}
 }
 \description{
 Wavelet coherence and wavelet phase coherence, spatial or for single time series.
@@ -80,7 +87,10 @@ datasets, computed using
 the normalization specified by \code{norm}. The type of surrogate used (Fourier surrogates 
 or amplitude adjusted Fourier surrogates, see \code{surrog}), as well as which of the 
 datasets surrogates are computed on (\code{dat1}, \code{dat2}, or both) is determined by 
-\code{sigmethod}. Synchrony-preserving surrogates are used. A variety of 
+\code{sigmethod}. The first part of the value of \code{sigmethod} specifies the
+type of surrogate used, and the numbers in the second part (1, 2, or 12) specify 
+whether surrogates are applied to \code{dat1}, \code{dat2}, or both, respectively.
+Synchrony-preserving surrogates are used. A variety of 
 statements of significance (or lack thereof) can be made
 by comparing \code{signif$coher} with \code{signif$scoher} (see the \code{plotmag}, 
 \code{plotrank}, and \code{bandtest} methods
@@ -121,8 +131,13 @@ res<-coh(dat1,dat2,times,norm,sigmethod,nrand)
 \references{
 Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
 pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+
 Sheppard, L.W., et al. (2017) Rapid surrogate testing of wavelet coherences. European Physical 
 Journal, Nonlinear and Biomedical Physics, 5, 1. DOI: 10.1051/epjnbp/2017000
+}
+\seealso{
+\code{\link{cleandat}}, \code{\link{coh_methods}}, \code{\link{bandtest}}, \code{\link{plotmag}}, 
+\code{\link{plotphase}}, \code{\link{plotrank}}, \code{browseVignettes("wsyn")}
 }
 \author{
 Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; Lawrence 

@@ -1,7 +1,7 @@
 #' Aggregate significance across a timescale band
 #' 
-#' Computes the aggregate significance of coherence or of a wavelet linear model test object
-#' across a timescale band, accounting for non-independence of timescales. Also gets the 
+#' Computes the aggregate significance of coherence (\code{coh}) or of a wavelet linear model test object
+#' (\code{wlmtest}) across a timescale band, accounting for non-independence of timescales. Also gets the 
 #' average phase across the band, in the case of coherence.
 #' 
 #' @param object An object of class \code{coh} or \code{wlmtest}, must have a non-\code{NA} 
@@ -23,6 +23,8 @@
 #' @references 
 #' Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
 #' pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+#' 
+#' @seealso \code{\link{coh}}, \code{\link{wlm}}, \code{\link{wlmtest}}, \code{browseVignettes("wsyn")}
 #' 
 #' @examples 
 #' #Example for a coh object

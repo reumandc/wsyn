@@ -12,6 +12,8 @@
 #' Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}
 #' 
 #' @note Internal function, no error checking performed
+#' 
+#' @seealso \code{\link{coh}}, \code{\link{wlmtest}}, \code{\link{bandtest}}, \code{browseVignettes("wsyn")}
 
 addranks<-function(obj)
 {

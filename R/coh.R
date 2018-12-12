@@ -7,8 +7,10 @@
 #' @param dat1 A locations (rows) x time (columns) matrix (for spatial coherence), or a single time series 
 #' @param dat2 Same format as dat1, same locations and times
 #' @param times The times at which measurements were made, spacing 1
-#' @param norm The normalization of wavelet transforms to use. Controls the version of the coherence that is performed. One of "none", "phase", "powall", "powind". See details.
-#' @param sigmethod The method for significance testing. One of "none", "fftsurrog1", "fftsurrog2", "fftsurrog12", "aaftsurrog1", "aaftsurrog2", "aaftsurrog12", "fast". See details.
+#' @param norm The normalization of wavelet transforms to use. Controls the version of the coherence that is 
+#' performed. One of "none", "phase", "powall", "powind". See details.
+#' @param sigmethod The method for significance testing. One of "none", "fftsurrog1", "fftsurrog2", "fftsurrog12", 
+#' "aaftsurrog1", "aaftsurrog2", "aaftsurrog12", "fast". See details.
 #' @param nrand Number of surrogate randomizations to use for significance testing.
 #' @param scale.min The smallest scale of fluctuation that will be examined. At least 2.
 #' @param scale.max.input The largest scale of fluctuation guaranteed to be examined
@@ -19,13 +21,18 @@
 #' \item{dat1, dat2}{The input data}
 #' \item{times}{The times associated with the data}
 #' \item{sigmethod}{The method for significance testing, as inputted.} 
-#' \item{norm}{The normalization of the wavelet transforms that will be used in computing the coherence. Different values result in different versions of the coherence. One of "none", "phase", "powall", "powind". See details.}
+#' \item{norm}{The normalization of the wavelet transforms that will be used in computing the coherence. Different 
+#' values result in different versions of the coherence. One of "none", "phase", "powall", "powind". See details.}
 #' \item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 #' \item{timescales}{The timescales associated with the coherence}
-#' \item{coher}{The complex magnitude of this quantity is the coherence, calculated in the usual way (which depends on \code{norm}, see details), and with scalloping of the transforms.} 
-#' \item{signif}{A list with information from the significance testing. Elements are \code{coher} and \code{scoher}. See details.}
-#' \item{ranks}{A list with ranking information for \code{signif}. \code{NA} until \code{plotrank} is called, see documentation for \code{plotrank}.}
-#' \item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. Empty on an initial call to \code{coh}, filled in by the function \code{bandtest}. See details.}
+#' \item{coher}{The complex magnitude of this quantity is the coherence, calculated in the usual way (which depends 
+#' on \code{norm}, see details), and with scalloping of the transforms.} 
+#' \item{signif}{A list with information from the significance testing. Elements are \code{coher} and \code{scoher}. 
+#' See details.}
+#' \item{ranks}{A list with ranking information for \code{signif}. \code{NA} until \code{plotrank} is called, see 
+#' documentation for \code{plotrank}.}
+#' \item{bandp}{A data frame containing results of computing significances of the coherence across timescale bands. 
+#' Empty on an initial call to \code{coh}, filled in by the function \code{bandtest}. See details.}
 #' 
 #' @details If the dimensions of \code{dat1} and \code{dat2} are \eqn{N} by \eqn{T} 
 #' (\eqn{N} is 1 for 
@@ -94,8 +101,12 @@
 #' @references 
 #' Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
 #' pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+#' 
 #' Sheppard, L.W., et al. (2017) Rapid surrogate testing of wavelet coherences. European Physical 
 #' Journal, Nonlinear and Biomedical Physics, 5, 1. DOI: 10.1051/epjnbp/2017000
+#' 
+#' @seealso \code{\link{cleandat}}, \code{\link{coh_methods}}, \code{\link{bandtest}}, \code{\link{plotmag}}, 
+#' \code{\link{plotphase}}, \code{\link{plotrank}}, \code{browseVignettes("wsyn")}
 #' 
 #' @examples
 #' times<-1:100
