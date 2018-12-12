@@ -33,6 +33,10 @@ values<-matrix(1,length(times),length(timescales))
 h<-tts(times,timescales,values)
 
 }
+\seealso{
+\code{\link{tts_methods}}, \code{\link{wt}}, \code{\link{wmf}}, \code{\link{wpmf}},
+\code{browseVignettes("wsyn")}
+}
 \author{
 Daniel Reuman, \email{reuman@ku.edu}
 }

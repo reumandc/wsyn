@@ -22,7 +22,7 @@ of \code{syncexpl}. Only \code{norm="powall"} implemented so far.
 }
 \description{
 Predicted synchrony of a \code{wlm} object. This is described in the
-first paragraph of Appendix S15 of Sheppard et al (2018).
+first paragraph of Appendix S15 of Sheppard et al (2019).
 }
 \examples{
 times<-(-3:100)
@@ -58,8 +58,12 @@ res<-predsync(wlmobj)
 
 }
 \references{
-Sheppard, LW et al. (2018) Synchrony is more than its top-down and climatic parts: interacting 
+Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
 Moran effects on phytoplankton in British seas, In review.
+}
+\seealso{
+\code{\link{wlm}}, \code{\link{tts}}, \code{\link{plotmag}}, \code{\link{wmf}}, \code{\link{power}},
+\code{\link{syncexpl}}, \code{browseVignettes("wsyn")}
 }
 \author{
 Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; Lawrence 

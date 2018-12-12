@@ -5,7 +5,7 @@
 #' @param W An array of wavelet transforms, locations by times by timescales
 #' @param norm The normalization of wavelet transforms to use. Controls the version of the coherence that is performed. One of "none", "phase", "powall", "powind". See details section of the documentation for \code{coh}.
 #' 
-#' @return \code{coh} returns an array the same dimensions as W of normalized transforms
+#' @return \code{normforcoh} returns an array the same dimensions as W of normalized transforms
 #' 
 #' @note Internal function, no error checking
 #'

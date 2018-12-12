@@ -23,7 +23,9 @@ wmf(dat, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05,
 }
 \value{
 \code{wmf} returns an object of class \code{wmf}. Slots are:
-\item{values}{A matrix of complex numbers containing the wavelet mean field, of dimensions \code{length(times)} by the number of timescales. Entries not considered reliable (longer timescales, near the edges of the time span) are set to NA.}
+\item{values}{A matrix of complex numbers containing the wavelet mean field, of dimensions \code{length(times)} 
+by the number of timescales. Entries not considered reliable (longer timescales, near the edges of the time span) 
+are set to NA.}
 \item{times}{The time steps specified (e.g., years)}
 \item{timescales}{The timescales (1/frequency) computed for the wavelet transforms}
 \item{dat}{The data matrix (locations by time) from which the wmf was computed}
@@ -34,9 +36,6 @@ Computes the wavelet mean field from a matrix of spatiotemporal data. Also the
 creator function for the \code{wmf} class. The \code{wmf} class inherits from the 
 \code{tts} class, which inherits from the \code{list} class.
 }
-\note{
-The wavelet mean field was developed by Lawrence Sheppard and Daniel Reuman. R code by Jonathan Walter.
-}
 \examples{
 times<-1:30 #generate time steps
 #generate fake count data for 20 locations
@@ -46,8 +45,14 @@ wmf<-wmf(dat,times)
 
 }
 \references{
-Sheppard, L.w., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. 
+Nature Climate Change. DOI: 10.1038/nclimate2881
+}
+\seealso{
+\code{\link{wmf_methods}}, \code{\link{tts}}, \code{\link{wpmf}}, \code{\link{plotmag}},
+\code{browseVignettes("wsyn")}
 }
 \author{
-Jonathan Walter, \email{jaw3es@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@ku.edu}; Daniel Reuman, \email{reuman@ku.edu}
+Jonathan Walter, \email{jaw3es@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@ku.edu}; 
+Daniel Reuman, \email{reuman@ku.edu}
 }

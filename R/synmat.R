@@ -64,11 +64,13 @@
 #' contain 1 minus the p-values. 
 #' 
 #' @author Jonathan Walter, \email{jaw3es@@virginia.edu}; Daniel Reuman, \email{reuman@@ku.edu};
-#' Lei Zhao, \email{lei_journal@@yahoo.com}
+#' Lei Zhao, \email{lei.zhao@@cau.edu.cn}
 #'
 #' @references Walter, J. A., et al. (2017) The geography of spatial synchrony. Ecology 
 #' Letters. doi: 10.1111/ele.12782
-#'  
+#'
+#' @seealso \code{\link{clust}}, \code{\link{coh}}, \code{\link{surrog}}, \code{browseVignettes("wsyn")}
+#'    
 #' @examples 
 #' sig<-matrix(.9,5,5)
 #' diag(sig)<-1

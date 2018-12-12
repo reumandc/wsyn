@@ -9,6 +9,8 @@
 #' \code{mat} less than \code{sigthresh} become a 1, other entries become a 0. The diagonal
 #' is \code{NA}.
 #' 
+#' @author Lei Zhao, \email{lei.zhao@@cau.edu.cn}, Daniel Reuman \email{reuman@@ku.edu}
+#' 
 #' @note Internal function, no error checking
 
 makeunweighted<-function(mat,sigthresh)

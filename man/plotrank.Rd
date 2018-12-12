@@ -89,6 +89,13 @@ plotrank(res)
 \references{
 Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
 pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+
+Sheppard, LW et al. (2018) Synchrony is more than its top-down and climatic parts: interacting 
+Moran effects on phytoplankton in British seas, In review.
+}
+\seealso{
+\code{\link{coh}}, \code{\link{wlmtest}}, \code{\link{bandtest}}, \code{\link{plotphase}},
+\code{\link{plotmag}}, \code{browseVignettes("wsyn")}
 }
 \author{
 Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; Lawrence 

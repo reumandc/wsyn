@@ -17,6 +17,8 @@
 #'  
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
 #' 
+#' @seealso \code{\link{wmf}}
+#' 
 #' @examples
 #' times<-1:30 #generate time steps
 #' #generate fake count data for 20 locations

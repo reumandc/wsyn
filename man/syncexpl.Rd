@@ -67,8 +67,12 @@ res<-syncexpl(wlmobj)
  
 }
 \references{
-Sheppard, LW et al. (2018) Synchrony is more than its top-down and climatic parts: interacting 
+Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
 Moran effects on phytoplankton in British seas, In review.
+}
+\seealso{
+\code{\link{wlm}}, \code{\link{predsync}}, \code{\link{wlmtest}},
+\code{browseVignettes("wsyn")}
 }
 \author{
 Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; Lawrence 

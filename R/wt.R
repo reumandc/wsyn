@@ -24,6 +24,9 @@
 #' @author Lawrence Sheppard \email{lwsheppard@@ku.edu}, Jonathan Walter 
 #' \email{jaw3es@@virginia.edu}, Daniel Reuman \email{reuman@@ku.edu}
 #' 
+#' @seealso \code{\link{wt_methods}}, \code{\link{tts}}, \code{\link{plotmag}}, \code{\link{plotphase}},
+#' \code{browseVignettes("wsyn")}
+#' 
 #' @examples
 #' time1<-1:100
 #' time2<-101:200

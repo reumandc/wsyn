@@ -22,3 +22,6 @@ Convenience function for converting certain synchrony matrices to unweighted ver
 \note{
 Internal function, no error checking
 }
+\author{
+Lei Zhao, \email{lei.zhao@cau.edu.cn}, Daniel Reuman \email{reuman@ku.edu}
+}

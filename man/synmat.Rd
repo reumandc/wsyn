@@ -102,7 +102,10 @@ res<-synmat(dat,times,method,nsurrogs=100,weighted=FALSE,
 Walter, J. A., et al. (2017) The geography of spatial synchrony. Ecology 
 Letters. doi: 10.1111/ele.12782
 }
+\seealso{
+\code{\link{clust}}, \code{\link{coh}}, \code{\link{surrog}}, \code{browseVignettes("wsyn")}
+}
 \author{
 Jonathan Walter, \email{jaw3es@virginia.edu}; Daniel Reuman, \email{reuman@ku.edu};
-Lei Zhao, \email{lei_journal@yahoo.com}
+Lei Zhao, \email{lei.zhao@cau.edu.cn}
 }

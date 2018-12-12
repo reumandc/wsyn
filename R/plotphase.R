@@ -17,6 +17,9 @@
 #' Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
 #' pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 #' 
+#' @seealso \code{\link{tts}}, \code{\link{wt}}, \code{\link{wmf}}, \code{\link{wpmf}}, \code{\link{coh}}, 
+#' \code{\link{plotmag}}, \code{\link{plotrank}}, \code{browseVignettes("wsyn")}
+#' 
 #' @examples
 #' #For a tts object
 #' times<-1:100

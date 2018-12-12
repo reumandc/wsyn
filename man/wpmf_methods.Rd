@@ -77,6 +77,9 @@ summary(h)
 print(h)
 
 }
+\seealso{
+\code{\link{wpmf}}
+}
 \author{
 Daniel Reuman, \email{reuman@ku.edu}
 }

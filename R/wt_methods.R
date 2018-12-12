@@ -17,6 +17,8 @@
 #'  
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
 #' 
+#' @seealso \code{\link{wt}}
+#' 
 #' @examples
 #' time1<-1:100
 #' time2<-101:200

@@ -36,8 +36,11 @@
 #' Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}
 #' 
 #' @references 
-#' Sheppard, LW et al. (2018) Synchrony is more than its top-down and climatic parts: interacting 
+#' Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
 #' Moran effects on phytoplankton in British seas, In review.
+#' 
+#' @seealso \code{\link{wlm_methods}}, \code{\link{wlmtest}}, \code{\link{syncexpl}}, \code{\link{predsync}}, 
+#' \code{browseVignettes("wsyn")}
 #' 
 #' @examples
 #' times<-1:30

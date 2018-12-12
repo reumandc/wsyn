@@ -54,6 +54,10 @@ times<-c(time1,time2)
 res<-wt(t.series, times)
 
 }
+\seealso{
+\code{\link{wt_methods}}, \code{\link{tts}}, \code{\link{plotmag}}, \code{\link{plotphase}},
+\code{browseVignettes("wsyn")}
+}
 \author{
 Lawrence Sheppard \email{lwsheppard@ku.edu}, Jonathan Walter 
 \email{jaw3es@virginia.edu}, Daniel Reuman \email{reuman@ku.edu}

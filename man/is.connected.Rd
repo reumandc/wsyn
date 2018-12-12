@@ -28,6 +28,9 @@ g2<-matrix(c(0,1,0,0,1,0,0,0,0,0,0,1,0,0,1,0),4,4)
 is.connected(g2)
 
 }
+\seealso{
+\code{\link{cluseigen}}, \code{\link{clust}}, \code{browseVignettes("wsyn")}
+}
 \author{
-Lei Zhao, \email{lei_journal@yahoo.com}
+Lei Zhao, \email{lei.zhao@cau.edu.cn}
 }

@@ -20,6 +20,8 @@
 #'  
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
 #' 
+#' @seealso \code{\link{tts}}
+#' 
 #' @examples
 #' times<-1:10
 #' timescales<-1/c(1:10)

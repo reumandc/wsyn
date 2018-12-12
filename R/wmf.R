@@ -13,17 +13,22 @@
 #' @param f0 The ratio of the period of fluctuation to the width of the envelope
 #' 
 #' @return \code{wmf} returns an object of class \code{wmf}. Slots are:
-#' \item{values}{A matrix of complex numbers containing the wavelet mean field, of dimensions \code{length(times)} by the number of timescales. Entries not considered reliable (longer timescales, near the edges of the time span) are set to NA.}
+#' \item{values}{A matrix of complex numbers containing the wavelet mean field, of dimensions \code{length(times)} 
+#' by the number of timescales. Entries not considered reliable (longer timescales, near the edges of the time span) 
+#' are set to NA.}
 #' \item{times}{The time steps specified (e.g., years)}
 #' \item{timescales}{The timescales (1/frequency) computed for the wavelet transforms}
 #' \item{dat}{The data matrix (locations by time) from which the wmf was computed}
 #' \item{wtopt}{The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list}
 #' 
-#' @note The wavelet mean field was developed by Lawrence Sheppard and Daniel Reuman. R code by Jonathan Walter.
+#' @author Jonathan Walter, \email{jaw3es@@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@@ku.edu}; 
+#' Daniel Reuman, \email{reuman@@ku.edu}
 #' 
-#' @author Jonathan Walter, \email{jaw3es@@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}
+#' @references Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. 
+#' Nature Climate Change. DOI: 10.1038/nclimate2881
 #' 
-#' @references Sheppard, L.w., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+#' @seealso \code{\link{wmf_methods}}, \code{\link{tts}}, \code{\link{wpmf}}, \code{\link{plotmag}},
+#' \code{browseVignettes("wsyn")}
 #' 
 #' @examples
 #' times<-1:30 #generate time steps

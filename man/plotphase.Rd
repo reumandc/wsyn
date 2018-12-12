@@ -82,6 +82,10 @@ plotphase(res)
 Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
 pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 }
+\seealso{
+\code{\link{tts}}, \code{\link{wt}}, \code{\link{wmf}}, \code{\link{wpmf}}, \code{\link{coh}}, 
+\code{\link{plotmag}}, \code{\link{plotrank}}, \code{browseVignettes("wsyn")}
+}
 \author{
 Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; 
 Lawrence Sheppard, \email{lwsheppard@ku.edu}; Daniel Reuman, \email{reuman@ku.edu}

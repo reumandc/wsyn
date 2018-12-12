@@ -12,9 +12,11 @@ surrog(dat, nsurrogs, surrtype, syncpres)
 
 \item{nsurrogs}{The number of surrogates to produce}
 
-\item{surrtype}{Either "fft" (for Fourier surrogates) or "aaft" (for amplitude adjusted Fourier surrogates). Fourier surrogates are appropriate for time series with normal marginals; otherwise consider aaft surrogates.}
+\item{surrtype}{Either "fft" (for Fourier surrogates) or "aaft" (for amplitude adjusted Fourier surrogates). 
+Fourier surrogates are appropriate for time series with normal marginals; otherwise consider aaft surrogates.}
 
-\item{syncpres}{Logical. TRUE for "synchrony preserving" surrogates (same phase randomizations used for all time series). FALSE leads to independent phase randomizations for all time series.}
+\item{syncpres}{Logical. TRUE for "synchrony preserving" surrogates (same phase randomizations used for all time 
+series). FALSE leads to independent phase randomizations for all time series.}
 }
 \value{
 \code{surrog} returns a list of nsurrogs surrogate datasets
@@ -37,9 +39,17 @@ res<-surrog(dat,nsurrogs,surrtype,syncpres)
 
 }
 \references{
-Sheppard, LW, et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+Sheppard, LW, et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate 
+Change. DOI: 10.1038/nclimate2881
+
 Schreiber, T and Schmitz, A (2000) Surrogate time series. Physica D 142, 346-382.
-Prichard, D and Theiler, J (1994) Generating surrogate data for time series with several simultaneously measured variables. Physical Review Letters 73, 951-954.
+
+Prichard, D and Theiler, J (1994) Generating surrogate data for time series with several simultaneously measured 
+variables. Physical Review Letters 73, 951-954.
+}
+\seealso{
+\code{\link{wpmf}}, \code{\link{coh}}, \code{\link{wlmtest}}, \code{\link{synmat}},
+\code{browseVignettes("wsyn")}
 }
 \author{
 Jonathan Walter, \email{jaw3es@virginia.edu}; Lawrence Sheppard, \email{lwsheppard@ku.edu}; 

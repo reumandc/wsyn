@@ -25,17 +25,20 @@
 #' @note Adapted from code developed by Robert J. Fletcher, Jr.
 #' 
 #' @author Jonathan Walter, \email{jonathan.walter@@ku.edu}; Lei Zhao, 
-#' \email{lei_journal@@yahoo.com}; Daniel Reuman, \email{reuman@@ku.edu}
+#' \email{lei.zhao@@cau.edu.cn}; Daniel Reuman, \email{reuman@@ku.edu}
 #'
 #' @references 
 #' Fletcher Jr., R.J., et al. (2013) Network modularity reveals critical scales 
-#' for connectivity in ecology and evolution. Nature Communications. 
-#' doi: 10.1038//ncomms3572.
+#' for connectivity in ecology and evolution. Nature Communications. doi: 10.1038//ncomms3572.
+#' 
 #' Gomez S., Jensen P. & Arenas A. (2009). Analysis of community structure in networks 
 #' of correlated data. Phys Rev E, 80, 016114.
+#' 
 #' Newman M.E. (2006). Finding community structure in networks using the eigenvectors 
 #' of matrices. Phys Rev E, 74, 036104.
 #'
+#' @seealso \code{\link{clust}}, \code{\link{cluseigen}}, \code{browseVignettes("wsyn")}
+#' 
 #' @examples
 #' adj<-matrix(0, 10, 10) # create a fake adjacency matrix
 #' adj[lower.tri(adj)]<-runif(10*9/2, -1, 1)

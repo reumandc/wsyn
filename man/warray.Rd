@@ -14,7 +14,8 @@ warray(dat, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05,
 
 \item{scale.min}{The smallest scale of fluctuation that will be examined. At least 2.}
 
-\item{scale.max.input}{The largest scale of fluctuation that will be examined. Note that if this is set too high relative to the length of the timeseries it will be truncated.}
+\item{scale.max.input}{The largest scale of fluctuation that will be examined. Note that if this is set too high 
+relative to the length of the timeseries it will be truncated.}
 
 \item{sigma}{The ratio of each time scale examined relative to the next timescale. Greater than 1.}
 

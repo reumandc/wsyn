@@ -12,7 +12,7 @@ normforcoh(W, norm)
 \item{norm}{The normalization of wavelet transforms to use. Controls the version of the coherence that is performed. One of "none", "phase", "powall", "powind". See details section of the documentation for \code{coh}.}
 }
 \value{
-\code{coh} returns an array the same dimensions as W of normalized transforms
+\code{normforcoh} returns an array the same dimensions as W of normalized transforms
 }
 \description{
 A convenience function for performing the normalization step for the \code{coh} function.

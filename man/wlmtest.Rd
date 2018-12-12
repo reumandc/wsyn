@@ -24,7 +24,7 @@ which is the response, is not allowed here.}
 \item{signif}{A list with information from the significance testing. Elements are 
 \code{sigmethod} (the input), \code{coher} and \code{scoher}. See details.}
 \item{ranks}{A list with ranking information for \code{signif}. \code{NA} until 
-\code{plotranks} is called, see documentation for \code{plotranks}.}
+\code{plotrank} or \code{bandtest} is called.}
 \item{bandp}{A data frame containing results of computing significances across 
 timescale bands. Empty on an initial call to \code{wlmtest}, filled in by the function 
 \code{bandtest}. See details.}
@@ -59,7 +59,7 @@ should be used whenever the actual value of the coherence is needed.
 The slots \code{ranks} and \code{bandp} are empty on an initial call to \code{wlmtest}. 
 They are made to compute and hold 
 aggregate significance results over any timescale band of choice. These are filled in
-when needed by other methods, see \code{plotranks} and \code{bandtest}.
+when needed by other methods, see \code{plotrank} and \code{bandtest}.
 }
 \examples{
 times<-1:30
@@ -78,10 +78,16 @@ res<-wlmtest(wlmobj,drop,sigmethod,nrand=10)
 \references{
 Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
 pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+
 Sheppard, L.W., et al. (2017) Rapid surrogate testing of wavelet coherences. European Physical 
 Journal, Nonlinear and Biomedical Physics, 5, 1. DOI: 10.1051/epjnbp/2017000
-Sheppard, LW et al. (2018) Synchrony is more than its top-down and climatic parts: interacting 
+
+Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
 Moran effects on phytoplankton in British seas, In review.
+}
+\seealso{
+\code{\link{wlm}}, \code{\link{plotrank}}, \code{\link{bandtest}}, \code{\link{coh}}, 
+\code{\link{wlmtest_methods}}, \code{browseVignettes("wsyn")}
 }
 \author{
 Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; Lawrence 

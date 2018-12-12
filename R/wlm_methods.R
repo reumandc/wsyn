@@ -16,6 +16,8 @@
 #'  
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
 #' 
+#' @seealso \code{\link{wlm}}
+#' 
 #' @examples
 #' times<-1:30
 #' dat<-list(v1=matrix(rnorm(300),10,30),v2=matrix(rnorm(300),10,30),v3=matrix(rnorm(300),10,30),

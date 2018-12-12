@@ -97,6 +97,9 @@ summary(h)
 print(h)
 
 }
+\seealso{
+\code{\link{wlm}}
+}
 \author{
 Daniel Reuman, \email{reuman@ku.edu}
 }

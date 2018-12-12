@@ -17,7 +17,7 @@ power(object)
 }
 \description{
 Returns the power of a \code{tts} object, i.e., the mean over
-time of the square magnitude (which is a function of timescale)
+time of the squared magnitude (which is a function of timescale)
 }
 \examples{
 times<-1:10
@@ -26,6 +26,10 @@ values<-matrix(rep(complex(modulus=1,argument=2*pi*c(0:9)/10),times=10),10,10)
 ttsobj<-tts(times,timescales,values)
 res<-power(ttsobj)
  
+}
+\seealso{
+\code{\link{tts}}, \code{\link{wt}}, \code{\link{wmf}}, \code{\link{wpmf}},
+\code{browseVignettes("wsyn")}
 }
 \author{
 Daniel Reuman, \email{reuman@ku.edu}

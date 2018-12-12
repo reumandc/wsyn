@@ -61,6 +61,9 @@ summary(h)
 print(h)
 
 }
+\seealso{
+\code{\link{tts}}
+}
 \author{
 Daniel Reuman, \email{reuman@ku.edu}
 }

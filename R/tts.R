@@ -17,6 +17,9 @@
 #' 
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
 #' 
+#' @seealso \code{\link{tts_methods}}, \code{\link{wt}}, \code{\link{wmf}}, \code{\link{wpmf}},
+#' \code{browseVignettes("wsyn")} 
+#' 
 #' @examples
 #' times<-1:10
 #' timescales<-1/c(1:10)

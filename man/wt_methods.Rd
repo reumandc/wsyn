@@ -80,6 +80,9 @@ summary(h)
 print(h)
 
 }
+\seealso{
+\code{\link{wt}}
+}
 \author{
 Daniel Reuman, \email{reuman@ku.edu}
 }

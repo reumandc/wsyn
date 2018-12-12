@@ -1,13 +1,16 @@
 #' Power of a \code{tts} object
 #' 
 #' Returns the power of a \code{tts} object, i.e., the mean over
-#' time of the square magnitude (which is a function of timescale)
+#' time of the squared magnitude (which is a function of timescale)
 #' 
 #' @param object A \code{tts} object
 #' 
 #' @return \code{power} returns a data frame with columns timescales and power
 #' 
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
+#' 
+#' @seealso \code{\link{tts}}, \code{\link{wt}}, \code{\link{wmf}}, \code{\link{wpmf}},
+#' \code{browseVignettes("wsyn")}
 #' 
 #' @examples
 #' times<-1:10

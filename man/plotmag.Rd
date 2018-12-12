@@ -35,23 +35,27 @@ plotmag(object, ...)
 \method{plotmag}{default}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{tts} or some class that inherits from \code{tts} or of class \code{coh} or \code{wlmtest}}
+\item{object}{An object of class \code{tts} or some class that inherits from \code{tts} or 
+of class \code{coh} or \code{wlmtest}}
 
 \item{...}{Additional graphics parameters passed to \code{image} (\code{graphics} package) 
 if \code{colorbar==FALSE}, or to \code{image.plot} (\code{fields} package) if 
-\code{colorbar==TRUE} (for \code{coh} objects)}
+\code{colorbar==TRUE} (for \code{tts} objects)}
 
-\item{zlims}{z axis limits. If specified, must encompass the range of \code{Mod(get_values(object))}. Default NULL uses this range.}
+\item{zlims}{z axis limits. If specified, must encompass the range of 
+\code{Mod(get_values(object))}. Default NULL uses this range.}
 
 \item{neat}{Logical. Should timescales with no values be trimmed?}
 
-\item{colorfill}{Color spectrum to use, set through colorRampPalette. Default value NULL produces jet colors from Matlab.}
+\item{colorfill}{Color spectrum to use, set through colorRampPalette. Default value NULL 
+produces jet colors from Matlab.}
 
 \item{colorbar}{Logical. Should a colorbar legend be plotted?}
 
 \item{title}{Title for the top of the plot.}
 
-\item{filename}{Filename (without extension), for saving as pdf. Default value NA saves no file and uses the default graphics device.}
+\item{filename}{Filename (without extension), for saving as pdf. Default value NA saves no 
+file and uses the default graphics device.}
 
 \item{sigthresh}{Significance threshold(s). Numeric vector with values between 0 and 1. 
 Typically 0.95, 0.99, 0.999, etc. For \code{wpmf} objects, contours are plotted at these 
@@ -116,6 +120,14 @@ plotmag(res)
 \references{
 Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
 pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+
+Sheppard, LW et al. (2018) Synchrony is more than its top-down and climatic parts: interacting 
+Moran effects on phytoplankton in British seas, In review.
+}
+\seealso{
+\code{\link{tts}}, \code{\link{wt}}, \code{\link{wmf}}, \code{\link{wpmf}}, \code{\link{coh}},
+\code{\link{wlmtest}}, \code{\link{plotphase}}, \code{\link{bandtest}}, \code{\link{plotrank}},
+\code{browseVignettes("wsyn")}
 }
 \author{
 Thomas Anderson, \email{anderstl@gmail.com}, Jon Walter, \email{jaw3es@virginia.edu}; Lawrence 

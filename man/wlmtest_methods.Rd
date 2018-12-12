@@ -76,6 +76,9 @@ summary(h)
 print(h)
 
 }
+\seealso{
+\code{\link{wlmtest}}
+}
 \author{
 Daniel Reuman, \email{reuman@ku.edu}
 }

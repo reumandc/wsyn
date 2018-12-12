@@ -9,7 +9,8 @@ setmints(ts, mints)
 \arguments{
 \item{ts}{A vector of numeric values representing a time series}
 
-\item{mints}{The time series is shifted to have this minimum value. Default NA means use the smallest difference between consecutive, distinct sorted values of the time series. NaN means perform no shift.}
+\item{mints}{The time series is shifted to have this minimum value. Default NA means use the smallest difference 
+between consecutive, distinct sorted values of the time series. NaN means perform no shift.}
 }
 \value{
 \code{setmints} returns the shifted vector.

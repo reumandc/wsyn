@@ -11,7 +11,9 @@
 #' Source: http://www.ams.jhu.edu/~ers/matgraph/; routine: 
 #' matgraph/@graph/isconnected.m
 #' 
-#' @author Lei Zhao, \email{lei_journal@yahoo.com}
+#' @author Lei Zhao, \email{lei.zhao@@cau.edu.cn}
+#' 
+#' @seealso \code{\link{cluseigen}}, \code{\link{clust}}, \code{browseVignettes("wsyn")}
 #' 
 #' @examples 
 #' g1<-matrix(c(0,0,0,1,1,0,0,0,0,1,0,0,0,0,1,0),4,4)
