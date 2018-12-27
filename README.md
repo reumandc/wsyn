@@ -8,10 +8,17 @@ Daniel C. Reuman, University of Kansas
 
 This repository provides tools for analyzing synchrony of time series from a timescale-specific viewpoint.
 
-## Installation
-
-devtools::install_github(repo="reumandc/wsyn")
-
 ## Explanations
 
-In addition to the documentation, see the vignette, a pdf of which is in the vignette folder.
+In addition to the documentation, see the vignette, which is probably the best way to get started.
+
+## Installation
+
+For a quick install: devtools::install_github(repo="reumandc/wsyn"). The 
+install_github function, by default, will not install the vignette. There is 
+an option for installing vignettes (build_vignettes=TRUE), but it seems 
+finicky. You can also clone the repository and use devtools::install(). The  
+build_vignettes=TRUE option seems to work better for devtools::install than 
+it does for devtools::install_github. If you have trouble, please email me 
+with details.
+
