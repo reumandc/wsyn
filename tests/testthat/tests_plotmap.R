@@ -47,17 +47,17 @@ test_that("tests on clust objects",{
   
   #all defaults
   Test_plotmap_1<-function(){plotmap(cl1)}
-  expect_doppelganger(title="Test-plotmap-1",fig=Test_plotmap_1)
+  vdiffr::expect_doppelganger(title="Test-plotmap-1",fig=Test_plotmap_1)
   
   #change spltlvl
   Test_plotmap_2<-function(){plotmap(cl1, spltlvl=1)}
-  expect_doppelganger(title="Test-plotmap-2",fig=Test_plotmap_2)
+  vdiffr::expect_doppelganger(title="Test-plotmap-2",fig=Test_plotmap_2)
   
   #shrink range of nodesize
   Test_plotmap_3<-function(){plotmap(cl1, nodesize=c(1,2))}
-  expect_doppelganger(title="Test-plotmap-3",fig=Test_plotmap_3)
+  vdiffr::expect_doppelganger(title="Test-plotmap-3",fig=Test_plotmap_3)
   
   #fix nodesize
   Test_plotmap_4<-function(){plotmap(cl1, nodesize=c(2,2))}
-  expect_doppelganger(title="Test-plotmap-4",fig=Test_plotmap_4)
+  vdiffr::expect_doppelganger(title="Test-plotmap-4",fig=Test_plotmap_4)
 })

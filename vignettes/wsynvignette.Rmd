@@ -1022,9 +1022,17 @@ d<-t(d)
 d<-cleandat(d,1:Tmax,1)$cdat
 ```
 
-These data have period-5 oscillations which are synchronous within location groups 1 and 2, but are asynchronous between these groups. Superimposed on the period-5 oscillations are period-12 oscillations which are synchronous within location groups A and B, but are asynchronous between these groups. Groups 1 and 2 are locations $1-10$ and $11-20$, respectively. Group A is locations $1-5$ and $11-15$. Group B is locations $6-10$ and $16-20$. So the spatial structure of period-5 oscillations differs from that of period-12 oscillations. Strong local noise is superimposed on top of the periodic oscillations.     
+These data have period-5 oscillations which are synchronous within location groups 1 and 2, but are 
+asynchronous between these groups. Superimposed on the period-5 oscillations are period-12 
+oscillations which are synchronous within location groups A and B, but are asynchronous between 
+these groups. Groups 1 and 2 are locations $1-10$ and $11-20$, respectively. Group A is locations 
+$1-5$ and $11-15$. Group B is locations $6-10$ and $16-20$. So the spatial structure of period-5 
+oscillations differs from that of period-12 oscillations. Strong local noise is superimposed on top 
+of the periodic oscillations.     
 
-We measure synchrony matrices using portions of the the cross-wavelet transform centered on periods 5, and 12 (in separate synchrony matrices), to detect the different structures on different timescales.
+We measure synchrony matrices using portions of the the cross-wavelet transform centered on periods 
+5, and 12 (in separate synchrony matrices), to detect the different structures on different 
+timescales.
 ```{r detect_tsspecific_sync}
 sm5<-synmat(dat=d,times=1:Tmax,method="ReXWT",tsrange=c(4,6))
 fields::image.plot(1:N,1:N,sm5,col=heat.colors(20))
@@ -1032,7 +1040,8 @@ sm12<-synmat(dat=d,times=1:Tmax,method="ReXWT",tsrange=c(11,13))
 fields::image.plot(1:N,1:N,sm12,col=heat.colors(20))
 ```
 
-This timescale-specific approach reveals the structure of the data better than a correlation approach. 
+This timescale-specific approach reveals the structure of the data better than a 
+correlation approach. 
 ```{r abuse_cor}
 sm<-synmat(dat=d,times=1:Tmax,method="pearson")
 fields::image.plot(1:N,1:N,sm,col=heat.colors(20))
@@ -1061,7 +1070,9 @@ coords<-data.frame(X=c(rep(1,10),rep(2,10)),Y=rep(c(1:5,7:11),times=2))
 #create clusters based on the 5-year timescale range and map them using coords
 cl5<-clust(dat=d,times=1:Tmax,coords=coords,method="ReXWT",tsrange=c(4,6))
 get_clusters(cl5) #the first element of the list is always all 1s - prior to any splits
+
 #call the mapper here
+plotmap(cl5)
 
 #plot mean time series for each module
 plot(get_times(cl5)[1:100],get_mns(cl5)[[2]][1,1:100],type='l',col='red',
@@ -1077,7 +1088,9 @@ plotmag(get_wmfs(cl5)[[2]][[2]])
 #create clusters based on the 12-year timescale range and map them using coords
 cl12<-clust(dat=d,times=1:Tmax,coords=coords,method="ReXWT",tsrange=c(11,13))
 cl12$clusters
+
 #call the mapper here
+plotmap(cl12)
 
 #plot mean time series for each module
 plot(get_times(cl12)[1:100],get_mns(cl12)[[2]][1,1:100],type='l',col='red',

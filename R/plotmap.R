@@ -15,6 +15,8 @@
 #' @return \code{plotmap} produces a map.
 #' 
 #' @export
+#' @importFrom graphics legend plot 
+#' @importFrom grDevices colorRampPalette pdf dev.off
 
 plotmap<-function(inclust, spltlvl=length(inclust$clusters), nodesize=c(1,3), filename=NA)
 {
@@ -72,10 +74,10 @@ plotmap<-function(inclust, spltlvl=length(inclust$clusters), nodesize=c(1,3), fi
   leg1<-legend(legx,legy1,legend=paste0("module ",1:max(unlist(inclust$clusters[spltlvl]))), pch=16, col=
            pal[1:max(unlist(inclust$clusters[spltlvl]))],title="Membership",bty="n")
   legy2<-legy1 - leg1$rect$h
-  labs=round(c(min(inclust$modres[[spltlvl]]$nodeQ,na.rm=T),
+  labs<-round(c(min(inclust$modres[[spltlvl]]$nodeQ,na.rm=T),
                mean(inclust$modres[[spltlvl]]$nodeQ,na.rm=T),
                max(inclust$modres[[spltlvl]]$nodeQ,na.rm=T)),digits=3)
-  sizes=c(min(nodecex),mean(nodecex),max(nodecex))
+  sizes<-c(min(nodecex),mean(nodecex),max(nodecex))
   leg2<-legend(legx,legy2,legend=labs,pt.cex=sizes,pch=1,title="Node weight",bty="n")
 
   par(mar=par.mar) #reset 'mar' graphics parameter
