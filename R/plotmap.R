@@ -30,15 +30,20 @@ plotmap<-function(inclust, spltlvl=length(inclust$clusters), nodesize=c(1,3), fi
   if(all(c("X","Y") %in% names(inclust$coords)))
   {
     coords<-data.frame(X=inclust$coords$X,Y=inclust$coords$Y)
-    
+    x_label<-"X"
+    y_label<-"Y"
   }
   if(all(c("lat","lon") %in% names(inclust$coords)))
   {
     coords<-data.frame(X=inclust$coords$lon,Y=inclust$coords$lat)
+    x_label<-"longitude"
+    y_label<-"latitude"
   }
   if(all(c("latitude","longitude") %in% names(inclust$coords)))
   {
     coords<-data.frame(X=inclust$coords$longitude,Y=inclust$coords$latitude)
+    x_label<-"longitude"
+    y_label<-"latitude"
   }
   
   #make color ramp --  this is Set1 from RColorBrewer
@@ -58,7 +63,8 @@ plotmap<-function(inclust, spltlvl=length(inclust$clusters), nodesize=c(1,3), fi
   membwgt<-membwgt/max(membwgt)
   nodecex<-membwgt*(nodesize[2]-nodesize[1]) + nodesize[1]
 
-  plot(coords[,1], coords[,2], pch=16, cex=nodecex, col=pal[unlist(inclust$clusters[spltlvl])])
+  plot(coords[,1], coords[,2], pch=16, cex=nodecex, col=pal[unlist(inclust$clusters[spltlvl])],
+       xlab=x_label,ylab=y_label)
 
   #add legends
   legx<-par('usr')[2] + 0.01*abs(diff(par('usr')[1:2]))
