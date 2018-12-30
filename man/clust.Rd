@@ -134,7 +134,8 @@ doi: 10.1111/ele.12782
 }
 \seealso{
 \code{\link{cluseigen}}, \code{\link{modularity}}, \code{\link{addwmfs}}, 
-\code{\link{addwpmfs}},\code{\link{clust_methods}}, \code{\link{synmat}}, \code{browseVignettes("wsyn")}
+\code{\link{addwpmfs}},\code{\link{clust_methods}}, \code{\link{synmat}}, \code{\link{plotmap}},
+\code{browseVignettes("wsyn")}
 }
 \author{
 Jonathan Walter, \email{jaw3es@virginia.edu}; Daniel Reuman, \email{reuman@ku.edu}; 
