@@ -20,6 +20,5 @@ an option for installing vignettes (build_vignettes=TRUE), but it seems
 finicky. You can also clone the repository and use devtools::install() 
 to install from your local clone. The build_vignettes=TRUE option seems 
 to work better for devtools::install than it does 
-for devtools::install_github. If you have trouble, please email me 
-with details, reuman@ku.edu.
+for devtools::install_github. If you have trouble, please email me.
 

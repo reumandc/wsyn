@@ -53,6 +53,9 @@ clustobj<-clust(dat,times,coords,method,nsurrogs = 100)
 res<-addwpmfs(clustobj)
 
 }
+\seealso{
+\code{\link{clust}}, \code{\link{addwmfs}}, \code{browseVignettes("wsyn")}
+}
 \author{
 Daniel Reuman, \email{reuman@ku.edu}
 }

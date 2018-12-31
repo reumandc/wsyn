@@ -70,20 +70,7 @@ res<-bandtest(res,c(2,4))
 res<-bandtest(res,c(8,12))
 plotrank(res)
   
-#For a wlmtest object, follows from above
-artsig_i<-matrix(rnorm(11*length(times)),11,length(times)) #the irrelevant
-artsig_i<-cleandat(artsig_i,times,1)$cdat
-dat<-list(driven=artsig_y,driver=artsig_x,irrelevant=artsig_i)
-resp<-1
-pred<-2:3
-norm<-"powall"
-wlmobj<-wlm(dat,times,resp,pred,norm)
-sigmethod<-"fft"
-nrand<-10
-res<-wlmtest(wlmobj,drop="driver",sigmethod,nrand=nrand)
-res<-bandtest(res,c(5,15))
-res<-bandtest(res,c(20,25))
-plotrank(res)
+#For a wlmtest object, see vignette
 
 }
 \references{

@@ -108,7 +108,7 @@ print(h)
 
 }
 \seealso{
-\code{\link{clust}}, \code{browseVignettes("wsyn")}
+\code{\link{clust}}
 }
 \author{
 Daniel Reuman, \email{reuman@ku.edu}

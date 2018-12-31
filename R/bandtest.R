@@ -53,18 +53,7 @@
 #'             f0=0.5,scale.max.input=28)
 #' cohobj<-bandtest(cohobj,c(2,4))
 #'   
-#' #Example for a wlmtest object
-#' artsig_i<-matrix(rnorm(11*length(times)),11,length(times)) #the irrelevant
-#' artsig_i<-cleandat(artsig_i,times,1)$cdat
-#' dat<-list(driven=artsig_y,driver=artsig_x,irrelevant=artsig_i)
-#' resp<-1
-#' pred<-2:3
-#' norm<-"powall"
-#' wlmobj<-wlm(dat,times,resp,pred,norm)
-#' sigmethod<-"fft"
-#' nrand<-5
-#' res_di<-wlmtest(wlmobj,drop="irrelevant",sigmethod,nrand=nrand)
-#' res_di<-bandtest(res_di,c(5,15))
+#' #Example for a wlmtest object - see vignette
 #'   
 #' @export 
 

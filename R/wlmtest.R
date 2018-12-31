@@ -62,7 +62,7 @@
 #' Moran effects on phytoplankton in British seas, In review.
 #'
 #' @seealso \code{\link{wlm}}, \code{\link{plotrank}}, \code{\link{bandtest}}, \code{\link{coh}}, 
-#' \code{\link{wlmtest_methods}}, \code{browseVignettes("wsyn")} 
+#' \code{\link{wlmtest_methods}}, \code{browseVignettes("wsyn")}
 #'
 #' @examples
 #' times<-1:30

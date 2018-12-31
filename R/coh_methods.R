@@ -16,7 +16,7 @@
 #'  
 #' @author Daniel Reuman, \email{reuman@@ku.edu}
 #' 
-#' @seealso \code{\link{coh}}, \code{browseVignettes("wsyn")}
+#' @seealso \code{\link{coh}}
 #' 
 #' @examples
 #' times<-1:100

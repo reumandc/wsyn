@@ -111,7 +111,7 @@ print(h)
 
 }
 \seealso{
-\code{\link{coh}}, \code{browseVignettes("wsyn")}
+\code{\link{coh}}
 }
 \author{
 Daniel Reuman, \email{reuman@ku.edu}

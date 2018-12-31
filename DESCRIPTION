@@ -1,11 +1,11 @@
 Package: wsyn
-Version: 0.1.0
+Version: 1.0.0
 Type: Package
 Title: Wavelet Approaches to Studies of Synchrony in Ecology and Other Fields
 Authors@R: c(
-    person("Daniel C.", "Reuman", email = "reuman@ku.edu", role = c("aut", "cre", "cph")),
+    person("Daniel C.", "Reuman", email = "reuman@ku.edu", role = c("aut", "cre")),
     person("Thomas L.", "Anderson", email="anderstl@gmail.com", role=c("aut")),
-    person("Jonathan", "Walter", email = "jaw3es@virginia.edu", role=c("aut")),
+    person("Jonathan A.", "Walter", email = "jaw3es@virginia.edu", role=c("aut")),
     person("Lei", "Zhao", email = "lei.zhao@cau.edu.cn", role=c("aut")),
     person("Lawrence W.", "Sheppard", email="lwsheppard@ku.edu", role=c("aut"))
     )
@@ -18,12 +18,12 @@ Imports:
     graphics (>= 3.4.4),
     grDevices (>= 3.4.4),
     MASS (>= 7.3-47),
-    mvtnorm (>= 1.0.0),
     stats (>= 3.4.4),
-    vdiffr (>= 0.2.3)
 Suggests: 
     knitr,
+    mvtnorm,
     rmarkdown,
-    testthat
+    testthat,
+    vdiffr
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1

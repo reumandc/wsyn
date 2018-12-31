@@ -13,7 +13,7 @@
 #' 
 #' @seealso \code{\link{tts_methods}}, \code{\link{wt_methods}}, \code{\link{wmf_methods}}, \code{\link{wpmf_methods}}, 
 #' \code{\link{coh_methods}}, \code{\link{wlm_methods}}, \code{\link{wlmtest_methods}}, \code{\link{clust_methods}},
-#' \code{browseVignettes("wsyn")} 
+#' \code{browseVignettes("wsyn")}
 #' 
 #' @examples 
 #' times<-1:10
