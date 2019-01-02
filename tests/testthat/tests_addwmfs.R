@@ -62,8 +62,7 @@ test_that("test it",{
   #plotmag(res$wmfs[[2]][[1]])
   #plotmag(wmf(dat[6:10,],times))
   
-  #the above pairs of plots were identical, so I commented and test for consistency 
-  #through time using a hash
-  #digest::digest(res)
-  expect_known_hash(res,"8d2ca911d8ed71147197cece1f4d1fa3")
+  #the above pairs of plots were visually identical, so I commented and test for 
+  #consistency through time 
+  expect_known_value(res$wmfs,file="../vals/addwmfs_testval_01",update=FALSE)
 })
