@@ -84,7 +84,6 @@ test_that("test",{
   #lines(res$timescales,res$interactions,col='orange')
   #looks good
   
-  #since the plots looked good, just test for the hash
-  #digest::digest(res)
-  expect_known_hash(res,"160eebdb7d0755f0ff0d2d583362460d")
+  #since the plots looked good, just test for consistency through time
+  expect_known_value(res,file="../vals/syncexpl_testval_01",update=FALSE)
 })

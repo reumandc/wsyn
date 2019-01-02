@@ -67,8 +67,7 @@ test_that("test for qualitatively correct output, quick signif method",{
   #        levels=unname(quantile(res$signif$magsumrndphas,.95)),axes=FALSE,drawlabels=FALSE,
   #        frame.plot=FALSE)
   #It looked good so I commented it out, now just check future runs are always the same.
-  #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="6fc0f363be0cb0e3b6a5703b7c27550c")   
+  expect_known_value(res,file="../vals/wpmf_testval_01",update=FALSE)
 })
 
 test_that("test for qualitatively correct output, fft signif method",{
@@ -106,8 +105,7 @@ test_that("test for qualitatively correct output, fft signif method",{
   #        levels=.95,axes=FALSE,drawlabels=FALSE,
   #        frame.plot=FALSE)
   #It looked good so I commented it out, now just check future runs are always the same.
-  #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="ea9da16eaa0fcaf883c5d06aea4925ee")
+  expect_known_value(res,file="../vals/wpmf_testval_02",update=FALSE)
 })
 
 test_that("test for qualitatively correct output, aaft signif method",{
@@ -146,6 +144,5 @@ test_that("test for qualitatively correct output, aaft signif method",{
   #        levels=.95,axes=FALSE,drawlabels=FALSE,
   #        frame.plot=FALSE)
   #It looked good so I commented it out, now just check future runs are always the same.
-  #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="94000ca7268a15e3ddfa9dac1dfd2ec0")
+  expect_known_value(res,file="../vals/wpmf_testval_03",update=FALSE)
 })

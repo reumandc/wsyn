@@ -51,7 +51,6 @@ test_that("test for qualitatively correct output",{
   #lines(c(1,100),log2(c(10,10)))
   #lines(c(1,100),log2(c(5,5)))
   #It looked good so I commented it out, now just check future runs are always the same.
-  #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="72ada5669cf0e62273a30c9deaa217fa")   
+  expect_known_value(res,file="../vals/wmf_testval_01",update=FALSE)
 })
 

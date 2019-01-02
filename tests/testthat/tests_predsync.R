@@ -85,6 +85,5 @@ test_that("do an example",{
   #lines(wmfpow$timescales,wmfpow$power,type='l')
   
   #all the above plots look fine, so...
-  #digest::digest(res)
-  expect_known_hash(res,"5559f0cda668479a5ec6733ce0de7276")
+  expect_known_value(res,file="../vals/predsync_testval_01",update=FALSE)
 })

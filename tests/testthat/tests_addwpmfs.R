@@ -63,11 +63,6 @@ test_that("test it",{
   #plotmag(wpmf(dat[6:10,],times,sigmethod="quick",nrand=1000))
   
   #the above pairs of plots were close enough to identical, so I commented and test for 
-  #consistency through time using a hash
-  #digest::digest(res)
-  #expect_known_hash(res,"970654301e160a8aa0097d1fa5259348")
-  
-  #the above pairs of plots were close enough to identical, so I commented and test for 
   #consistency through time 
   expect_known_value(res$wpmfs,file="../vals/addwpmfs_testval_01",update=FALSE)
 })

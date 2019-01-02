@@ -158,8 +158,7 @@ test_that("compare to a previous coherence example",{
   #  lines(log(1/res$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="450faf518892489ffeea82c080957eb3")   
+  expect_known_value(res,file="../vals/coh_testval_01",update=FALSE)
 })
 
 test_that("test for correct format of output, fast algorithm",{
@@ -373,8 +372,7 @@ test_that("compare to a previous coherence example, fast algorithm",{
   #  lines(log(1/res$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="0ef1798f505be063611e59fcaeacdca6")   
+  expect_known_value(res,file="../vals/coh_testval_02",update=FALSE)
   
   #now look at just the first time series to make sure things work
   #in that case
@@ -391,8 +389,7 @@ test_that("compare to a previous coherence example, fast algorithm",{
   #  lines(log(1/res$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="167f08dce962e5d072da033589f30131")  
+  expect_known_value(res,file="../vals/coh_testval_03",update=FALSE)
 })
 
 test_that("compare to a previous coherence example, fast algorithm, norm equals none",{
@@ -438,8 +435,7 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #  lines(log(1/res$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="c36cd8d1d749c9ebdafba1a48b508137")   
+  expect_known_value(res,file="../vals/coh_testval_04",update=FALSE)
   
   #now look at just the first time series to make sure things work
   #in that case
@@ -456,8 +452,7 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #  lines(log(1/res$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  #Hash below was obtained using digest::digest(res).
-  expect_known_hash(res,hash="ba572f2b01b76fe2abcecf11311f7a62")  
+  expect_known_value(res,file="../vals/coh_testval_05",update=FALSE)
 })
 
 test_that("compare to a previous coherence example, fast algorithm, norm equals powind",{
@@ -504,8 +499,7 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #  lines(log(1/res1$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  #Hash below was obtained using digest::digest(res1).
-  expect_known_hash(res1,hash="db8c3327f023802c4e272af3c895b44e")   
+  expect_known_value(res1,file="../vals/coh_testval_06",update=FALSE)
   
   #now look at just the first time series to make sure things work
   #in that case
@@ -522,8 +516,7 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #  lines(log(1/res2$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  #Hash below was obtained using digest::digest(res2).
-  expect_known_hash(res2,hash="127cfcb173a8cfa1ac9563522ca972b7")  
+  expect_known_value(res2,file="../vals/coh_testval_07",update=FALSE)
   
   #Now do a version like res1 but multiply the first time series (only) by 20.
   #Should give *exactly* the same result.
