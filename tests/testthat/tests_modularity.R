@@ -13,72 +13,84 @@ test_that("error checking",{
 })
 
 test_that("test against the igraph function - only tests the main result, not the decomp",{
-  gr<-igraph::make_graph(edges="Bull")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
+  #gr<-igraph::make_graph(edges="Bull")
+  #ma<-igraph::as_adj(gr,sparse=FALSE)
+  ma<-matrix(c(0,1,1,0,0,1,0,1,1,0,1,1,0,0,1,0,1,0,0,0,0,0,1,0,0),5,5)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res1<-modularity(ma,membership,decomp=FALSE)
-  resi<-igraph::modularity(gr,membership)
+  #resi<-igraph::modularity(gr,membership)
+  resi<-(-0.1)
   expect_equal(res1,resi)
   expect_true(res1<=1 && res1>=-1) #Because Gomez et al says modularity is the difference of
                                    #two probabilities
   
-  gr<-igraph::make_graph(edges="Chvatal")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
+  #gr<-igraph::make_graph(edges="Chvatal")
+  #ma<-igraph::as_adj(gr,sparse=FALSE)
+  ma<-matrix(c(0,0,0,0,0,0,1,0,0,1,1,1,0,0,1,0,0,1,0,1,0,0,1,0,0,1,0,0,0,0,1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,1,1,1,0,0,0,0,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,1,0,1,1,1,0,0,0,0,0,0,0),12,12)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res1<-modularity(ma,membership,decomp=FALSE)
-  resi<-igraph::modularity(gr,membership)
+  #resi<-igraph::modularity(gr,membership)
+  resi<-(-0.25)
   expect_equal(res1,resi)
   expect_true(res1<=1 && res1>=-1)
   
-  gr<-igraph::make_graph(edges="Coxeter")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
+  #gr<-igraph::make_graph(edges="Coxeter")
+  #ma<-igraph::as_adj(gr,sparse=FALSE)
+  ma<-matrix(c(0,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0),28,28)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res1<-modularity(ma,membership,decomp=FALSE)
-  resi<-igraph::modularity(gr,membership)
+  #resi<-igraph::modularity(gr,membership)
+  resi<-1/6
   expect_equal(res1,resi)
   expect_true(res1<=1 && res1>=-1)
   
-  gr<-igraph::make_graph(edges="Cubical")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
+  #gr<-igraph::make_graph(edges="Cubical")
+  #ma<-igraph::as_adj(gr,sparse=FALSE)
+  ma<-matrix(c(0,1,0,1,1,0,0,0,1,0,1,0,0,1,0,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0,0,1,1,0,0,0,0,1,0,1,0,1,0,0,1,0,1,0,0,0,1,0,0,1,0,1,0,0,0,1,1,0,1,0),8,8)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res1<-modularity(ma,membership,decomp=FALSE)
-  resi<-igraph::modularity(gr,membership)
+  #resi<-igraph::modularity(gr,membership)
+  resi<-1/6
   expect_equal(res1,resi)
   expect_true(res1<=1 && res1>=-1)
 })
 
 test_that("tests of the decomposition",{
   #test that the decomps add up to the total
-  gr<-igraph::make_graph(edges="Bull")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
+  #gr<-igraph::make_graph(edges="Bull")
+  #ma<-igraph::as_adj(gr,sparse=FALSE)
+  ma<-matrix(c(0,1,1,0,0,1,0,1,1,0,1,1,0,0,1,0,1,0,0,0,0,0,1,0,0),5,5)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res<-modularity(ma,membership,decomp=TRUE)
   expect_equal(res$totQ,sum(res$modQ))
   expect_equal(res$totQ,sum(res$nodeQ))
     
-  gr<-igraph::make_graph(edges="Chvatal")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
+  #gr<-igraph::make_graph(edges="Chvatal")
+  #ma<-igraph::as_adj(gr,sparse=FALSE)
+  ma<-matrix(c(0,0,0,0,0,0,1,0,0,1,1,1,0,0,1,0,0,1,0,1,0,0,1,0,0,1,0,0,0,0,1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,1,1,1,0,0,0,0,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,1,0,1,1,1,0,0,0,0,0,0,0),12,12)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res<-modularity(ma,membership,decomp=TRUE)
   expect_equal(res$totQ,sum(res$modQ))
   expect_equal(res$totQ,sum(res$nodeQ))
 
-  gr<-igraph::make_graph(edges="Coxeter")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
+  #gr<-igraph::make_graph(edges="Coxeter")
+  #ma<-igraph::as_adj(gr,sparse=FALSE)
+  ma<-matrix(c(0,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0),28,28)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res<-modularity(ma,membership,decomp=TRUE)
   expect_equal(res$totQ,sum(res$modQ))
   expect_equal(res$totQ,sum(res$nodeQ))
 
-  gr<-igraph::make_graph(edges="Cubical")
-  ma<-igraph::as_adj(gr,sparse=FALSE)
+  #gr<-igraph::make_graph(edges="Cubical")
+  #ma<-igraph::as_adj(gr,sparse=FALSE)
+  ma<-matrix(c(0,1,0,1,1,0,0,0,1,0,1,0,0,1,0,0,0,1,0,1,0,0,1,0,1,0,1,0,0,0,0,1,1,0,0,0,0,1,0,1,0,1,0,0,1,0,1,0,0,0,1,0,0,1,0,1,0,0,0,1,1,0,1,0),8,8)
   n<-dim(ma)[1]
   membership<-c(rep(1,floor(n/2)),rep(2,ceiling(n/2)))
   res<-modularity(ma,membership,decomp=TRUE)

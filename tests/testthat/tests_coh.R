@@ -357,12 +357,12 @@ test_that("compare to a previous coherence example, fast algorithm",{
   
   res<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powall",sigmethod="fast",nrand=1000,
            f0=0.5,scale.max.input=28)
+  qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
   #res_new<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powall",sigmethod="fast_new",nrand=1000,
   #             f0=0.5,scale.max.input=28)
   
   #Make a plot to check visually. Expected to look like panel panel g of supp fig 5 in the 
   #reference cited above in some respects 
-  #qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
   #plot(log(1/res$timescales),Mod(res$coher),type="l",lty="dashed",xaxt="n",col="red",
   #     ylim=range(Mod(res$coher),Mod(res$signif$coher),qs))
   #axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
@@ -372,14 +372,18 @@ test_that("compare to a previous coherence example, fast algorithm",{
   #  lines(log(1/res$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  expect_known_value(res,file="../vals/coh_testval_02",update=FALSE)
+  rescut<-res
+  rescut$signif<-NULL #expect_known_values saves an external file and I don't want it to be
+  #too big, so remove this part of the result and just use qs to check for consistency of that 
+  #part
+  expect_known_value(list(rescut,qs),file="../vals/coh_testval_02",update=FALSE)
   
   #now look at just the first time series to make sure things work
   #in that case
   res<-coh(dat1=artsig_x[2,],dat2=artsig_y[2,],times=times,norm="powall",sigmethod="fast",nrand=1000,
            f0=0.5,scale.max.input=28)
+  qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
   #make a plot
-  #qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
   #plot(log(1/res$timescales),Mod(res$coher),type="l",lty="dashed",xaxt="n",col="red",
   #     ylim=range(Mod(res$coher),Mod(res$signif$coher),qs))
   #axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
@@ -389,7 +393,11 @@ test_that("compare to a previous coherence example, fast algorithm",{
   #  lines(log(1/res$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  expect_known_value(res,file="../vals/coh_testval_03",update=FALSE)
+  rescut<-res
+  rescut$signif<-NULL #expect_known_values saves an external file and I don't want it to be
+  #too big, so remove this part of the result and just use qs to check for consistency of that 
+  #part
+  expect_known_value(list(rescut,qs),file="../vals/coh_testval_03",update=FALSE)
 })
 
 test_that("compare to a previous coherence example, fast algorithm, norm equals none",{
@@ -422,10 +430,10 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   
   res<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="none",sigmethod="fast",nrand=1000,
            f0=0.5,scale.max.input=28)
+  qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
   
   #Make a plot to check visually. Expected to look like panel panel g of supp fig 5 in the 
   #reference cited above in some respects 
-  #qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
   #plot(log(1/res$timescales),Mod(res$coher),type="l",lty="dashed",xaxt="n",col="red",
   #     ylim=range(Mod(res$coher),Mod(res$signif$coher),qs))
   #axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
@@ -435,14 +443,18 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #  lines(log(1/res$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  expect_known_value(res,file="../vals/coh_testval_04",update=FALSE)
+  rescut<-res
+  rescut$signif<-NULL #expect_known_values saves an external file and I don't want it to be
+  #too big, so remove this part of the result and just use qs to check for consistency of that 
+  #part
+  expect_known_value(list(rescut,qs),file="../vals/coh_testval_04",update=FALSE)
   
   #now look at just the first time series to make sure things work
   #in that case
   res<-coh(dat1=artsig_x[2,],dat2=artsig_y[2,],times=times,norm="none",sigmethod="fast",nrand=1000,
            f0=0.5,scale.max.input=28)
+  qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
   #make a plot
-  #qs<-apply(X=Mod(res$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
   #plot(log(1/res$timescales),Mod(res$coher),type="l",lty="dashed",xaxt="n",col="red",
   #     ylim=range(Mod(res$coher),Mod(res$signif$coher),qs))
   #axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
@@ -452,7 +464,11 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #  lines(log(1/res$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  expect_known_value(res,file="../vals/coh_testval_05",update=FALSE)
+  rescut<-res
+  rescut$signif<-NULL #expect_known_values saves an external file and I don't want it to be
+  #too big, so remove this part of the result and just use qs to check for consistency of that 
+  #part  
+  expect_known_value(list(rescut,qs),file="../vals/coh_testval_05",update=FALSE)
 })
 
 test_that("compare to a previous coherence example, fast algorithm, norm equals powind",{
@@ -486,10 +502,10 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   set.seed(201)
   res1<-coh(dat1=artsig_x,dat2=artsig_y,times=times,norm="powind",sigmethod="fast",nrand=1000,
            f0=0.5,scale.max.input=28)
+  qs<-apply(X=Mod(res1$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
   
   #Make a plot to check visually. Expected to look like panel panel g of supp fig 5 in the 
   #reference cited above in some respects 
-  #qs<-apply(X=Mod(res1$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
   #plot(log(1/res1$timescales),Mod(res1$coher),type="l",lty="dashed",xaxt="n",col="red",
   #     ylim=range(Mod(res1$coher),Mod(res1$signif$coher),qs))
   #axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
@@ -499,14 +515,18 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #  lines(log(1/res1$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  expect_known_value(res1,file="../vals/coh_testval_06",update=FALSE)
+  rescut<-res1
+  rescut$signif<-NULL #expect_known_values saves an external file and I don't want it to be
+  #too big, so remove this part of the result and just use qs to check for consistency of that 
+  #part    
+  expect_known_value(list(rescut,qs),file="../vals/coh_testval_06",update=FALSE)
   
   #now look at just the first time series to make sure things work
   #in that case
   res2<-coh(dat1=artsig_x[2,],dat2=artsig_y[2,],times=times,norm="powind",sigmethod="fast",nrand=1000,
            f0=0.5,scale.max.input=28)
+  qs<-apply(X=Mod(res2$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
   #make a plot
-  #qs<-apply(X=Mod(res2$signif$scoher),FUN=quantile,MARGIN=2,prob=c(.01,.5,.95,.99))
   #plot(log(1/res2$timescales),Mod(res2$coher),type="l",lty="dashed",xaxt="n",col="red",
   #     ylim=range(Mod(res2$coher),Mod(res2$signif$coher),qs))
   #axis(side=1,at=log(1/c(2,5,10,20)),labels=c(2,5,10,20))
@@ -516,7 +536,11 @@ test_that("compare to a previous coherence example, fast algorithm, norm equals 
   #  lines(log(1/res2$timescales),qs[counter,])
   #}
   #It looked good so I commented it out, now just check future runs are always the same.
-  expect_known_value(res2,file="../vals/coh_testval_07",update=FALSE)
+  rescut<-res2
+  rescut$signif<-NULL #expect_known_values saves an external file and I don't want it to be
+  #too big, so remove this part of the result and just use qs to check for consistency of that 
+  #part    
+  expect_known_value(list(rescut,qs),file="../vals/coh_testval_07",update=FALSE)
   
   #Now do a version like res1 but multiply the first time series (only) by 20.
   #Should give *exactly* the same result.

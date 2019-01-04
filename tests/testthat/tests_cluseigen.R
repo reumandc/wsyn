@@ -24,7 +24,13 @@ test_that("test on a simple disconnected example",{
   expect_equal(class(res),"list")
   expect_equal(length(res),2)
   expect_equal(res[[1]],rep(1,4))
-  expect_equal(res[[2]],c(1,1,2,2))
+  
+  #check the clustering is the same except for possible cluster relabeling,
+  #i.e., check that d defines a bijective map from the cluster labels
+  #d$x to the cluster labels d$y
+  d<-data.frame(x=c(1,1,2,2),y=res[[2]]) 
+  expect_equal(length(unique(d$y)),2) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],2) #check it's a well-defined map
 })
 
 test_that("test on a simple example where there should be two splits",{
@@ -39,62 +45,23 @@ test_that("test on a simple example where there should be two splits",{
   res<-cluseigen(adj)
   expect_equal(length(res),4)
   expect_equal(res[[1]],rep(1,8))
-  expect_equal(res[[2]],c(rep(2,4),rep(1,4)))
-  expect_equal(res[[4]],c(4,4,3,3,2,2,1,1))
+  
+  #expect_equal(res[[2]],c(rep(2,4),rep(1,4)))
+  #check the clustering is the same except for possible cluster relabeling,
+  #i.e., check that d defines a bijective map from the cluster labels
+  #d$x to the cluster labels d$y
+  d<-data.frame(x=c(rep(2,4),rep(1,4)),y=res[[2]]) 
+  expect_equal(length(unique(d$y)),2) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],2) #check it's a well-defined map
+  
+  #expect_equal(res[[4]],c(4,4,3,3,2,2,1,1))
+  #check the clustering is the same except for possible cluster relabeling,
+  #i.e., check that d defines a bijective map from the cluster labels
+  #d$x to the cluster labels d$y
+  d<-data.frame(x=c(4,4,3,3,2,2,1,1),y=res[[4]]) 
+  expect_equal(length(unique(d$y)),4) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],4) #check it's a well-defined map
 })
-
-#test_that("test for accuracy against the igraph function in some cases that function applies",{
-#  gr<-igraph::make_graph(edges="Bull")
-#  ma<-igraph::as_adj(gr,sparse=FALSE)
-#  res<-cluseigen(ma)
-#  ires<-igraph::cluster_leading_eigen(gr)
-#  expect_equal(res[[length(res)]],ires$membership) #currently there is disagreement
-#  modularity(ma,res[[length(res)]]) 
-#  modularity(ma,ires$membership) #same modularity
-#  
-#  gr<-igraph::make_graph(edges="Chvatal")
-#  ma<-igraph::as_adj(gr,sparse=FALSE)
-#  res<-cluseigen(ma)
-#  ires<-igraph::cluster_leading_eigen(gr)
-#  h<-res[[length(res)]]
-#  hnew<-h
-#  hnew[h==1]<-2
-#  hnew[h==2]<-1 #reverse edge names, since they are arbitrary anyway
-#  expect_equal(hnew,ires$membership) 
-#  
-#  gr<-igraph::make_graph(edges="Coxeter")
-#  ma<-igraph::as_adj(gr,sparse=FALSE)
-#  res<-cluseigen(ma)
-#  ires<-igraph::cluster_leading_eigen(gr)
-#  expect_equal(res[[length(res)]],ires$membership) #currently major disagreement
-#  modularity(ma,res[[length(res)]]) #this is higher, so cluseigen is actually doing better
-#  modularity(ma,ires$membership)
-#  
-#  gr<-igraph::make_graph(edges="Cubical")
-#  ma<-igraph::as_adj(gr,sparse=FALSE)
-#  res<-cluseigen(ma)
-#  ires<-igraph::cluster_leading_eigen(gr)
-#  expect_equal(res[[length(res)]],ires$membership) 
-#  
-#  gr<-igraph::make_graph(edges="Dodecahedral")
-#  ma<-igraph::as_adj(gr,sparse=FALSE)
-#  res<-cluseigen(ma)
-#  ires<-igraph::cluster_leading_eigen(gr)
-#  expect_equal(res[[length(res)]],ires$membership) #currently major disagreement
-#  modularity(ma,res[[length(res)]]) #this is higher, so cluseigen is actually doing better
-#  modularity(ma,ires$membership)
-#  
-#  gr<-igraph::make_graph(edges="Franklin")
-#  ma<-igraph::as_adj(gr,sparse=FALSE)
-#  res<-cluseigen(ma)
-#  ires<-igraph::cluster_leading_eigen(gr)
-#  expect_equal(res[[length(res)]],ires$membership) #currently major disagreement
-#  modularity(ma,res[[length(res)]]) #this is higher, so cluseigen is actually doing better
-#  modularity(ma,ires$membership)
-#  
-#  #so it could be the cluseigen function that is faulty. So comment this whole
-#  #test suite out and instead test cluseigen by hand
-#})
 
 test_that("unweighted, by-hand checks",{
   #code written by Lei, tests by Dan
@@ -112,7 +79,10 @@ test_that("unweighted, by-hand checks",{
   B<-A-P
   es<-eigen(B,symmetric=TRUE)
   res<-cluseigen(A)
-  expect_equal(res[[2]],-1*sign(es$vectors[,1])/2+1.5)
+  #check the clustering is the same except for possible cluster relabeling
+  d<-data.frame(x=-1*sign(es$vectors[,1])/2+1.5,y=res[[2]]) 
+  expect_equal(length(unique(d$y)),2) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],2) #check it's a well-defined map
   
   #more complex one
   set.seed(302)
@@ -128,8 +98,12 @@ test_that("unweighted, by-hand checks",{
   res<-cluseigen(A)
   #res[[2]]
   #sign(es$vectors[,1])
-  expect_equal(res[[2]],sign(es$vectors[,1])/2+1.5)
-
+  #expect_equal(res[[2]],sign(es$vectors[,1])/2+1.5)
+  #check the clustering is the same except for possible cluster relabeling
+  d<-data.frame(x=sign(es$vectors[,1])/2+1.5,y=res[[2]]) 
+  expect_equal(length(unique(d$y)),2) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],2) #check it's a well-defined map
+  
   #check the subsequent splitting
   gp1inds<-which(res[[2]]==1)
   Bg1<-B[gp1inds,gp1inds]
@@ -157,7 +131,11 @@ test_that("unweighted, by-hand checks",{
   res<-cluseigen(A)
   #res[[2]]
   #sign(es$vectors[,1])
-  expect_equal(res[[2]],sign(es$vectors[,1])/2+1.5)  
+  #expect_equal(res[[2]],sign(es$vectors[,1])/2+1.5)  
+  #check the clustering is the same except for possible cluster relabeling
+  d<-data.frame(x=sign(es$vectors[,1])/2+1.5,y=res[[2]]) 
+  expect_equal(length(unique(d$y)),2) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],2) #check it's a well-defined map
   
   #do a bigger one
   set.seed(101)
@@ -175,7 +153,11 @@ test_that("unweighted, by-hand checks",{
   #rbind(res[[2]],h)
   h[h==1]<-2
   h[h==-1]<-1
-  expect_equal(res[[2]],h)  
+  #expect_equal(res[[2]],h)  
+  #check the clustering is the same except for possible cluster relabeling
+  d<-data.frame(x=h,y=res[[2]]) 
+  expect_equal(length(unique(d$y)),2) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],2) #check it's a well-defined map
   
   #check the subsequent splitting
   gp1inds<-which(res[[2]]==1)
@@ -215,7 +197,11 @@ test_that("positive weights, by-hand checks",{
   #sign(es$vectors[,1])
   h<-sign(es$vectors[,1])
   h[h==-1]<-2
-  expect_equal(res[[2]],h)  
+  #expect_equal(res[[2]],h)  
+  #check the clustering is the same except for possible cluster relabeling
+  d<-data.frame(x=h,y=res[[2]]) 
+  expect_equal(length(unique(d$y)),length(unique(d$x))) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],length(unique(d$x))) #check it's a well-defined map
   
   #check subsequent splits
   gp1inds<-which(res[[2]]==1)
@@ -259,7 +245,11 @@ test_that("positive and negative weights, by-hand checks",{
   h<-sign(es$vectors[,1])
   h[h==1]<-2
   h[h==-1]<-1
-  expect_equal(res[[2]],h)  
+  #expect_equal(res[[2]],h)  
+  #check the clustering is the same except for possible cluster relabeling
+  d<-data.frame(x=h,y=res[[2]]) 
+  expect_equal(length(unique(d$y)),length(unique(d$x))) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],length(unique(d$x))) #check it's a well-defined map
   
   #do the next split
   gp1inds<-which(res[[2]]==1)
