@@ -225,5 +225,11 @@ fastcohtest<-function(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnum
     res<-list(timescales=s2/f0,coher=altcoh.norm,scoher=surrcoh.norm)  
   }
   
+  #The algorithm above was developed by Lawrence Sheppard, using a Lancaster
+  #convention for phase that is opposite the ordinary convention. So switch
+  #phase, for phase consistency with coherence calculated in the usual way
+  res$coher<-Conj(res$coher)
+  res$scoher<-Conj(res$scoher)
+  
   return(res)    
 }
