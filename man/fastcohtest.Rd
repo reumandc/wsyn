@@ -5,12 +5,12 @@
 \title{Fast algorithm for significance testing coherence using Fourier surrogates}
 \usage{
 fastcohtest(dat1, dat2, scale.min, scale.max.input, sigma, f0, nrand, randnums,
-  norm)
+  randbits, norm)
 }
 \arguments{
 \item{dat1}{A locations (rows) x time (columns) matrix (for spatial coherence), or a single time series}
 
-\item{dat2}{Same format as dat1, same locations and times}
+\item{dat2}{Same format as \code{dat1}, same locations and times}
 
 \item{scale.min}{The smallest scale of fluctuation that will be examined. At least 2.}
 
@@ -20,10 +20,14 @@ fastcohtest(dat1, dat2, scale.min, scale.max.input, sigma, f0, nrand, randnums,
 
 \item{f0}{The ratio of the period of fluctuation to the width of the envelope}
 
-\item{nrand}{Number of surrogate randomizations to use for significance testing.}
+\item{nrand}{Number of surrogate randomizations to use for significance testing}
 
 \item{randnums}{A bunch of independent random numbers uniformly distributed on (0,1).
-There must be nrand*floor((dim(dat1)[2]-1)/2) of these.}
+There must be \code{nrand*floor((dim(dat1)[2]-1)/2)} of these.}
+
+\item{randbits}{A bunch of random bits (0 or 1). There must be \code{nrand} of these if time
+series are of odd length and \code{2*nrand} if even length. You may pass more than this, so,
+in particular, you may pass \code{2*nrand} for even or odd length.}
 
 \item{norm}{The normalization of wavelet transforms to use. Controls the version of the 
 coherence that is performed. One of "none", "powall", "powind". See details in

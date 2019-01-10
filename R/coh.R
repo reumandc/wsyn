@@ -203,7 +203,14 @@ coh<-function(dat1,dat2,times,norm,sigmethod="none",nrand=1000,scale.min=2,scale
   if (sigmethod=="fast")
   {
     randnums<-runif(nrand*floor((ncol(dat1)-1)/2))
-    fcres<-fastcohtest(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnums,norm)
+    if (dim(dat1)[2] %% 2 == 0)
+    {
+      randbits<-sample.int(2,2*nrand,replace=TRUE)-1
+    }else
+    {
+      randbits<-sample.int(2,nrand,replace=TRUE)-1
+    }
+    fcres<-fastcohtest(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnums,randbits,norm)
     signif<-list(coher=fcres$coher,scoher=fcres$scoher)
     
     #prepare result  

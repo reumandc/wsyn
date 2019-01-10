@@ -281,13 +281,20 @@ synmat<-function(dat,times,method,tsrange=c(0,Inf),nsurrogs=1000,
     
     mat<-matrix(NA,nlocs,nlocs) 
     randnums<-runif(nsurrogs*floor((dim(dat)[2]-1)/2))
+    if (dim(dat)[2] %% 2 == 0)
+    {
+      randbits<-sample.int(2,2*nsurrogs,replace=TRUE)-1
+    }else
+    {
+      randbits<-sample.int(2,nsurrogs,replace=TRUE)-1
+    }
     for (i in 2:nlocs)
     {
       for (j in 1:(i-1))
       {
         h<-fastcohtest(dat[i,],dat[j,],
                     scale.min,scale.max.input,sigma,f0,
-                    nsurrogs,randnums,"powind")
+                    nsurrogs,randnums,randbits,"powind")
         x<-f(h$coher[h$timescales >= tsrange[1] & h$timescales <= tsrange[2]])
         sx<-f(h$scoher[,h$timescales >= tsrange[1] & h$timescales <= tsrange[2],drop=F])
         

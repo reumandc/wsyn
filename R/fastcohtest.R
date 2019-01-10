@@ -3,14 +3,17 @@
 #' This is the algorithm of Sheppard et al. (2017) (see references). 
 #'
 #' @param dat1 A locations (rows) x time (columns) matrix (for spatial coherence), or a single time series 
-#' @param dat2 Same format as dat1, same locations and times
+#' @param dat2 Same format as \code{dat1}, same locations and times
 #' @param scale.min The smallest scale of fluctuation that will be examined. At least 2.
 #' @param scale.max.input The largest scale of fluctuation guaranteed to be examined
 #' @param sigma The ratio of each time scale examined relative to the next timescale. Should be greater than 1.
 #' @param f0 The ratio of the period of fluctuation to the width of the envelope
-#' @param nrand Number of surrogate randomizations to use for significance testing.
+#' @param nrand Number of surrogate randomizations to use for significance testing
 #' @param randnums A bunch of independent random numbers uniformly distributed on (0,1).
-#' There must be nrand*floor((dim(dat1)[2]-1)/2) of these. 
+#' There must be \code{nrand*floor((dim(dat1)[2]-1)/2)} of these. 
+#' @param randbits A bunch of random bits (0 or 1). There must be \code{nrand} of these if time
+#' series are of odd length and \code{2*nrand} if even length. You may pass more than this, so,
+#' in particular, you may pass \code{2*nrand} for even or odd length.
 #' @param norm The normalization of wavelet transforms to use. Controls the version of the 
 #' coherence that is performed. One of "none", "powall", "powind". See details in
 #' the documentation of \code{coh}.
@@ -32,7 +35,7 @@
 #' 
 #' @importFrom stats fft
 
-fastcohtest<-function(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnums,norm)
+fastcohtest<-function(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnums,randbits,norm)
 {
   #deal with vector datasets
   if (!is.matrix(dat1))
@@ -65,17 +68,29 @@ fastcohtest<-function(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnum
   {
     stop("Error in fastcohtest: randnums must be between 0 and 1")
   }
+  if (length(randbits)<nrand)
+  {
+    stop("Error in fastcohtest: randbits not long enough")
+  }
+  if ((length(randbits)<2*nrand) && (dim(dat1)[2] %% 2 == 0))
+  {
+    stop("Error in fastcohtest: randbits not long enough")
+  }
+  if (!(all(randbits %in% c(0,1))))
+  {
+    stop("Error in fastcohtest: randbits can only contain 0s and 1s")
+  }
   
   #Generate random phases for surrogates with correct symmetry properties 
   rrr<-2*pi*(matrix(randnums,nrow=nrand,ncol=floor((tt-1)/2))-0.5)
   if(tt%%2==0)
   { # timeseries has even length
-    ts1surrang<-cbind(pi*(sample.int(2,nrand,replace=T)-1),rrr,
-                      pi*(sample.int(2,nrand,replace=T)-1),-rrr[,ncol(rrr):1])
+    ts1surrang<-cbind(pi*(randbits[1:nrand]),rrr,
+                      pi*(randbits[(nrand+1):(2*nrand)]),-rrr[,ncol(rrr):1])
   }
   if(tt%%2!=0)
   { # timeseries has odd length
-    ts1surrang<-cbind(pi*(sample.int(2,nrand,replace=T)-1),rrr,-rrr[,ncol(rrr):1])
+    ts1surrang<-cbind(pi*(randbits[1:nrand]),rrr,-rrr[,ncol(rrr):1])
   }
   
   if ((norm %in% c("powall","none")) || (norm=="powind" && n==1))
