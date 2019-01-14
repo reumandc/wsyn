@@ -25,12 +25,11 @@
 #' 
 #' @details For \code{coh} (respectively, \code{wlmtest}) objects, the modulus of 
 #' object$coher (respectively, object$wlmobj$coher) is plotted using a solid red line, and 
-#' the modulus of object$signif$coher is plotted using a dashed red line. The two coherences agree except
-#' for \code{sigmethod="fast"}, for which they are close. The dashed line is what should be
-#' compared to the distribution of surrogate coherences (black lines, which only appear for 
-#' \code{coh} objects if \code{signif} is 
-#' not \code{NA}). Horizontal axis ticks are labeled as timescales, but are spaced on the 
-#' axis as log(1/timescale), i.e., log frequencies.
+#' the modulus of object$signif$coher is plotted using a dashed red line. The two coherences 
+#' agree except for \code{sigmethod="fast"}, for which they are close. The dashed line is what 
+#' should be compared to the distribution of surrogate coherences (black lines, which only appear 
+#' for \code{coh} objects if \code{signif} is not \code{NA}). Horizontal axis ticks are labeled 
+#' as timescales, but are spaced on the axis as log(1/timescale), i.e., log frequencies.
 #' 
 #' @author Thomas Anderson, \email{anderstl@@gmail.com}, Jon Walter, \email{jaw3es@@virginia.edu}; Lawrence 
 #' Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}
