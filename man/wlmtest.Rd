@@ -83,7 +83,7 @@ Sheppard, L.W., et al. (2017) Rapid surrogate testing of wavelet coherences. Eur
 Journal, Nonlinear and Biomedical Physics, 5, 1. DOI: 10.1051/epjnbp/2017000
 
 Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
-Moran effects on phytoplankton in British seas, In review.
+Moran effects on phytoplankton in British seas. Plos Computational Biology. In press.
 }
 \seealso{
 \code{\link{wlm}}, \code{\link{plotrank}}, \code{\link{bandtest}}, \code{\link{coh}}, 

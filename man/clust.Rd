@@ -131,6 +131,11 @@ res<-clust(dat,times,coords,method,nsurrogs = 50)
 \references{
 Walter, J. A., et al. (2017) The geography of spatial synchrony. Ecology Letters. 
 doi: 10.1111/ele.12782
+
+Newman M.E.J. (2006). Finding community structure in networks using the eigenvectors of 
+matrices. Phys Rev E, 74, 036104.
+
+Newman M.E.J. (2006) Modularity and community structure in networks. PNAS 103, 8577-8582.
 }
 \seealso{
 \code{\link{cluseigen}}, \code{\link{modularity}}, \code{\link{addwmfs}}, 

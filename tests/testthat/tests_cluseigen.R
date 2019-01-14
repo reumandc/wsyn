@@ -78,12 +78,15 @@ test_that("unweighted, by-hand checks",{
   P<-matrix(k,length(k),1) %*% matrix(k,1,length(k))/(2*m)
   B<-A-P
   es<-eigen(B,symmetric=TRUE)
+  h<-sign(es$vectors[,1])
   res<-cluseigen(A)
   #check the clustering is the same except for possible cluster relabeling
-  d<-data.frame(x=-1*sign(es$vectors[,1])/2+1.5,y=res[[2]]) 
+  d<-data.frame(x=h,y=res[[2]]) 
   expect_equal(length(unique(d$y)),2) #so check it's the same number of clusters 
   expect_equal(dim(unique(d))[1],2) #check it's a well-defined map
-  
+  #make sure the modularity went up, or the split should not have been adopted
+  expect_gt(matrix(h,1,length(h)) %*% B %*% matrix(h,length(h),1),0)
+
   #more complex one
   set.seed(302)
   A<-matrix(runif(100),10,10)/2
@@ -95,28 +98,46 @@ test_that("unweighted, by-hand checks",{
   P<-matrix(k,length(k),1) %*% matrix(k,1,length(k))/(2*m)
   B<-A-P
   es<-eigen(B,symmetric=TRUE)
+  h<-sign(es$vectors[,1])
   res<-cluseigen(A)
-  #res[[2]]
-  #sign(es$vectors[,1])
-  #expect_equal(res[[2]],sign(es$vectors[,1])/2+1.5)
   #check the clustering is the same except for possible cluster relabeling
-  d<-data.frame(x=sign(es$vectors[,1])/2+1.5,y=res[[2]]) 
+  d<-data.frame(x=h,y=res[[2]]) 
   expect_equal(length(unique(d$y)),2) #so check it's the same number of clusters 
   expect_equal(dim(unique(d))[1],2) #check it's a well-defined map
-  
+  #make sure the modularity went up, or the split should not have been adopted
+  expect_gt(matrix(h,1,length(h)) %*% B %*% matrix(h,length(h),1),0)
+
+  #possible relabeling - for platform independence, since it seems
+  #to depend on platform the labelling that was used, 1 and 2 
+  #versus 2 and 1 for the two groups after the first split
+  num1<-sum(res[[2]]==1)
+  gp<-res[[2]]
+  if (num1==6)
+  {
+    gp[gp==1]<-3
+    gp[gp==2]<-1
+    gp[gp==3]<-2
+  }
+    
   #check the subsequent splitting
-  gp1inds<-which(res[[2]]==1)
+  gp1inds<-which(gp==1)
   Bg1<-B[gp1inds,gp1inds]
   diag(Bg1)<-diag(Bg1)-rowSums(Bg1)
   es1<-eigen(Bg1,symmetric=TRUE)
-  expect_equal(es1$vectors[,1]<0,rep(TRUE,4))
-  
-  gp2inds<-which(res[[2]]==2)
+  expect_equal(es1$values[1],0) #no further split to this group
+
+  gp2inds<-which(gp==2)
   Bg2<-B[gp2inds,gp2inds]
   diag(Bg2)<-diag(Bg2)-rowSums(Bg2)
   es2<-eigen(Bg2,symmetric=TRUE)
-  expect_equal(sign(es2$vectors[,1]),c(-1,-1,-1,1,1,-1))
-  
+  h<-sign(es2$vectors[,1])
+  #check the clustering is the same except for possible cluster relabeling
+  d<-data.frame(x=h,y=res[[3]][gp2inds]) 
+  expect_equal(length(unique(d$y)),2) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],2) #check it's a well-defined map
+  #make sure the modularity went up, or the split should not have been adopted
+  expect_gt(matrix(h,1,length(h)) %*% Bg2 %*% matrix(h,length(h),1),0)
+
   #another
   set.seed(202)
   A<-matrix(runif(100),10,10)/2
@@ -129,14 +150,14 @@ test_that("unweighted, by-hand checks",{
   B<-A-P
   es<-eigen(B,symmetric=TRUE)
   res<-cluseigen(A)
-  #res[[2]]
-  #sign(es$vectors[,1])
-  #expect_equal(res[[2]],sign(es$vectors[,1])/2+1.5)  
   #check the clustering is the same except for possible cluster relabeling
-  d<-data.frame(x=sign(es$vectors[,1])/2+1.5,y=res[[2]]) 
+  d<-data.frame(x=sign(es$vectors[,1]),y=res[[2]]) 
   expect_equal(length(unique(d$y)),2) #so check it's the same number of clusters 
   expect_equal(dim(unique(d))[1],2) #check it's a well-defined map
-  
+  #make sure the modularity went up, or the split should not have been adopted
+  h<-sign(es$vectors[,1])
+  expect_gt(matrix(h,1,length(h)) %*% B %*% matrix(h,length(h),1),0)
+
   #do a bigger one
   set.seed(101)
   A<-matrix(runif(2500),50,50)/2
@@ -150,36 +171,46 @@ test_that("unweighted, by-hand checks",{
   es<-eigen(B,symmetric=TRUE)
   res<-cluseigen(A)
   h<-sign(es$vectors[,1])
-  #rbind(res[[2]],h)
-  h[h==1]<-2
-  h[h==-1]<-1
-  #expect_equal(res[[2]],h)  
   #check the clustering is the same except for possible cluster relabeling
   d<-data.frame(x=h,y=res[[2]]) 
   expect_equal(length(unique(d$y)),2) #so check it's the same number of clusters 
   expect_equal(dim(unique(d))[1],2) #check it's a well-defined map
+  #make sure the modularity went up, or the split should not have been adopted
+  expect_gt(matrix(h,1,length(h)) %*% B %*% matrix(h,length(h),1),0)
+
+  #possible relabeling - for platform independence, since it seems
+  #to depend on platform the labelling that was used, 1 and 2 
+  #versus 2 and 1 for the two groups
+  num1<-sum(res[[2]]==1)
+  gp<-res[[2]]
+  if (num1==23)
+  {
+    gp[gp==1]<-3
+    gp[gp==2]<-1
+    gp[gp==3]<-2
+  }
   
   #check the subsequent splitting
-  gp1inds<-which(res[[2]]==1)
+  gp1inds<-which(gp==1)
   Bg1<-B[gp1inds,gp1inds]
   diag(Bg1)<-diag(Bg1)-rowSums(Bg1)
   es1<-eigen(Bg1,symmetric=TRUE)
   h<-sign(es1$vectors[,1])
   #rbind(res[[3]][gp1inds],h) #looks like it should have been split but wasnt so check whether the 
   #proposed split actually makes the modularity go down, in which case it would not have been done
-  expect_lt(sum(Bg1[h<0,h<0])+sum(Bg1[h>0,h>0]),0)
+  expect_lt(matrix(h,1,length(h)) %*% Bg1 %*% matrix(h,length(h),1),0)
   
-  gp2inds<-which(res[[2]]==2)
+  gp2inds<-which(gp==2)
   Bg2<-B[gp2inds,gp2inds]
   diag(Bg2)<-diag(Bg2)-rowSums(Bg2)
   es2<-eigen(Bg2,symmetric=TRUE)
   h<-sign(es2$vectors[,1])
-  #rbind(res[[3]][gp2inds],h)
-  h[h==1]<-2
-  h[h==-1]<-3
-  expect_equal(h,res[[3]][gp2inds])
-  expect_gt(sum(Bg2[h==2,h==2])+sum(Bg2[h==3,h==3]),0) #make sure the proposed split was not making
-  #the modularity go down, because if it were it should not have been adopted
+  #check the clustering is the same except for possible cluster relabeling
+  d<-data.frame(x=h,y=res[[3]][gp2inds]) 
+  expect_equal(length(unique(d$y)),2) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],2) #check it's a well-defined map
+  #make sure the modularity went up, or the split should not have been adopted
+  expect_gt(matrix(h,1,length(h)) %*% Bg2 %*% matrix(h,length(h),1),0)
 })
 
 test_that("positive weights, by-hand checks",{
@@ -196,33 +227,41 @@ test_that("positive weights, by-hand checks",{
   #res[[2]]
   #sign(es$vectors[,1])
   h<-sign(es$vectors[,1])
-  h[h==-1]<-2
   #expect_equal(res[[2]],h)  
   #check the clustering is the same except for possible cluster relabeling
   d<-data.frame(x=h,y=res[[2]]) 
   expect_equal(length(unique(d$y)),length(unique(d$x))) #so check it's the same number of clusters 
   expect_equal(dim(unique(d))[1],length(unique(d$x))) #check it's a well-defined map
   
+  #possible relabeling - for platform independence, since it seems
+  #to depend on platform the labelling that was used, 1 and 2 
+  #versus 2 and 1 for the two groups
+  num1<-sum(res[[2]]==1)
+  gp<-res[[2]]
+  if (num1==7)
+  {
+    gp[gp==1]<-3
+    gp[gp==2]<-1
+    gp[gp==3]<-2
+  }
+  
   #check subsequent splits
-  gp1inds<-which(res[[2]]==1)
+  gp1inds<-which(gp==1)
   Bg1<-B[gp1inds,gp1inds]
   diag(Bg1)<-diag(Bg1)-rowSums(Bg1)
   es1<-eigen(Bg1,symmetric=TRUE)
-  h<-sign(es1$vectors[,1])
-  expect_equal(h,rep(-1,3)) #because gp 1 was not further split
+  expect_equal(es1$values[1],0) #because gp 1 was not further split
   
-  gp2inds<-which(res[[2]]==2)
+  gp2inds<-which(gp==2)
   Bg2<-B[gp2inds,gp2inds]
   diag(Bg2)<-diag(Bg2)-rowSums(Bg2)
   es2<-eigen(Bg2,symmetric=TRUE)$vectors[,1]
   h<-sign(es2)
   #res[[3]][gp2inds]
   #h
-  h[h==-1]<-3
-  h[h==1]<-2
-  expect_equal(h,res[[3]][gp2inds])
-  expect_gt(sum(Bg2[h==2,h==2])+sum(Bg2[h==3,h==3]),0) #make sure the proposed split was not making
-  #the modularity go down, because if it were it should not have been adopted
+  d<-data.frame(x=h,y=res[[3]][gp2inds]) 
+  expect_equal(length(unique(d$y)),length(unique(d$x))) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],length(unique(d$x))) #check it's a well-defined map
 })
 
 test_that("positive and negative weights, by-hand checks",{
@@ -243,28 +282,34 @@ test_that("positive and negative weights, by-hand checks",{
   #res[[2]]
   #sign(es$vectors[,1])
   h<-sign(es$vectors[,1])
-  h[h==1]<-2
-  h[h==-1]<-1
-  #expect_equal(res[[2]],h)  
   #check the clustering is the same except for possible cluster relabeling
   d<-data.frame(x=h,y=res[[2]]) 
   expect_equal(length(unique(d$y)),length(unique(d$x))) #so check it's the same number of clusters 
   expect_equal(dim(unique(d))[1],length(unique(d$x))) #check it's a well-defined map
   
+  #possible relabeling - for platform independence, since it seems
+  #to depend on platform the labelling that was used, 1 and 2 
+  #versus 2 and 1 for the two groups
+  num1<-sum(res[[2]]==1)
+  gp<-res[[2]]
+  if (num1==4)
+  {
+    gp[gp==1]<-3
+    gp[gp==2]<-1
+    gp[gp==3]<-2
+  }
+  
   #do the next split
-  gp1inds<-which(res[[2]]==1)
+  gp1inds<-which(gp==1)
   Bg1<-B[gp1inds,gp1inds]
   diag(Bg1)<-diag(Bg1)-rowSums(Bg1)
   es1<-eigen(Bg1,symmetric=TRUE)
   h<-sign(es1$vectors[,1])
-  #h
-  #res[[3]][gp1inds]
-  h[h==-1]<-2
-  expect_equal(h,res[[3]][gp1inds])
-  expect_gt(sum(Bg1[h==1,h==1])+sum(Bg1[h==2,h==2]),0) #make sure the proposed split was not making
-  #the modularity go down, because if it were it should not have been adopted
+  d<-data.frame(x=h,y=res[[3]][gp1inds]) 
+  expect_equal(length(unique(d$y)),length(unique(d$x))) #so check it's the same number of clusters 
+  expect_equal(dim(unique(d))[1],length(unique(d$x))) #check it's a well-defined map
   
-  gp2inds<-which(res[[2]]==2)
+  gp2inds<-which(gp==2)
   Bg2<-B[gp2inds,gp2inds]
   diag(Bg2)<-diag(Bg2)-rowSums(Bg2)
   es2<-eigen(Bg2,symmetric=TRUE)$vectors[,1]
@@ -272,6 +317,6 @@ test_that("positive and negative weights, by-hand checks",{
   #res[[3]][gp2inds]
   #h #these disagreed so check that the proposed split was going to make the modularity go down
   #and so that was why it was not adopted
-  expect_lt(sum(Bg2[h==1,h==1])+sum(Bg2[h==-1,h==-1]),0)
+  expect_lt(matrix(h,1,length(h)) %*% Bg2 %*% matrix(h,length(h),1),0)
 })
 

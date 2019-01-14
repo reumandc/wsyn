@@ -23,8 +23,8 @@
 #' Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
 #' pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 #' 
-#' Sheppard, LW et al. (2018) Synchrony is more than its top-down and climatic parts: interacting 
-#' Moran effects on phytoplankton in British seas, In review.
+#' Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
+#' Moran effects on phytoplankton in British seas. Plos Computational Biology. In press.
 #' 
 #' @seealso \code{\link{coh}}, \code{\link{wlmtest}}, \code{\link{bandtest}}, \code{\link{plotphase}},
 #' \code{\link{plotmag}}, \code{browseVignettes("wsyn")}
@@ -95,7 +95,7 @@ plotrank.coh<-function(object,sigthresh=0.95,bandprows="all",filename=NA,...)
   {
     stop("Error in plotrank.coh: inappropriate value for sigthresh")
   }
-  if (bandprows!="all" && !any(is.na(bandp)))
+  if (!identical(bandprows,"all") && !any(is.na(bandp)))
   {
     if (!is.numeric(bandprows))
     {
@@ -144,7 +144,7 @@ plotrank.coh<-function(object,sigthresh=0.95,bandprows="all",filename=NA,...)
     graphics::axis(side=1,at=log(1/xlocs),labels=xlocs) 
     
     #add the p-vals
-    if (bandprows!="all")
+    if (!identical(bandprows,"all"))
     {
       bandp<-bandp[bandprows,]
     }
@@ -189,7 +189,7 @@ plotrank.wlmtest<-function(object,sigthresh=0.95,bandprows="all",filename=NA,...
   {
     stop("Error in plotrank.wlmtest: inappropriate value for sigthresh")
   }
-  if (bandprows!="all" && !any(is.na(bandp)))
+  if (!identical(bandprows,"all") && !any(is.na(bandp)))
   {
     if (!is.numeric(bandprows))
     {
@@ -238,7 +238,7 @@ plotrank.wlmtest<-function(object,sigthresh=0.95,bandprows="all",filename=NA,...
     graphics::axis(side=1,at=log(1/xlocs),labels=xlocs) 
     
     #add the p-vals
-    if (bandprows!="all")
+    if (!identical(bandprows,"all"))
     {
       bandp<-bandp[bandprows,]
     }

@@ -130,7 +130,7 @@ plotphase.coh<-function(object,bandprows="all",filename=NA,...)
   bandp<-get_bandp(object)
   
   #error catch
-  if (bandprows!="all" && !any(is.na(bandp)))
+  if (!identical(bandprows,"all") && !any(is.na(bandp)))
   {
     if (!is.numeric(bandprows))
     {

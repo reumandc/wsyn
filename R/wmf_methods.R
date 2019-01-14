@@ -88,12 +88,12 @@ print.wmf<-function(x,...)
   
   if (length(x$timescales)<=5 && length(x$times)<=5)
   {
-    cat("values, a",dim(x$values)[1],"by",dim(x$values)[2]," matrix:\n")
-    print(x$values)
+    cat("values, a",dim(x$values)[1],"by",dim(x$values)[2]," matrix, to four digits:\n")
+    print(round(x$values,4))
   }else
   {
-    cat("values, a",dim(x$values)[1],"by",dim(x$values)[2],"matrix, upper left is:\n")
-    print(x$values[1:5,1:5])
+    cat("values, a",dim(x$values)[1],"by",dim(x$values)[2],"matrix, upper left to four digits is:\n")
+    print(round(x$values[1:5,1:5],4))
   }
   
   w<-x$wtopt

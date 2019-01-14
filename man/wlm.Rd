@@ -64,7 +64,7 @@ res<-wlm(dat,times,resp,pred,norm)
 }
 \references{
 Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
-Moran effects on phytoplankton in British seas, In review.
+Moran effects on phytoplankton in British seas. Plos Computational Biology. In press.
 }
 \seealso{
 \code{\link{wlm_methods}}, \code{\link{wlmtest}}, \code{\link{syncexpl}}, \code{\link{predsync}}, 

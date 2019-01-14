@@ -64,7 +64,7 @@ fastcohtest<-function(dat1,dat2,scale.min,scale.max.input,sigma,f0,nrand,randnum
   {
     stop("Error in fastcohtest: wrong length of randnums")
   }
-  if (any(randnums<0 || randnums>1))
+  if (any(randnums<0 | randnums>1))
   {
     stop("Error in fastcohtest: randnums must be between 0 and 1")
   }
