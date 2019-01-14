@@ -71,12 +71,11 @@ against time and timescale, and \code{coh} and \code{wlmtest} objects against ti
 \details{
 For \code{coh} (respectively, \code{wlmtest}) objects, the modulus of 
 object$coher (respectively, object$wlmobj$coher) is plotted using a solid red line, and 
-the modulus of object$signif$coher is plotted using a dashed red line. The two coherences agree except
-for \code{sigmethod="fast"}, for which they are close. The dashed line is what should be
-compared to the distribution of surrogate coherences (black lines, which only appear for 
-\code{coh} objects if \code{signif} is 
-not \code{NA}). Horizontal axis ticks are labeled as timescales, but are spaced on the 
-axis as log(1/timescale), i.e., log frequencies.
+the modulus of object$signif$coher is plotted using a dashed red line. The two coherences 
+agree except for \code{sigmethod="fast"}, for which they are close. The dashed line is what 
+should be compared to the distribution of surrogate coherences (black lines, which only appear 
+for \code{coh} objects if \code{signif} is not \code{NA}). Horizontal axis ticks are labeled 
+as timescales, but are spaced on the axis as log(1/timescale), i.e., log frequencies.
 }
 \examples{
 #For a wt object
