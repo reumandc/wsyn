@@ -23,6 +23,7 @@ test_that("test basic error checking",{
 })
 
 test_that("tests on clust objects",{
+  set.seed(101)
   N<-20
   Tmax<-500
   tim<-1:Tmax

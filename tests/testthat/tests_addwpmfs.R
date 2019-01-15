@@ -64,5 +64,9 @@ test_that("test it",{
   
   #the above pairs of plots were close enough to identical, so I commented and test for 
   #consistency through time 
-  expect_known_value(res$wpmfs,file="../vals/addwpmfs_testval_01",update=FALSE)
+  h<-res$wpmfs
+  h[[1]][[1]]<-Mod(h[[1]][[1]]$values[20:30,20:30])
+  h[[2]][[2]]<-Mod(h[[2]][[2]]$values[20:30,20:30])
+  h[[2]][[1]]<-Mod(h[[2]][[1]]$values[20:30,20:30]) #these changes are for file size reasons
+  expect_known_value(h,file="../vals/addwpmfs_testval_01",update=FALSE)
 })

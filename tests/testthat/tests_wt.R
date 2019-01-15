@@ -48,7 +48,8 @@ test_that("test for qualitatively correct output, test 1",{
   #lines(c(1,200),c(15,15))
   #lines(c(1,200),c(8,8))
   #It looked good so I commented it out, now just check future runs are always the same.
-  expect_known_value(res,file="../vals/wt_testval_01",update=FALSE)
+  h<-Mod(res$values[75:125,]) #just test part, for file size reasons
+  expect_known_value(h,file="../vals/wt_testval_01",update=FALSE)
 })
 
 test_that("test for qualitatively correct output, test 2",{
@@ -70,7 +71,8 @@ test_that("test for qualitatively correct output, test 2",{
   #lines(c(1,200),c(5,5))
   #lines(c(1,200),c(10,10))
   #It looked good so I commented it out, now just check future runs are always the same.
-  expect_known_value(res,file="../vals/wt_testval_02",update=FALSE)
+  h<-Mod(res$values[75:125,]) #just test part, for file size reasons
+  expect_known_value(h,file="../vals/wt_testval_02",update=FALSE)
 })
 
 test_that("test for non-default values of f0, sigma, scale.min, scale.max.input",{
@@ -121,9 +123,9 @@ test_that("test for non-default values of f0, sigma, scale.min, scale.max.input"
   #lines(range(res1$times),log2(c(10,10)),type='l')
   
   #checked plots looked right, now comment out the plot lines and use expect_known_value
-  expect_known_value(res0p5$values,file="../vals/wt_testval_03",update=FALSE)
-  expect_known_value(res1$values,file="../vals/wt_testval_04",update=FALSE)
-  expect_known_value(res2$values,file="../vals/wt_testval_05",update=FALSE)
+  expect_known_value(Mod(res0p5$values[75:125,]),file="../vals/wt_testval_03",update=FALSE)
+  expect_known_value(Mod(res1$values[75:125,]),file="../vals/wt_testval_04",update=FALSE)
+  expect_known_value(Mod(res2$values[75:125,]),file="../vals/wt_testval_05",update=FALSE)
 
   #do a test where you try a different value of scale.min
   res1<-wt(t.series, times)
@@ -134,14 +136,14 @@ test_that("test for non-default values of f0, sigma, scale.min, scale.max.input"
   
   #test non-default values of sigma
   res1<-wt(t.series, times, sigma=1.05, f0=3)
-  res2<-wt(t.series, times, sigma=1.01, f0=3)
+  res2<-wt(t.series, times, sigma=1.025, f0=3)
   expect_equal(res1$timescales[1:10],2*1.05^c(0:9))
-  expect_equal(res2$timescales[1:10],2*1.01^c(0:9))
+  expect_equal(res2$timescales[1:10],2*1.025^c(0:9))
 
   #plotmag(res1)
   #plotmag(res2)
   #checked these look right, now comment out the plot lines and use expect_known_value
-  expect_known_value(res1$values,file="../vals/wt_testval_06",update=FALSE)
-  expect_known_value(res2$values,file="../vals/wt_testval_07",update=FALSE)
+  expect_known_value(Mod(res1$values[75:125,]),file="../vals/wt_testval_06",update=FALSE)
+  expect_known_value(Mod(res2$values[75:125,]),file="../vals/wt_testval_07",update=FALSE)
 })
 

@@ -51,6 +51,7 @@ test_that("test for qualitatively correct output",{
   #lines(c(1,100),log2(c(10,10)))
   #lines(c(1,100),log2(c(5,5)))
   #It looked good so I commented it out, now just check future runs are always the same.
-  expect_known_value(res,file="../vals/wmf_testval_01",update=FALSE)
+  h<-Mod(res$values[25:75,10:30])
+  expect_known_value(h,file="../vals/wmf_testval_01",update=FALSE)
 })
 

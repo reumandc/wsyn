@@ -96,6 +96,48 @@ test_that("clev is 4",{
   expect_equal(mean(res$cdat[2,]),0)
   expect_equal(unname(coef(lm(res$cdat[1,]~times))),c(0,0))
   expect_equal(unname(coef(lm(res$cdat[2,]~times))),c(0,0))
+
+  #***test directly against formulas of Box Cox paper
+
+  if (exists(x="RUN_INTENSIVE_TESTS",envir=globalenv()) && 
+      identical(globalenv()$RUN_INTENSIVE_TESTS,TRUE))
+  {
+    #the data
+    set.seed(101)
+    times<-seq(1,100,1)
+    dat1<-.1*times+rnorm(length(times),mean=0,sd=.025*times+.5)+1
+    dat2<-.1*times+rnorm(length(times),mean=0,sd=.025*times+.5)+1
+    dat<-rbind(dat1,dat2)
+    
+    #use cleandat
+    lambdas<-seq(-2,2,by=0.001)
+    cd<-cleandat(dat,times,clev=4,lambdas=lambdas,mints=NaN)
+    
+    #use formulas of Box & Cox, 1964, specifically equations 8 and 9
+    #Box, GEP and Cox, DR (1964) An analysis of transformations (with discussion). Journal of the Royal Statistical Society B, 26, 211–252.
+    bcproflik<-function(dat,times,lambda)
+    {
+      tdat<-bctrans(dat,lambda)
+      thistd<-tdat[1,]
+      sse1<-sum((residuals(lm(thistd~times)))^2)
+      n<-length(dat[1,])
+      ll1<-(-0.5*n*log(sse1/n)+(lambda-1)*sum(log(dat[1,])))
+      thistd<-tdat[2,]
+      sse2<-sum((residuals(lm(thistd~times)))^2)
+      ll2<-(-0.5*n*log(sse2/n)+(lambda-1)*sum(log(dat[2,])))
+      
+      return(ll1+ll2)
+    }
+    pl<-NA*numeric(length(lambdas))
+    for (counter in 1:length(lambdas))
+    {
+      pl[counter]<-bcproflik(dat,times,lambdas[counter])
+    }
+    optlambda2<-lambdas[pl==max(pl)]
+    
+    expect_equal(optlambda2,cd$optlambda)
+    #we continue to rely on boxcox instead of some version of the above because boxcox is much faster
+  }
 })
 
 test_that("clev is 5",{
@@ -119,79 +161,45 @@ test_that("clev is 5",{
   expect_equal(unname(coef(lm(res$cdat~times))),c(0,0))
   
   #see if the output is the same as a direct call to boxcox
-  altres<-boxcox(dat~times,interp=FALSE,lambda=seq(-2,2,.01),plotit=FALSE)
+  altres<-MASS::boxcox(dat~times,interp=FALSE,lambda=seq(-2,2,.01),plotit=FALSE)
   altoptlambda<-altres$x[altres$y==max(altres$y)]
   expect_equal(res$optlambdas,altoptlambda)
   altcdat<-bctrans(dat,altoptlambda)
   altcdat<-residuals(lm(altcdat~times))
   altcdat<-altcdat/sd(altcdat)
   expect_equal(unname(altcdat),res$cdat)
-})
 
-test_that("clev is 4, test directly against formulas of Box Cox paper",{
-  #the data
-  set.seed(101)
-  times<-seq(1,100,1)
-  dat1<-.1*times+rnorm(length(times),mean=0,sd=.025*times+.5)+1
-  dat2<-.1*times+rnorm(length(times),mean=0,sd=.025*times+.5)+1
-  dat<-rbind(dat1,dat2)
+  #***test directly against formulas of Box Cox paper
   
-  #use cleandat
-  lambdas<-seq(-2,2,by=0.001)
-  cd<-cleandat(dat,times,clev=4,lambdas=lambdas,mints=NaN)
-  
-  #use formulas of Box & Cox, 1964, specifically equations 8 and 9
-  #Box, GEP and Cox, DR (1964) An analysis of transformations (with discussion). Journal of the Royal Statistical Society B, 26, 211–252.
-  bcproflik<-function(dat,times,lambda)
+  if (exists(x="RUN_INTENSIVE_TESTS",envir=globalenv()) && 
+      identical(globalenv()$RUN_INTENSIVE_TESTS,TRUE))
   {
-    tdat<-bctrans(dat,lambda)
-    thistd<-tdat[1,]
-    sse1<-sum((residuals(lm(thistd~times)))^2)
-    n<-length(dat[1,])
-    ll1<-(-0.5*n*log(sse1/n)+(lambda-1)*sum(log(dat[1,])))
-    thistd<-tdat[2,]
-    sse2<-sum((residuals(lm(thistd~times)))^2)
-    ll2<-(-0.5*n*log(sse2/n)+(lambda-1)*sum(log(dat[2,])))
+    #the data
+    set.seed(301)
+    times<-seq(1,200,1)
+    dat<-.1*times+2+exp(rnorm(length(times),mean=0,sd=.5))
     
-    return(ll1+ll2)
+    #use cleandat
+    lambdas<-seq(-2,2,by=0.001)
+    cd<-cleandat(dat,times,clev=5,lambdas=lambdas,mints=NaN)
+    
+    #use formulas of Box & Cox, 1964, specifically equations 8 and 9
+    #Box, GEP and Cox, DR (1964) An analysis of transformations (with discussion). Journal of the Royal Statistical Society B, 26, 211–252.
+    bcproflik<-function(dat,times,lambda)
+    {
+      tdat<-bctrans(dat,lambda)
+      sse<-sum((residuals(lm(tdat~times)))^2)
+      n<-length(dat)
+      return(-0.5*n*log(sse/n)+(lambda-1)*sum(log(dat)))
+    }
+    pl<-NA*numeric(length(lambdas))
+    for (counter in 1:length(lambdas))
+    {
+      pl[counter]<-bcproflik(dat,times,lambdas[counter])
+    }
+    optlambda2<-lambdas[pl==max(pl)]
+    
+    expect_equal(optlambda2,cd$optlambda)
+    #we continue to rely on boxcox instead of some version of the above because boxcox is much faster
   }
-  pl<-NA*numeric(length(lambdas))
-  for (counter in 1:length(lambdas))
-  {
-    pl[counter]<-bcproflik(dat,times,lambdas[counter])
-  }
-  optlambda2<-lambdas[pl==max(pl)]
-  
-  expect_equal(optlambda2,cd$optlambda)
-  #we continue to rely on boxcox instead of some version of the above because boxcox is much faster
-})
-
-test_that("clev is 5, test directly against formulas of Box Cox paper",{
-  #the data
-  set.seed(301)
-  times<-seq(1,200,1)
-  dat<-.1*times+2+exp(rnorm(length(times),mean=0,sd=.5))
-
-  #use cleandat
-  lambdas<-seq(-2,2,by=0.001)
-  cd<-cleandat(dat,times,clev=5,lambdas=lambdas,mints=NaN)
-  
-  #use formulas of Box & Cox, 1964, specifically equations 8 and 9
-  #Box, GEP and Cox, DR (1964) An analysis of transformations (with discussion). Journal of the Royal Statistical Society B, 26, 211–252.
-  bcproflik<-function(dat,times,lambda)
-  {
-    tdat<-bctrans(dat,lambda)
-    sse<-sum((residuals(lm(tdat~times)))^2)
-    n<-length(dat)
-    return(-0.5*n*log(sse/n)+(lambda-1)*sum(log(dat)))
-  }
-  pl<-NA*numeric(length(lambdas))
-  for (counter in 1:length(lambdas))
-  {
-    pl[counter]<-bcproflik(dat,times,lambdas[counter])
-  }
-  optlambda2<-lambdas[pl==max(pl)]
-  
-  expect_equal(optlambda2,cd$optlambda)
-  #we continue to rely on boxcox instead of some version of the above because boxcox is much faster
 })

@@ -91,17 +91,20 @@ test_that("test for reasonableness on an example",{
   sigmethod<-"fft"
   nrand<-25
   res_di<-wlmtest(wlmobj,drop="irrelevant",sigmethod,nrand=nrand)
-  res_dd<-wlmtest(wlmobj,drop="driver",sigmethod,nrand=nrand)
   
   #this also unit tests addranks and bandtest
   #res_di<-addranks(res_di)
   res_di<-bandtest(res_di,c(5,15))
-  
-  #res_dd<-addranks(res_dd)
-  res_dd<-bandtest(res_dd,c(5,15))
-  
   expect_gt(res_di$bandp[1,3],.05)
-  expect_lt(res_dd$bandp[1,3],.05)
+  
+  if (exists(x="RUN_INTENSIVE_TESTS",envir=globalenv()) && 
+      identical(globalenv()$RUN_INTENSIVE_TESTS,TRUE))
+  {
+    res_dd<-wlmtest(wlmobj,drop="driver",sigmethod,nrand=nrand)
+    #res_dd<-addranks(res_dd)
+    res_dd<-bandtest(res_dd,c(5,15))
+    expect_lt(res_dd$bandp[1,3],.05)
+  }
   
   #h<-data.frame(ts=res$wlmobj$timescales,
   #           ind=colSums(Mod(res_di$signif$scoher)<matrix(rep(Mod(res_di$signif$coher),each=nrand),nrow=nrand)),

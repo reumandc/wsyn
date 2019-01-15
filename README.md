@@ -22,3 +22,8 @@ to install from your local clone. The build_vignettes=TRUE option seems
 to work better for devtools::install than it does 
 for devtools::install_github. If you have trouble, please email me.
 
+## Running all tests
+
+Some of the more intensive tests are skipped unless there is a variable in the
+global environment called RUN_INTENSIVE_TESTS which is TRUE. This is so CRAN checks
+will run in the allowed time on CRAN servers, and was requested by CRAN.
