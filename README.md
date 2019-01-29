@@ -14,6 +14,8 @@ In addition to the documentation, see the vignette, which is the best way to get
 
 ## Installation
 
+The package is on the Comprehensive R Archive Network (CRAN).
+
 For a quick install of this development version: devtools::install_github(repo="reumandc/wsyn"). The 
 install_github function, by default, will not install the vignette. There is 
 an option for installing vignettes (build_vignettes=TRUE), but it seems 
