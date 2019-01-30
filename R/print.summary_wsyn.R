@@ -1,8 +1,8 @@
-#' Print method for \code{summary.wsyn} class
+#' Print method for \code{summary_wsyn} class
 #' 
-#' Print method for \code{summary.wsyn} class
+#' Print method for \code{summary_wsyn} class
 #' 
-#' @param x A \code{summary.wsyn} object
+#' @param x A \code{summary_wsyn} object
 #' @param ... Not currently used. Included for argument consistency
 #' with existing generics.
 #' 
