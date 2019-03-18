@@ -24,7 +24,7 @@
 #' pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 #' 
 #' Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
-#' Moran effects on phytoplankton in British seas. Plos Computational Biology. In press.
+#' Moran effects on phytoplankton in British seas. Plos Computational Biology 15, e1006744. doi: 10.1371/journal.pcbi.1006744
 #' 
 #' @seealso \code{\link{coh}}, \code{\link{wlmtest}}, \code{\link{bandtest}}, \code{\link{plotphase}},
 #' \code{\link{plotmag}}, \code{browseVignettes("wsyn")}
@@ -151,7 +151,9 @@ plotrank.coh<-function(object,sigthresh=0.95,bandprows="all",filename=NA,...)
     for (counter in 1:dim(bandp)[1])
     {
       b1<-unname(bandp[counter,1])
+      if (b1<min(timescales)){b1<-min(timescales)}
       b2<-unname(bandp[counter,2])
+      if (b2>max(timescales)){b2<-max(timescales)}
       p<-unname(bandp[counter,3])
       htl<-rg[2]-(counter-1/4-.1)*prc*drg
       wwd<-.07*prc*drg
@@ -245,7 +247,9 @@ plotrank.wlmtest<-function(object,sigthresh=0.95,bandprows="all",filename=NA,...
     for (counter in 1:dim(bandp)[1])
     {
       b1<-unname(bandp[counter,1])
+      if (b1<min(timescales)){b1<-min(timescales)}
       b2<-unname(bandp[counter,2])
+      if (b2>max(timescales)){b2<-max(timescales)}
       p<-unname(bandp[counter,3])
       htl<-rg[2]-(counter-1/4-.1)*prc*drg
       wwd<-.07*prc*drg

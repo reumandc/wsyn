@@ -34,7 +34,7 @@
 #' @author Thomas Anderson, \email{anderstl@@gmail.com}, Jon Walter, \email{jaw3es@@virginia.edu}; Lawrence 
 #' Sheppard, \email{lwsheppard@@ku.edu}; Daniel Reuman, \email{reuman@@ku.edu}
 #' 
-#' @references Sheppard, L.W., et al. (2015) Changes in large-scale climate alter spatial synchrony of aphid 
+#' @references Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
 #' pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 #' 
 #' @seealso \code{\link{wpmf_methods}}, \code{\link{wmf}}, \code{\link{tts}}, \code{\link{plotmag}}, 

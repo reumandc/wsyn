@@ -1,5 +1,5 @@
 Package: wsyn
-Version: 1.0.0
+Version: 1.0.1
 Type: Package
 Title: Wavelet Approaches to Studies of Synchrony in Ecology and Other Fields
 Authors@R: c(
@@ -9,7 +9,7 @@ Authors@R: c(
     person("Lei", "Zhao", email = "lei.zhao@cau.edu.cn", role=c("aut")),
     person("Lawrence W.", "Sheppard", email="lwsheppard@ku.edu", role=c("aut"))
     )
-Description: Tools for a wavelet-based approach to analyzing spatial synchrony, principally in ecological data. Some tools will be useful for studying community synchrony.
+Description: Tools for a wavelet-based approach to analyzing spatial synchrony, principally in ecological data. Some tools will be useful for studying community synchrony. See, for instance, Sheppard et al (2016) <doi: 10.1038/NCLIMATE2991>, Sheppard et al (2017) <doi: 10.1051/epjnbp/2017000>, Sheppard et al (2019) <doi: 10.1371/journal.pcbi.1006744>.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -132,7 +132,7 @@ print.clust<-function(x,...)
   res<-c()
   for (counter in 1:length(x$modres))
   {
-    res<-c(res,x$modres[[counter]]$totQ)
+    res<-c(res,round(x$modres[[counter]]$totQ,4))
   }
   cat("Modularity values for each step:",paste(res),"\n")
   

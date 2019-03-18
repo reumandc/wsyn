@@ -2,12 +2,12 @@
 % Please edit documentation in R/print.summary_wsyn.R
 \name{print.summary_wsyn}
 \alias{print.summary_wsyn}
-\title{Print method for \code{summary.wsyn} class}
+\title{Print method for \code{summary_wsyn} class}
 \usage{
 \method{print}{summary_wsyn}(x, ...)
 }
 \arguments{
-\item{x}{A \code{summary.wsyn} object}
+\item{x}{A \code{summary_wsyn} object}
 
 \item{...}{Not currently used. Included for argument consistency
 with existing generics.}
@@ -17,7 +17,7 @@ with existing generics.}
 printing to the screen.
 }
 \description{
-Print method for \code{summary.wsyn} class
+Print method for \code{summary_wsyn} class
 }
 \examples{
 times<-1:10

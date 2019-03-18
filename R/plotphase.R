@@ -187,7 +187,9 @@ plotphase.coh<-function(object,bandprows="all",filename=NA,...)
   for (counter in 1:dim(bandp)[1])
   {
     b1<-unname(bandp[counter,1])
+    if (b1<min(timescales)){b1<-min(timescales)}
     b2<-unname(bandp[counter,2])
+    if (b2>max(timescales)){b2<-max(timescales)}
     mnphs<-unname(bandp[counter,4])
     htl<-rg[2]-(counter-1/4-.1)*prc*drg
     wwd<-.07*prc*drg

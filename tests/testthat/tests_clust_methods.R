@@ -14,14 +14,19 @@ test_that("test print.clust",{
   dat<-cleandat(dat,times,clev=1)$cdat
   coords<-data.frame(Y=rep(0,10),X=1:10)
   method<-"coh.sig.fast"
+
   res<-clust(dat,times,coords,method,nsurrogs = 100)
-  expect_equal(capture_output(print(res)),"clust object:\ntimes, a length 50 numeric vector:\n1 2 3 4 5 ... 46 47 48 49 50 \nNumber of sampling locations: 10 \nmethodspecs:\nmethod=coh.sig.fast; tsrange=0 to Inf; nsurrogs=100; weighted=TRUE; sigthresh=0.95;\nscale.min=2; scale.max.input=NULL; sigma=1.05; f0=1\nadj has 88 of 90 off-diagonal entries differing from 0; values range from 0 to 0.990099 \nNumber of splitting steps done: 1 \nNumber of modules in final decomposition: 2 \nModularity values for each step: 4.19972005569816e-17 0.122970506592103 \nThe wmfs slot is: empty\nThe wpmfs slot is: empty")
+  mod1val<-round(res$modres[[1]]$totQ,4)
+  mod2val<-round(res$modres[[2]]$totQ,4)
+  expect_equal(capture_output(print(res)),paste0("clust object:\ntimes, a length 50 numeric vector:\n1 2 3 4 5 ... 46 47 48 49 50 \nNumber of sampling locations: 10 \nmethodspecs:\nmethod=coh.sig.fast; tsrange=0 to Inf; nsurrogs=100; weighted=TRUE; sigthresh=0.95;\nscale.min=2; scale.max.input=NULL; sigma=1.05; f0=1\nadj has 88 of 90 off-diagonal entries differing from 0; values range from 0 to 0.990099 \nNumber of splitting steps done: 1 \nNumber of modules in final decomposition: 2 \nModularity values for each step: ",mod1val," ",mod2val," \nThe wmfs slot is: empty\nThe wpmfs slot is: empty"))
 
   res<-addwmfs(res)
-  expect_equal(capture_output(print(res)),"clust object:\ntimes, a length 50 numeric vector:\n1 2 3 4 5 ... 46 47 48 49 50 \nNumber of sampling locations: 10 \nmethodspecs:\nmethod=coh.sig.fast; tsrange=0 to Inf; nsurrogs=100; weighted=TRUE; sigthresh=0.95;\nscale.min=2; scale.max.input=NULL; sigma=1.05; f0=1\nadj has 88 of 90 off-diagonal entries differing from 0; values range from 0 to 0.990099 \nNumber of splitting steps done: 1 \nNumber of modules in final decomposition: 2 \nModularity values for each step: 4.19972005569816e-17 0.122970506592103 \nThe wmfs slot is: filled\nThe wpmfs slot is: empty")
+  mod1val<-round(res$modres[[1]]$totQ,4)
+  mod2val<-round(res$modres[[2]]$totQ,4)
+  expect_equal(capture_output(print(res)),paste0("clust object:\ntimes, a length 50 numeric vector:\n1 2 3 4 5 ... 46 47 48 49 50 \nNumber of sampling locations: 10 \nmethodspecs:\nmethod=coh.sig.fast; tsrange=0 to Inf; nsurrogs=100; weighted=TRUE; sigthresh=0.95;\nscale.min=2; scale.max.input=NULL; sigma=1.05; f0=1\nadj has 88 of 90 off-diagonal entries differing from 0; values range from 0 to 0.990099 \nNumber of splitting steps done: 1 \nNumber of modules in final decomposition: 2 \nModularity values for each step: ",mod1val," ",mod2val," \nThe wmfs slot is: filled\nThe wpmfs slot is: empty"))
 })
 
-test_that("test summary.clust and the print method for the summary_wsyn class",{
+test_that("test summary.clust",{
   set.seed(101)
   sig<-matrix(.8,5,5)
   diag(sig)<-1
@@ -62,6 +67,4 @@ test_that("test summary.clust and the print method for the summary_wsyn class",{
   expect_equal(h[[17]],2)
   expect_equal(h[[19]],"empty")
   expect_equal(h[[20]],"empty")
-  
-  expect_equal(capture_output(print(h)),"class: clust\ntimes_start: 1\ntimes_end: 50\ntimes_increment: 1\nsampling_locs: 10\nmethod: coh.sig.fast\ntsrange1: 0\ntsrange2: Inf\nnsurrogs: 100\nweighted: TRUE\nsigthresh: 0.95\nscale.min: 2\nscale.max.input: NULL\nsigma: 1.05\nf0: 1\nnum_split_steps: 1\nnum_final_modules: 2\nfinal_modularity: 0.1229705\nwmf_slot_is: empty\nwpmf_slot_is: empty")
 })

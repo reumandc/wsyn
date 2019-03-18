@@ -59,7 +59,7 @@
 #' Journal, Nonlinear and Biomedical Physics, 5, 1. DOI: 10.1051/epjnbp/2017000
 #' 
 #' Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
-#' Moran effects on phytoplankton in British seas. Plos Computational Biology. In press.
+#' Moran effects on phytoplankton in British seas. Plos Computational Biology 15, e1006744. doi: 10.1371/journal.pcbi.1006744
 #'
 #' @seealso \code{\link{wlm}}, \code{\link{plotrank}}, \code{\link{bandtest}}, \code{\link{coh}}, 
 #' \code{\link{wlmtest_methods}}, \code{browseVignettes("wsyn")}

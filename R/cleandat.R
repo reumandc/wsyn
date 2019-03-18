@@ -36,7 +36,7 @@
 #'
 #' Venables, WN and Ripley, BD (2002) Modern Applied Statistics with S. Fourth edition. Springer.
 #'
-#' Sheppard, LW, et al. (2015) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+#' Sheppard, LW, et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate Change. DOI: 10.1038/nclimate2881
 #' 
 #' @seealso \code{\link{wt}}, \code{\link{wmf}}, \code{\link{wpmf}}, \code{\link{coh}}, \code{\link{wlm}}, 
 #' \code{\link{wlmtest}}, \code{\link{clust}}, \code{browseVignettes("wsyn")}

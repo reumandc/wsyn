@@ -54,6 +54,15 @@ test_that("test for an actual coh object",{
   #do the plot for testing
   Test_plotrank_coh<-function(){plotrank(res)}
   vdiffr::expect_doppelganger(title="Test-plotrank-coh",fig=Test_plotrank_coh)
+  
+  #do a case with a band that exceeds the timescales, but otherwise matches the above - 
+  #should give the same thing
+  res2<-bandtest(res,c(0,4))
+  res2<-bandtest(res2,c(4,Inf))
+  plotrank(res2)
+
+  Test_plotrank_coh_2<-function(){plotrank(res2)}
+  vdiffr::expect_doppelganger(title="Test-plotrank-coh-2",fig=Test_plotrank_coh_2)
 })
 
 test_that("test for an actual wlmtest pbject",{
