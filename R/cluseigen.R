@@ -1,6 +1,6 @@
 #' Community structure detection in networks 
 #' 
-#' Community structure detection in networks ased on the leading eigenvector of the 
+#' Community structure detection in networks based on the leading eigenvector of the 
 #' community matrix
 #' 
 #' @param adj An adjacency matrix. Should be symmetric with diagonal containing zeros.
