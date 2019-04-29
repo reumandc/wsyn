@@ -14,12 +14,12 @@ cluseigen(adj)
 performed by the clustering algorithm. Each element is a vector with entries 
 corresponding to rows and columns of adj and indicating the module membership
 of the node, following the split. The last element of the list is the final 
-clustering determined by algorithm when its halting condition is satisfied.
+clustering determined by the algorithm when its halting condition is satisfied.
 The first element is always a vector of all 1s (corresponding to before any 
 splits are performed).
 }
 \description{
-Community structure detection in networks ased on the leading eigenvector of the 
+Community structure detection in networks based on the leading eigenvector of the 
 community matrix
 }
 \details{

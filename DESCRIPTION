@@ -1,5 +1,5 @@
 Package: wsyn
-Version: 1.0.1
+Version: 1.0.2
 Type: Package
 Title: Wavelet Approaches to Studies of Synchrony in Ecology and Other Fields
 Authors@R: c(
