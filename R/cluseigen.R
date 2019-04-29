@@ -122,7 +122,7 @@ cluseigen<-function(adj)
     
     A1[A1>0]<-1
     A1[A1<0]<-0
-    if(!is.connected(A1[i.pos,i.pos]) | !is.connected(A1[i.neg,i.neg])){
+    if(!is.connected(A1[i.pos,i.pos,drop=FALSE]) | !is.connected(A1[i.neg,i.neg,drop=FALSE])){
       a<-a+1
       next
     }

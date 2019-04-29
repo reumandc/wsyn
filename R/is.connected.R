@@ -44,6 +44,10 @@ is.connected<-function(adj)
   }
 
   #screen for 1x1 matrices, which are automatically connected
+  if (isTRUE(all.equal(dim(adj),c(1,1))))
+  {
+    return(TRUE)
+  }
     
   #now do the algorithm
   if(length(which(colSums(adj)==0))>0)
