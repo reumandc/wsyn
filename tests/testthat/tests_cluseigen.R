@@ -320,3 +320,13 @@ test_that("positive and negative weights, by-hand checks",{
   expect_lt(matrix(h,1,length(h)) %*% Bg2 %*% matrix(h,length(h),1),0)
 })
 
+test_that("test on a graph with a single disconnected node - this is for handling of single-node modules",{
+  adj<-matrix(c(1,1,1,-1,1,1,1,-1,1,1,1,-1,-1,-1,-1,1),4,4)
+  diag(adj)<-0
+  res<-cluseigen(adj)
+  expect_equal(class(res),"list")
+  expect_equal(length(res),2)
+  expect_equal(res[[1]],rep(1,4))
+  expect_equal(res[[2]],c(2,2,2,1))  
+})
+

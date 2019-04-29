@@ -71,8 +71,8 @@ cluseigen<-function(adj)
   A0<-adj
   n<-nrow(A0)
   
-  A0.pos<-A0; A0.pos[A0.pos<0]=0
-  A0.neg<-A0; A0.neg[A0.neg>0]=0
+  A0.pos<-A0; A0.pos[A0.pos<0]<-0
+  A0.neg<-A0; A0.neg[A0.neg>0]<-0
   A0.neg<-(-A0.neg)
   
   k.pos<-colSums(A0.pos)
@@ -96,6 +96,13 @@ cluseigen<-function(adj)
     # compute modularity matrix
     i.remain<-which(modules==a) # nodes in current (sub)graph to partition
     n1<-length(i.remain)
+    
+    #if a single node, terminate and check the next module
+    if (n1==1)
+    {
+      a<-a+1
+      next
+    }
     
     A1<-A0[i.remain,i.remain]
     
