@@ -58,7 +58,7 @@ summary.wlmtest<-function(object,...)
   }
   
   #whether the ranks slot is full
-  if (class(x$ranks)=="list")
+  if (inherits(x$ranks,"list"))
   {
     h2<-"filled"
   }else
@@ -153,7 +153,7 @@ print.wlmtest<-function(x,...)
   if (is.null(w$scale.max.input)){w$scale.max.input<-"NULL"}
   cat("wtopt: scale.min=",w$scale.min,"; scale.max.input=",w$scale.max.input,"; sigma=",w$sigma,"; f0=",w$f0,"\n",sep="")
   
-  if (class(x$ranks)=="list")
+  if (inherits(x$ranks,"list"))
   {
     cat("The ranks slot is: filled\n")
   }else
@@ -161,7 +161,7 @@ print.wlmtest<-function(x,...)
     cat("The ranks slot is: empty\n")  
   }
   
-  if (class(x$bandp)=="data.frame")
+  if (inherits(x$bandp,"data.frame"))
   {
     cat("Timescale bands tested in bandp slot:\n")
     h<-print(x$bandp[,c(1,2)])

@@ -53,7 +53,8 @@
 plotmap<-function(inclust, spltlvl=length(inclust$clusters), nodesize=c(1,3), filename=NA)
 {
   #some checking of validity of inputs
-  if(class(inclust)[1]!="clust"){
+  if(!inherits(inclust,"clust"))
+  {
     stop("Error in plotmap: inclust must be a clust object")
   }
   if(max(inclust$clusters[[spltlvl]])>9){

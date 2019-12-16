@@ -1,7 +1,7 @@
 #' Error check for appropriate spatio-temporal data
 #' 
 #' Error checking whether a times vector and a matrix with each row a time
-#' series make a ligitimate spatio-temporal data set for wavelet analysis
+#' series make a legitimate spatio-temporal data set for wavelet analysis
 #' 
 #' @param times the times of measurement, spacing 1
 #' @param dat each row is a time series - must have at least two rows

@@ -67,7 +67,7 @@ wlm<-function(dat,times,resp,pred,norm,scale.min=2,scale.max.input=NULL,sigma=1.
   {
     stop("Error in wlm: this value of norm not implemented yet")
   }
-  if (class(dat)!="list")
+  if (!inherits(dat,"list"))
   {
     stop("Error in wlm: dat must be a list")
   }

@@ -126,7 +126,7 @@ clust<-function(dat,times,coords,method,tsrange=c(0,Inf),nsurrogs=1000,
 {
   #error checking
   errcheck_stdat(times,dat,"clust")
-  if (class(coords)!="data.frame")
+  if (!inherits(coords,"data.frame"))
   {
     stop("Error in clust: coords must be a data frame")
   }

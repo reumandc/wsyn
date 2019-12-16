@@ -47,7 +47,7 @@
 addwpmfs<-function(obj,level=1:length(obj$clusters),sigmethod="quick",nrand=1000)
 {
   #error checking
-  if (any(class(obj)!=c("clust","list")))
+  if (!inherits(obj,"clust"))
   {
     stop("Error in addwpmfs: obj must be a clust object")
   }

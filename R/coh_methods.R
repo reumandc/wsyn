@@ -46,7 +46,7 @@ summary.coh<-function(object,...)
   if (is.null(h)){h<-"NULL"}
   
   #whether the ranks slot is full
-  if (class(x$ranks)=="list")
+  if (inherits(x$ranks,"list"))
   {
     h2<-"filled"
   }else
@@ -109,7 +109,7 @@ print.coh<-function(x,...)
   
   cat("sigmethod, the type of significance testing used:",x$sigmethod,"\n")
   
-  if (class(x$signif)=="list")
+  if (inherits(x$signif,"list"))
   {
     cat("Number of surrogates:",dim(x$signif$scoher)[1],"\n")
   }else
@@ -117,7 +117,7 @@ print.coh<-function(x,...)
     cat("Number of surrogates: NA\n")
   }
   
-  if (class(x$ranks)=="list")
+  if (inherits(x$ranks,"list"))
   {
     cat("The ranks slot is: filled\n")
   }else
@@ -125,7 +125,7 @@ print.coh<-function(x,...)
     cat("The ranks slot is: empty\n")  
   }
   
-  if (class(x$bandp)=="data.frame")
+  if (inherits(x$bandp,"data.frame"))
   {
     cat("Timescale bands tested in bandp slot:\n")
     h<-print(x$bandp[,c(1,2)])

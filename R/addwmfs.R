@@ -38,7 +38,7 @@
 addwmfs<-function(obj)
 {
   #error checking
-  if (any(class(obj)!=c("clust","list")))
+  if (!inherits(obj,"clust"))
   {
     stop("Error in addwmfs: obj must be a clust object")
   }

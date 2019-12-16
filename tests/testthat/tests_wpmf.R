@@ -98,7 +98,7 @@ test_that("test for qualitatively correct output",{
     res<-wpmf(dat,times,sigmethod="fft",nrand=50)
     expect_equal(res$signif[[1]],"fft")
     expect_equal(unname(res$signif[[2]]),50)
-    expect_equal(class(res$signif$gt),"matrix")
+    expect_true(inherits(res$signif$gt,"matrix"))
     expect_equal(dim(get_values(res)),dim(res$signif$gt))
     
     #Make a plot to check visually. Expected to look like panel panel k of supp fig 1 in the
@@ -141,7 +141,7 @@ test_that("test for qualitatively correct output",{
     res<-wpmf(dat,times,sigmethod="aaft",nrand=nrd)
     expect_equal(res$signif[[1]],"aaft")
     expect_equal(unname(res$signif[[2]]),nrd)
-    expect_equal(class(res$signif$gt),"matrix")
+    expect_true(inherits(res$signif$gt,"matrix"))
     expect_equal(dim(get_values(res)),dim(res$signif$gt))
     
     #Make a plot to check visually. Expected to look like panel panel k of supp fig 1 in the

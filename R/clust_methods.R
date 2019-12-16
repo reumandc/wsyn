@@ -50,7 +50,7 @@ summary.clust<-function(object,...)
   if (is.null(h)){h<-"NULL"}
   
   #whether the wmfs slot is empty or filled
-  if (class(x$wmfs)=="list")
+  if (inherits(x$wmfs,"list"))
   {
     h2<-"filled"
   }else
@@ -59,7 +59,7 @@ summary.clust<-function(object,...)
   }
   
   #same for wpmfs slot
-  if (class(x$wpmfs)=="list")
+  if (inherits(x$wpmfs,"list"))
   {
     h3<-"filled"
   }else
@@ -137,7 +137,7 @@ print.clust<-function(x,...)
   cat("Modularity values for each step:",paste(res),"\n")
   
   #whether the wmfs slot is empty or filled
-  if (class(x$wmfs)=="list")
+  if (inherits(x$wmfs,"list"))
   {
     cat("The wmfs slot is: filled\n")
   }else
@@ -146,7 +146,7 @@ print.clust<-function(x,...)
   }
   
   #same for wpmfs slot
-  if (class(x$wpmfs)=="list")
+  if (inherits(x$wpmfs,"list"))
   {
     cat("The wpmfs slot is: filled\n")
   }else

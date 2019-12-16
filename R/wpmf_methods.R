@@ -101,7 +101,7 @@ print.wpmf<-function(x,...)
   if (is.null(w$scale.max.input)){w$scale.max.input<-"NULL"}
   cat("wtopt: scale.min=",w$scale.min,"; scale.max.input=",w$scale.max.input,"; sigma=",w$sigma,"; f0=",w$f0,"\n",sep="")
   
-  if (class(x$signif)=="list")
+  if (inherits(x$signif,"list"))
   {
     cat("significance testing:",x$signif[[1]])
   }else
