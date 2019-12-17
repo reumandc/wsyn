@@ -66,6 +66,10 @@ cleandat<-function(dat,times,clev,lambdas=seq(-10,10,by=0.01),mints=NA)
     stop("Error in cleandat: if clev is 4 or 5, mints must be NA, NaN, or a positive number")
   }
   errcheck_times(times,"cleandat")
+  if (inherits(dat,"data.frame"))
+  {
+    stop("Error in cleandat: dat must be a vector or matrix, not a dataframe")
+  }
   if (!is.numeric(dat))
   {
     stop("Error in cleandat: dat must be numeric")

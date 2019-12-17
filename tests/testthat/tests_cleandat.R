@@ -7,6 +7,9 @@ test_that("test error catching not covered elsewhere",{
   
   expect_error(cleandat("test",times,clev=4),"Error in cleandat: dat must be numeric")
   
+  dat<-data.frame(l1=1:100,l2=1:100,l3=1:100)
+  expect_error(cleandat(dat,times,clev=4),"Error in cleandat: dat must be a vector or matrix, not a dataframe")
+  
   dat<-rnorm(99)
   expect_error(cleandat(dat,times,clev=1),"Error in cleandat: length of dat and times must be equal")
   

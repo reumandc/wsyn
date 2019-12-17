@@ -18,7 +18,7 @@ errcheck_stdat(times, dat, callfunc)
 }
 \description{
 Error checking whether a times vector and a matrix with each row a time
-series make a ligitimate spatio-temporal data set for wavelet analysis
+series make a legitimate spatio-temporal data set for wavelet analysis
 }
 \author{
 Daniel Reuman, \email{reuman@ku.edu}
