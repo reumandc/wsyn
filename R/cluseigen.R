@@ -109,7 +109,7 @@ cluseigen<-function(adj)
     B<-B0[i.remain,i.remain]  #first part of Eq. 51 in Newman 2006
     diag(B)<-diag(B)-colSums(B)  #minus second part of Eq. 51 in Newman 2006
     
-    E<-eigen(B)
+    E<-eigen(B,symmetric=TRUE)
     
     #if indivisible, terminate and check the next queue
     if(max(E$values)<=1e-5){
