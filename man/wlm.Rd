@@ -4,8 +4,17 @@
 \alias{wlm}
 \title{Wavelet linear models}
 \usage{
-wlm(dat, times, resp, pred, norm, scale.min = 2, scale.max.input = NULL,
-  sigma = 1.05, f0 = 1)
+wlm(
+  dat,
+  times,
+  resp,
+  pred,
+  norm,
+  scale.min = 2,
+  scale.max.input = NULL,
+  sigma = 1.05,
+  f0 = 1
+)
 }
 \arguments{
 \item{dat}{A list of matrices representing the data (or in the case of one location, a list of

@@ -4,8 +4,12 @@
 \alias{plotmap}
 \title{Map clusters from a \code{clust} object}
 \usage{
-plotmap(inclust, spltlvl = length(inclust$clusters), nodesize = c(1, 3),
-  filename = NA)
+plotmap(
+  inclust,
+  spltlvl = length(inclust$clusters),
+  nodesize = c(1, 3),
+  filename = NA
+)
 }
 \arguments{
 \item{inclust}{A \code{clust} object, as created with \code{wsyn::clust}}

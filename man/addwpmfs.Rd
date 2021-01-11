@@ -4,8 +4,12 @@
 \alias{addwpmfs}
 \title{Adds wavelet phasor mean field information to a \code{clust} object}
 \usage{
-addwpmfs(obj, level = 1:length(obj$clusters), sigmethod = "quick",
-  nrand = 1000)
+addwpmfs(
+  obj,
+  level = 1:length(obj$clusters),
+  sigmethod = "quick",
+  nrand = 1000
+)
 }
 \arguments{
 \item{obj}{An object of class \code{clust}}
@@ -42,8 +46,15 @@ but they will be there for later use by \code{addwmfs} and \code{addwpmfs}.
 sig<-matrix(.8,5,5)
 diag(sig)<-1
 lents<-50
-dat1<-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
-dat2<-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
+if (requireNamespace("mvtnorm",quietly=TRUE))
+{
+  dat1<-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
+  dat2<-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
+}else
+{
+  dat1<-t(matrix(rep(rnorm(lents),times=5),lents,5))
+  dat2<-t(matrix(rep(rnorm(lents),times=5),lents,5))
+}
 dat<-rbind(dat1,dat2)
 times<-1:lents
 dat<-cleandat(dat,times,clev=1)$cdat

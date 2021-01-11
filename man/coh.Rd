@@ -4,8 +4,18 @@
 \alias{coh}
 \title{Coherence}
 \usage{
-coh(dat1, dat2, times, norm, sigmethod = "none", nrand = 1000,
-  scale.min = 2, scale.max.input = NULL, sigma = 1.05, f0 = 1)
+coh(
+  dat1,
+  dat2,
+  times,
+  norm,
+  sigmethod = "none",
+  nrand = 1000,
+  scale.min = 2,
+  scale.max.input = NULL,
+  sigma = 1.05,
+  f0 = 1
+)
 }
 \arguments{
 \item{dat1}{A locations (rows) x time (columns) matrix (for spatial coherence), or a single time series}

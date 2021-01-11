@@ -11,8 +11,10 @@ test_that("test basic error checking",{
   rho<-0.5
   sig<-matrix(rho,N,N)
   diag(sig)<-1
-  d<-t(cbind(mvtnorm::rmvnorm(Tmax,mean=rep(0,N),sigma=sig),
-             mvtnorm::rmvnorm(Tmax,mean=rep(0,N),sigma=sig)))
+  #d<-t(cbind(mvtnorm::rmvnorm(Tmax,mean=rep(0,N),sigma=sig),
+  #           mvtnorm::rmvnorm(Tmax,mean=rep(0,N),sigma=sig)))
+  d<-t(cbind(copy_rmvnorm(Tmax,mean=rep(0,N),sigma=sig),
+             copy_rmvnorm(Tmax,mean=rep(0,N),sigma=sig))) #This copy function is in helper-utils.R. I made this change to avoid having to condition the performance of these tests on the availability of mvtnorm on the platform, since mvtnorm is in (and should be in) Suggests.
   
   d<-cleandat(d,1:Tmax,1)$cdat
   coords<-data.frame(X=runif(N*2,1,10),Y=runif(N*2,1,10))
@@ -48,17 +50,17 @@ test_that("tests on clust objects",{
   
   #all defaults
   Test_plotmap_1<-function(){plotmap(cl1)}
-  vdiffr::expect_doppelganger(title="Test-plotmap-1",fig=Test_plotmap_1)
+  expect_doppelganger(title="Test-plotmap-1",fig=Test_plotmap_1)
   
   #change spltlvl
   Test_plotmap_2<-function(){plotmap(cl1, spltlvl=1)}
-  vdiffr::expect_doppelganger(title="Test-plotmap-2",fig=Test_plotmap_2)
+  expect_doppelganger(title="Test-plotmap-2",fig=Test_plotmap_2)
   
   #shrink range of nodesize
   Test_plotmap_3<-function(){plotmap(cl1, nodesize=c(1,2))}
-  vdiffr::expect_doppelganger(title="Test-plotmap-3",fig=Test_plotmap_3)
+  expect_doppelganger(title="Test-plotmap-3",fig=Test_plotmap_3)
   
   #fix nodesize
   Test_plotmap_4<-function(){plotmap(cl1, nodesize=c(2,2))}
-  vdiffr::expect_doppelganger(title="Test-plotmap-4",fig=Test_plotmap_4)
+  expect_doppelganger(title="Test-plotmap-4",fig=Test_plotmap_4)
 })

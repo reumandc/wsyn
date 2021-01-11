@@ -9,11 +9,9 @@
 \usage{
 plotrank(object, ...)
 
-\method{plotrank}{coh}(object, sigthresh = 0.95, bandprows = "all",
-  filename = NA, ...)
+\method{plotrank}{coh}(object, sigthresh = 0.95, bandprows = "all", filename = NA, ...)
 
-\method{plotrank}{wlmtest}(object, sigthresh = 0.95, bandprows = "all",
-  filename = NA, ...)
+\method{plotrank}{wlmtest}(object, sigthresh = 0.95, bandprows = "all", filename = NA, ...)
 
 \method{plotrank}{default}(object, ...)
 }

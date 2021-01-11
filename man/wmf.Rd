@@ -5,8 +5,7 @@
 \title{Computes the wavelet mean field from a matrix of spatiotemporal data. Also the
 creator function for the \code{wmf} class.}
 \usage{
-wmf(dat, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05,
-  f0 = 1)
+wmf(dat, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05, f0 = 1)
 }
 \arguments{
 \item{dat}{A locations (rows) x time (columns) matrix}

@@ -28,8 +28,10 @@ test_that("test pearson methods",{
   set.seed(101)
   sig<-matrix(.9,5,5)
   diag(sig)<-1
-  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
-  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  #dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  #dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat1<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig)) #This copy function is in helper-utils.R. I made this change to avoid having to condition the performance of these tests on the availability of mvtnorm on the platform, since mvtnorm is in (and should be in) Suggests.
+  dat2<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig))
   dat<-rbind(dat1,dat2)
   times<-1:30
   dat<-cleandat(dat,times,clev=2)$cdat
@@ -45,8 +47,10 @@ test_that("test pearson methods",{
   set.seed(101)
   sig<-matrix(.9,5,5)
   diag(sig)<-1
-  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
-  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  #dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  #dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat1<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig)) #This copy function is in helper-utils.R. I made this change to avoid having to condition the performance of these tests on the availability of mvtnorm on the platform, since mvtnorm is in (and should be in) Suggests.
+  dat2<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig))
   dat<-rbind(dat1,dat2)
   times<-1:30
   dat<-cleandat(dat,times,clev=2)$cdat
@@ -129,8 +133,10 @@ test_that("test coh-based methods",{
     set.seed(101)
     sig<-matrix(.95,5,5)
     diag(sig)<-1
-    dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
-    dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    #dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    #dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    dat1<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig)) #This copy function is in helper-utils.R. I made this change to avoid having to condition the performance of these tests on the availability of mvtnorm on the platform, since mvtnorm is in (and should be in) Suggests.
+    dat2<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig))
     dat<-rbind(dat1,dat2)
     times<-1:30
     dat<-cleandat(dat,times,clev=2)$cdat
@@ -152,8 +158,10 @@ test_that("test coh-based methods",{
     set.seed(201)
     sig<-matrix(.95,5,5)
     diag(sig)<-1
-    dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
-    dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    #dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    #dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    dat1<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig)) #This copy function is in helper-utils.R. I made this change to avoid having to condition the performance of these tests on the availability of mvtnorm on the platform, since mvtnorm is in (and should be in) Suggests.
+    dat2<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig))
     dat<-rbind(dat1,dat2)
     times<-1:30
     dat<-cleandat(dat,times,clev=2)$cdat
@@ -172,8 +180,10 @@ test_that("test coh-based methods",{
   set.seed(301) 
   sig<-matrix(.95,5,5)
   diag(sig)<-1
-  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
-  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  #dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  #dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat1<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig)) #This copy function is in helper-utils.R. I made this change to avoid having to condition the performance of these tests on the availability of mvtnorm on the platform, since mvtnorm is in (and should be in) Suggests.
+  dat2<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig))
   dat<-rbind(dat1,dat2)
   times<-1:30
   dat<-cleandat(dat,times,clev=2)$cdat
@@ -209,8 +219,10 @@ test_that("test ReXWT-based methods",{
     set.seed(101)
     sig<-matrix(.95,5,5)
     diag(sig)<-1
-    dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
-    dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    #dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    #dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    dat1<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig)) #This copy function is in helper-utils.R. I made this change to avoid having to condition the performance of these tests on the availability of mvtnorm on the platform, since mvtnorm is in (and should be in) Suggests.
+    dat2<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig))
     dat<-rbind(dat1,dat2)
     times<-1:30
     dat<-cleandat(dat,times,clev=2)$cdat
@@ -232,8 +244,10 @@ test_that("test ReXWT-based methods",{
     set.seed(101)
     sig<-matrix(.95,5,5)
     diag(sig)<-1
-    dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
-    dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    #dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    #dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    dat1<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig)) #This copy function is in helper-utils.R. I made this change to avoid having to condition the performance of these tests on the availability of mvtnorm on the platform, since mvtnorm is in (and should be in) Suggests.
+    dat2<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig))
     dat<-rbind(dat1,dat2)
     times<-1:30
     dat<-cleandat(dat,times,clev=2)$cdat
@@ -252,8 +266,10 @@ test_that("test ReXWT-based methods",{
   set.seed(101)
   sig<-matrix(.95,5,5)
   diag(sig)<-1
-  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
-  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  #dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  #dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat1<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig)) #This copy function is in helper-utils.R. I made this change to avoid having to condition the performance of these tests on the availability of mvtnorm on the platform, since mvtnorm is in (and should be in) Suggests.
+  dat2<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig))
   dat<-rbind(dat1,dat2)
   times<-1:30
   dat<-cleandat(dat,times,clev=2)$cdat
@@ -289,8 +305,10 @@ test_that("phase coherence and average phase methods",{
     set.seed(301)
     sig<-matrix(.95,5,5)
     diag(sig)<-1
-    dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
-    dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    #dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    #dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    dat1<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig)) #This copy function is in helper-utils.R. I made this change to avoid having to condition the performance of these tests on the availability of mvtnorm on the platform, since mvtnorm is in (and should be in) Suggests.
+    dat2<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig))
     dat<-rbind(dat1,dat2)
     times<-1:30
     dat<-cleandat(dat,times,clev=2)$cdat
@@ -312,8 +330,10 @@ test_that("phase coherence and average phase methods",{
     set.seed(301)
     sig<-matrix(.95,5,5)
     diag(sig)<-1
-    dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
-    dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    #dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    #dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+    dat1<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig)) #This copy function is in helper-utils.R. I made this change to avoid having to condition the performance of these tests on the availability of mvtnorm on the platform, since mvtnorm is in (and should be in) Suggests.
+    dat2<-t(copy_rmvnorm(30,mean=rep(0,5),sigma=sig))
     dat<-rbind(dat1,dat2)
     times<-1:30
     dat<-cleandat(dat,times,clev=2)$cdat

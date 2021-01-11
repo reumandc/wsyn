@@ -25,5 +25,8 @@ Suggests:
     rmarkdown,
     testthat,
     vdiffr
-VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+VignetteBuilder: 
+    knitr,
+    rmarkdown,
+    mvtnorm
+RoxygenNote: 7.1.0

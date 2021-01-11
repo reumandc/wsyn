@@ -4,9 +4,20 @@
 \alias{clust}
 \title{Detection and description of clusters of synchronous locations}
 \usage{
-clust(dat, times, coords, method, tsrange = c(0, Inf), nsurrogs = 1000,
-  scale.min = 2, scale.max.input = NULL, sigma = 1.05, f0 = 1,
-  weighted = TRUE, sigthresh = 0.95)
+clust(
+  dat,
+  times,
+  coords,
+  method,
+  tsrange = c(0, Inf),
+  nsurrogs = 1000,
+  scale.min = 2,
+  scale.max.input = NULL,
+  sigma = 1.05,
+  f0 = 1,
+  weighted = TRUE,
+  sigthresh = 0.95
+)
 }
 \arguments{
 \item{dat}{A locations (rows) x time (columns) matrix of measurements}
@@ -117,8 +128,15 @@ Newman (2006).
 sig<-matrix(.8,5,5)
 diag(sig)<-1
 lents<-50
-dat1<-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
-dat2<-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
+if (requireNamespace("mvtnorm",quietly=TRUE))
+{
+  dat1<-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
+  dat2<-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
+}else
+{
+  dat1<-t(matrix(rep(rnorm(lents),times=5),lents,5))
+  dat2<-t(matrix(rep(rnorm(lents),times=5),lents,5))
+}
 dat<-rbind(dat1,dat2)
 times<-1:lents
 dat<-cleandat(dat,times,clev=1)$cdat

@@ -14,7 +14,7 @@ test_that("test for a tts object",{
   tts1<-tts(times,timescales,values1)  
   
   Test_plotphase_tts_1<-function(){plotphase(object=tts1)}
-  vdiffr::expect_doppelganger(title="Test-plotphase-tts-1",fig=Test_plotphase_tts_1)
+  expect_doppelganger(title="Test-plotphase-tts-1",fig=Test_plotphase_tts_1)
 })
 
 test_that("test for a coh object",{
@@ -60,5 +60,5 @@ test_that("test for a coh object",{
   
   #do the plot for testing
   Test_plotphase_coh<-function(){plotphase(res)}
-  vdiffr::expect_doppelganger(title="Test-plotphase-coh",fig=Test_plotphase_coh)
+  expect_doppelganger(title="Test-plotphase-coh",fig=Test_plotphase_coh)
 })

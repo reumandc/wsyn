@@ -4,8 +4,16 @@
 \alias{wpmf}
 \title{Wavelet phasor mean field}
 \usage{
-wpmf(dat, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05,
-  f0 = 1, sigmethod = "none", nrand = 1000)
+wpmf(
+  dat,
+  times,
+  scale.min = 2,
+  scale.max.input = NULL,
+  sigma = 1.05,
+  f0 = 1,
+  sigmethod = "none",
+  nrand = 1000
+)
 }
 \arguments{
 \item{dat}{A locations (rows) x time (columns) matrix}

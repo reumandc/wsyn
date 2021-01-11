@@ -5,8 +5,10 @@ test_that("test it",{
   sig<-matrix(.8,5,5)
   diag(sig)<-1
   lents<-50
-  dat1<-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
-  dat2<-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
+  #dat1<-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
+  #dat2<-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
+  dat1<-t(copy_rmvnorm(lents,mean=rep(0,5),sigma=sig)) #This copy function is in helper-utils.R. I made this change to avoid having to condition the performance of these tests on the availability of mvtnorm on the platform, since mvtnorm is in (and should be in) Suggests.
+  dat2<-t(copy_rmvnorm(lents,mean=rep(0,5),sigma=sig))
   dat<-rbind(dat1,dat2)
   times<-1:lents
   dat<-cleandat(dat,times,clev=1)$cdat

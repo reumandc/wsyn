@@ -5,8 +5,14 @@
 \title{Computes the wavelet transform of a timeseries. Also the creator function for the
 \code{wt} class.}
 \usage{
-wt(t.series, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05,
-  f0 = 1)
+wt(
+  t.series,
+  times,
+  scale.min = 2,
+  scale.max.input = NULL,
+  sigma = 1.05,
+  f0 = 1
+)
 }
 \arguments{
 \item{t.series}{A timeseries of real values}

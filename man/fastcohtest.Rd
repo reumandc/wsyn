@@ -4,8 +4,18 @@
 \alias{fastcohtest}
 \title{Fast algorithm for significance testing coherence using Fourier surrogates}
 \usage{
-fastcohtest(dat1, dat2, scale.min, scale.max.input, sigma, f0, nrand, randnums,
-  randbits, norm)
+fastcohtest(
+  dat1,
+  dat2,
+  scale.min,
+  scale.max.input,
+  sigma,
+  f0,
+  nrand,
+  randnums,
+  randbits,
+  norm
+)
 }
 \arguments{
 \item{dat1}{A locations (rows) x time (columns) matrix (for spatial coherence), or a single time series}

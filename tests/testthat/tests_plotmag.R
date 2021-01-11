@@ -27,19 +27,19 @@ test_that("test for an actual wt object",{
   res<-wt(t.series, times)
   
   Test_plotmag_wt_1<-function(){plotmag(object=res)}
-  vdiffr::expect_doppelganger(title="Test-plotmag-wt-1",fig=Test_plotmag_wt_1)
+  expect_doppelganger(title="Test-plotmag-wt-1",fig=Test_plotmag_wt_1)
   
   #try without the colorbar
   Test_plotmag_wt_2<-function(){plotmag(object=res,colorbar=FALSE)}
-  vdiffr::expect_doppelganger(title="Test-plotmag-wt-2",fig=Test_plotmag_wt_2)
+  expect_doppelganger(title="Test-plotmag-wt-2",fig=Test_plotmag_wt_2)
   
   #use neat=T
   Test_plotmag_wt_3<-function(){plotmag(object=res,neat=TRUE)}
-  vdiffr::expect_doppelganger(title="Test-plotmag-wt-3",fig=Test_plotmag_wt_3)
+  expect_doppelganger(title="Test-plotmag-wt-3",fig=Test_plotmag_wt_3)
 
   #try wider z axis limits, and with a test title
   Test_plotmag_wt_4<-function(){plotmag(object=res,zlim=c(-1,6),title="test")}
-  vdiffr::expect_doppelganger(title="Test-plotmag-wt-4",fig=Test_plotmag_wt_4)
+  expect_doppelganger(title="Test-plotmag-wt-4",fig=Test_plotmag_wt_4)
   
   #**this test based on the second example in fig S2 of Sheppard et al, "Synchrony is more than its
   #top-down and climatic parts: interacting Moran effects on phytoplankton in British seas"
@@ -55,7 +55,7 @@ test_that("test for an actual wt object",{
   res<-wt(t.series, times)
   
   Test_plotmag_wt_5<-function(){plotmag(object=res)}
-  vdiffr::expect_doppelganger(title="Test-plotmag-wt-5",fig=Test_plotmag_wt_5)
+  expect_doppelganger(title="Test-plotmag-wt-5",fig=Test_plotmag_wt_5)
 })
 
 test_that("test for actual wmf and wpmf objects",{
@@ -83,19 +83,19 @@ test_that("test for actual wmf and wpmf objects",{
   res<-wmf(dat,times)
   
   Test_plotmag_wmf_1<-function(){plotmag(object=res)}
-  vdiffr::expect_doppelganger(title="Test-plotmag-wmf-1",fig=Test_plotmag_wmf_1)
+  expect_doppelganger(title="Test-plotmag-wmf-1",fig=Test_plotmag_wmf_1)
   
   #try without the colorbar
   Test_plotmag_wmf_2<-function(){plotmag(object=res,colorbar=FALSE)}
-  vdiffr::expect_doppelganger(title="Test-plotmag-wmf-2",fig=Test_plotmag_wmf_2)
+  expect_doppelganger(title="Test-plotmag-wmf-2",fig=Test_plotmag_wmf_2)
   
   #use neat=T
   Test_plotmag_wmf_3<-function(){plotmag(object=res,neat=TRUE)}
-  vdiffr::expect_doppelganger(title="Test-plotmag-wmf-3",fig=Test_plotmag_wmf_3)
+  expect_doppelganger(title="Test-plotmag-wmf-3",fig=Test_plotmag_wmf_3)
   
   #try wider z axis limits, and with a test title
   Test_plotmag_wmf_4<-function(){plotmag(object=res,zlim=c(-1,6),title="test")}
-  vdiffr::expect_doppelganger(title="Test-plotmag-wmf-4",fig=Test_plotmag_wmf_4)
+  expect_doppelganger(title="Test-plotmag-wmf-4",fig=Test_plotmag_wmf_4)
 
   #***wpmf, quick signif method
   
@@ -119,7 +119,7 @@ test_that("test for actual wmf and wpmf objects",{
   res<-wpmf(dat,times,sigmethod="quick")
   
   Test_plotmag_wpmf_quick<-function(){plotmag(object=res)}
-  vdiffr::expect_doppelganger(title="Test-plotmag-wpmf-quick",fig=Test_plotmag_wpmf_quick)
+  expect_doppelganger(title="Test-plotmag-wpmf-quick",fig=Test_plotmag_wpmf_quick)
 
   #***wpmf, fft signif method
 
@@ -146,7 +146,7 @@ test_that("test for actual wmf and wpmf objects",{
     res<-wpmf(dat,times,sigmethod="fft",nrand=25)
     
     Test_plotmag_wpmf_fft<-function(){plotmag(object=res)}
-    vdiffr::expect_doppelganger(title="Test-plotmag-wpmf-fft",fig=Test_plotmag_wpmf_fft)
+    expect_doppelganger(title="Test-plotmag-wpmf-fft",fig=Test_plotmag_wpmf_fft)
   }
 
   #***wpmf, aaft signif method
@@ -174,7 +174,7 @@ test_that("test for actual wmf and wpmf objects",{
     res<-wpmf(dat,times,sigmethod="aaft",nrand=20)
     
     Test_plotmag_wpmf_aaft<-function(){plotmag(object=res)}
-    vdiffr::expect_doppelganger(title="Test-plotmag-wpmf-aaft",fig=Test_plotmag_wpmf_aaft)
+    expect_doppelganger(title="Test-plotmag-wpmf-aaft",fig=Test_plotmag_wpmf_aaft)
   }
 })
 
@@ -226,7 +226,7 @@ test_that("tests for a actual coh and wlmtest objects",{
   
   #do the plot for testing
   Test_plotmag_coh<-function(){plotmag(object=res)}
-  vdiffr::expect_doppelganger(title="Test-plotmag-coh",fig=Test_plotmag_coh)
+  expect_doppelganger(title="Test-plotmag-coh",fig=Test_plotmag_coh)
 
   #***wlmtest objects
   
@@ -274,6 +274,6 @@ test_that("tests for a actual coh and wlmtest objects",{
     res<-bandtest(res,c(20,25))
     
     Test_plotmag_wlmtest<-function(){plotmag(object=res)}
-    vdiffr::expect_doppelganger(title="Test-plotmag-wlmtest",fig=Test_plotmag_wlmtest)  
+    expect_doppelganger(title="Test-plotmag-wlmtest",fig=Test_plotmag_wlmtest)  
   }
 })

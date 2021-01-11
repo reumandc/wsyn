@@ -4,8 +4,7 @@
 \alias{warray}
 \title{Creates an array of wavelet transforms from input timeseries}
 \usage{
-warray(dat, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05,
-  f0 = 1)
+warray(dat, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05, f0 = 1)
 }
 \arguments{
 \item{dat}{A locations (rows) x time (columns) matrix}

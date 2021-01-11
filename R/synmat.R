@@ -74,8 +74,15 @@
 #' @examples 
 #' sig<-matrix(.9,5,5)
 #' diag(sig)<-1
-#' dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
-#' dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+#' if (requireNamespace("mvtnorm",quietly=TRUE))
+#' {
+#'   dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+#'   dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+#' }else
+#' {
+#'   dat1<-t(matrix(rep(rnorm(30),times=5),30,5))
+#'   dat2<-t(matrix(rep(rnorm(30),times=5),30,5))
+#' }
 #' dat<-rbind(dat1,dat2)
 #' times<-1:30
 #' dat<-cleandat(dat,times,clev=2)$cdat

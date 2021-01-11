@@ -13,24 +13,66 @@
 \usage{
 plotmag(object, ...)
 
-\method{plotmag}{tts}(object, zlims = NULL, neat = TRUE, colorfill = NULL,
-  colorbar = TRUE, title = NULL, filename = NA, ...)
+\method{plotmag}{tts}(
+  object,
+  zlims = NULL,
+  neat = TRUE,
+  colorfill = NULL,
+  colorbar = TRUE,
+  title = NULL,
+  filename = NA,
+  ...
+)
 
-\method{plotmag}{wt}(object, zlims = NULL, neat = TRUE, colorfill = NULL,
-  colorbar = TRUE, title = NULL, filename = NA, ...)
+\method{plotmag}{wt}(
+  object,
+  zlims = NULL,
+  neat = TRUE,
+  colorfill = NULL,
+  colorbar = TRUE,
+  title = NULL,
+  filename = NA,
+  ...
+)
 
-\method{plotmag}{wmf}(object, zlims = NULL, neat = TRUE, colorfill = NULL,
-  colorbar = TRUE, title = NULL, filename = NA, ...)
+\method{plotmag}{wmf}(
+  object,
+  zlims = NULL,
+  neat = TRUE,
+  colorfill = NULL,
+  colorbar = TRUE,
+  title = NULL,
+  filename = NA,
+  ...
+)
 
-\method{plotmag}{wpmf}(object, zlims = NULL, neat = TRUE,
-  colorfill = NULL, sigthresh = 0.95, colorbar = TRUE, title = NULL,
-  filename = NA, ...)
+\method{plotmag}{wpmf}(
+  object,
+  zlims = NULL,
+  neat = TRUE,
+  colorfill = NULL,
+  sigthresh = 0.95,
+  colorbar = TRUE,
+  title = NULL,
+  filename = NA,
+  ...
+)
 
-\method{plotmag}{coh}(object, sigthresh = c(0.95, 0.99), bandprows = "all",
-  filename = NA, ...)
+\method{plotmag}{coh}(
+  object,
+  sigthresh = c(0.95, 0.99),
+  bandprows = "all",
+  filename = NA,
+  ...
+)
 
-\method{plotmag}{wlmtest}(object, sigthresh = c(0.95, 0.99),
-  bandprows = "all", filename = NA, ...)
+\method{plotmag}{wlmtest}(
+  object,
+  sigthresh = c(0.95, 0.99),
+  bandprows = "all",
+  filename = NA,
+  ...
+)
 
 \method{plotmag}{default}(object, ...)
 }

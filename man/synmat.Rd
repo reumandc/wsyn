@@ -4,9 +4,19 @@
 \alias{synmat}
 \title{Synchrony matrices}
 \usage{
-synmat(dat, times, method, tsrange = c(0, Inf), nsurrogs = 1000,
-  scale.min = 2, scale.max.input = NULL, sigma = 1.05, f0 = 1,
-  weighted = TRUE, sigthresh = 0.95)
+synmat(
+  dat,
+  times,
+  method,
+  tsrange = c(0, Inf),
+  nsurrogs = 1000,
+  scale.min = 2,
+  scale.max.input = NULL,
+  sigma = 1.05,
+  f0 = 1,
+  weighted = TRUE,
+  sigthresh = 0.95
+)
 }
 \arguments{
 \item{dat}{A locations (rows) x time (columns) matrix of measurements}
@@ -88,8 +98,15 @@ contain 1 minus the p-values.
 \examples{
 sig<-matrix(.9,5,5)
 diag(sig)<-1
-dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
-dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+if (requireNamespace("mvtnorm",quietly=TRUE))
+{
+  dat1<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat2<-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+}else
+{
+  dat1<-t(matrix(rep(rnorm(30),times=5),30,5))
+  dat2<-t(matrix(rep(rnorm(30),times=5),30,5))
+}
 dat<-rbind(dat1,dat2)
 times<-1:30
 dat<-cleandat(dat,times,clev=2)$cdat
