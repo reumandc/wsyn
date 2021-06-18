@@ -52,7 +52,7 @@ test_that("test for correct output format using 1 by N matrix input",{
   set.seed(101)
   times<-1:100
   dat1<-matrix(rnorm(100),1,100)
-  dat2<-matrix(rnorm(1000),1,100)
+  dat2<-matrix(rnorm(100),1,100)
   dat1<-cleandat(dat1,times,1)$cdat
   dat2<-cleandat(dat2,times,1)$cdat
   norm<-"powind"
