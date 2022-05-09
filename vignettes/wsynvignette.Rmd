@@ -385,7 +385,7 @@ a given timescale. See @Sheppard_16 for a precise mathematical definition.
 The plot is similar in format to a wavelet phasor mean field plot, but
 without significance contours:
 ```{r wmf_example_1, results=FALSE}
-res<-wpmf(dat,times)
+res<-wmf(dat,times)
 plotmag(res)
 ```
 
